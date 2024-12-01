@@ -27,7 +27,12 @@ export default function Sidebar({ isOpen, Isclose }) {
                 raised
                 onClick={() => handleNavigation("/cadastropessoas")}
               />
-              <Button label="Produtos" text raised />
+              <Button
+                label="Produtos"
+                text
+                raised
+                onClick={() => handleNavigation("/cadastroprodutos")}
+              />
             </div>
           </div>
         </AccordionTab>

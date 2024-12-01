@@ -6,7 +6,7 @@ import About from "../pages/About.jsx";
 import Contact from "../pages/Contact.jsx";
 import Login from "../pages/Login.jsx";
 import CadastroPessoas from "../components/CadastroPessoas/CadastroPessoas.jsx";
-
+import CadastroProdutos from "../components/CadastroProdutos/CadastroProdutos.jsx";
 
 const Rota = () => {
   return (
@@ -21,6 +21,7 @@ const Rota = () => {
           <Route path="about" element={<About />} />
           <Route path="contact" element={<Contact />} />
           <Route path="cadastropessoas" element={<CadastroPessoas />} />
+          <Route path="cadastroprodutos" element={<CadastroProdutos />} />
         </Route>
       </Route>
 
