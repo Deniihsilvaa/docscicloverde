@@ -16,8 +16,8 @@ import FooterNivel2 from "./nivel2/FooterNivel2";
 
 import PropTypes from "prop-types";
 
-const Layout = ({ userLevel }) => {
-  console.log("Nivel do usuario", userLevel);
+const Layout = ({ userLevel = {} }) => {
+
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
 
   // Função para alternar o estado da sidebar
@@ -28,22 +28,29 @@ const Layout = ({ userLevel }) => {
   // Determinar os componentes com base no nível do usuário
   let Header, Sidebar, Footer;
 
-  switch (userLevel) {
-    case "Admin":
-      Header = HeaderNivel3;
-      Sidebar = SidebarNivel3;
-      Footer = FooterNivel3;
-      break;
-    case "COLLABORATOR":
-      Header = HeaderNivel2;
-      Sidebar = SidebarNivel2;
-      Footer = FooterNivel2;
-      break;
-    default:
-      Header = HeaderNivel1;
-      Sidebar = SidebarNivel1;
-      Footer = FooterNivel1;
-      break;
+  if (userLevel && userLevel.role) {
+    switch (userLevel.role) {
+      case "Admin":
+        Header = HeaderNivel3;
+        Sidebar = SidebarNivel3;
+        Footer = FooterNivel3;
+        break;
+      case "COLLABORATOR":
+        Header = HeaderNivel2;
+        Sidebar = SidebarNivel2;
+        Footer = FooterNivel2;
+        break;
+      default:
+        Header = HeaderNivel1;
+        Sidebar = SidebarNivel1;
+        Footer = FooterNivel1;
+        break;
+    }
+  } else {
+    // Renderizar componentes padrão para quando `userLevel` for indefinido
+    Header = HeaderNivel1;
+    Sidebar = SidebarNivel1;
+    Footer = FooterNivel1;
   }
 
   return (
@@ -59,7 +66,11 @@ const Layout = ({ userLevel }) => {
     </div>
   );
 };
+
 Layout.propTypes = {
-  userLevel: PropTypes.string.isRequired,
+  userLevel: PropTypes.shape({
+    role: PropTypes.string,
+  }),
 };
+
 export default Layout;

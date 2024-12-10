@@ -36,7 +36,6 @@ export default function SidebarNivel1({ isOpen, Isclose }) {
             </div>
           </div>
         </AccordionTab>
-
       </Accordion>
     </div>
   );

@@ -49,7 +49,10 @@ const Login = () => {
             required
           />
         </div>
-        <button type="submit" className="w-full p-button p-button-primary">
+        <button
+          type="submit"
+          className="w-full cursor-pointer p-button p-button-primary"
+        >
           Entrar
         </button>
       </form>

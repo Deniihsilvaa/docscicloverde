@@ -1,11 +1,14 @@
 import { BrowserRouter as Router } from "react-router-dom";
 import Rota from "./hooks/Rota";
+import UserProvider from "./context/UserProvider";
 
 const App = () => {
   return (
-    <Router>
-      <Rota />
-    </Router>
+    <UserProvider>
+      <Router>
+        <Rota />
+      </Router>
+    </UserProvider>
   );
 };
 
