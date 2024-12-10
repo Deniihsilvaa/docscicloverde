@@ -14,8 +14,10 @@ import HeaderNivel2 from "./nivel2/HeaderNivel2";
 import SidebarNivel2 from "./nivel2/SidebarNivel2";
 import FooterNivel2 from "./nivel2/FooterNivel2";
 
+import PropTypes from "prop-types";
+
 const Layout = ({ userLevel }) => {
-  console.log('Nivel do usuario',userLevel);
+  console.log("Nivel do usuario", userLevel);
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
 
   // Função para alternar o estado da sidebar
@@ -27,12 +29,12 @@ const Layout = ({ userLevel }) => {
   let Header, Sidebar, Footer;
 
   switch (userLevel) {
-    case 'Admin':
+    case "Admin":
       Header = HeaderNivel3;
       Sidebar = SidebarNivel3;
       Footer = FooterNivel3;
       break;
-    case 'COLLABORATOR':
+    case "COLLABORATOR":
       Header = HeaderNivel2;
       Sidebar = SidebarNivel2;
       Footer = FooterNivel2;
@@ -58,6 +60,6 @@ const Layout = ({ userLevel }) => {
   );
 };
 Layout.propTypes = {
-  userLevel: Number,
-}
+  userLevel: PropTypes.string.isRequired,
+};
 export default Layout;
