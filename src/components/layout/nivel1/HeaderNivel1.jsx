@@ -15,7 +15,7 @@ export default function HeaderNivel1({ toggleSidebar }) {
   // Itens do menu para o nível 1
   const items = [
     {
-      label: "Menu nivel 2",
+      label: "Menu nivel Padrao",
       icon: "pi pi-bars", // Ícone de barras para o menu
       command: () => toggleSidebar(), // Função para abrir/fechar a sidebar
     },

@@ -16,7 +16,7 @@ export default function HeaderNivel3({ toggleSidebar }) {
   // Itens do menu
   const items = [
     {
-      label: "Menu",
+      label: "Menu Nível Maximo",
       icon: "pi pi-bars", // Alterei o ícone para o ícone de barras
       command: () => toggleSidebar(), // Aqui, a função precisa ser chamada
     },
