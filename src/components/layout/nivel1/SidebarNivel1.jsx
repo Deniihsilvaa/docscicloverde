@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { Button } from "primereact/button";
 import PropTypes from "prop-types"; // Importing PropTypes
 
-export default function Sidebar({ isOpen, Isclose }) {
+export default function SidebarNivel1({ isOpen, Isclose }) {
   const navigate = useNavigate();
 
   const handleNavigation = (path) => {
@@ -22,13 +22,13 @@ export default function Sidebar({ isOpen, Isclose }) {
           <div className="m-0">
             <div className="grid grid-cols-1 gap-4">
               <Button
-                label="Pessoas"
+                label="Registro"
                 text
                 raised
                 onClick={() => handleNavigation("/cadastropessoas")}
               />
               <Button
-                label="Produtos"
+                label="Extrato de recibo"
                 text
                 raised
                 onClick={() => handleNavigation("/cadastroprodutos")}
@@ -37,22 +37,13 @@ export default function Sidebar({ isOpen, Isclose }) {
           </div>
         </AccordionTab>
 
-        <AccordionTab header="Registros">
-          <div className="m-0 ">
-            <div className="grid grid-cols-1 gap-4">
-              <Button label="NFE" text raised />
-              <Button label="MTR" text raised />
-              <Button label="Request" text raised />
-            </div>
-          </div>
-        </AccordionTab>
       </Accordion>
     </div>
   );
 }
 
 // PropTypes validation
-Sidebar.propTypes = {
+SidebarNivel1.propTypes = {
   isOpen: PropTypes.any, // isOpen should be a boolean and required
   Isclose: PropTypes.any,
 };

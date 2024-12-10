@@ -12,7 +12,7 @@ const Login = () => {
     e.preventDefault();
     setError("");
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -20,7 +20,7 @@ const Login = () => {
     if (error) {
       setError(error.message);
     } else {
-      navigate("/"); // Redireciona após login bem-sucedido
+      navigate("/home"); // Redireciona após login bem-sucedido
     }
   };
 

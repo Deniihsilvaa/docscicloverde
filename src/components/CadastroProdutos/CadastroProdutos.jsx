@@ -1,13 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { Button } from "primereact/button";
 import { TabView, TabPanel } from "primereact/tabview";
-import { Checkbox } from "primereact/checkbox";
-import { Divider } from "primereact/divider";
+import { DataTable } from "primereact/datatable";
+import { Card } from "primereact/card";
+import { Column } from "primereact/column";
+import PropTypes from "prop-types";
+import { supabase } from "../../services/supabase";
 
-// Componente separado para os dados gerais
+// Componentes organizados por responsabilidade
+
+// Componente Dados Gerais
 const DadosGerais = ({ product, setProduct, description, setDescription }) => (
   <div className="grid grid-cols-2 gap-4">
     <div className="field">
@@ -39,8 +44,20 @@ const DadosGerais = ({ product, setProduct, description, setDescription }) => (
   </div>
 );
 
-// Componente separado para informações adicionais
-const InformacoesAdicionais = ({ parentProduct, setParentProduct, productionType, setProductionType }) => {
+DadosGerais.propTypes = {
+  product: PropTypes.string.isRequired,
+  setProduct: PropTypes.func.isRequired,
+  description: PropTypes.string,
+  setDescription: PropTypes.func.isRequired,
+};
+
+// Componente Informações Adicionais
+const InformacoesAdicionais = ({
+  parentProduct,
+  setParentProduct,
+  productionType,
+  setProductionType,
+}) => {
   const parentOptions = [
     { label: "Produto Pai", value: "pai" },
     { label: "Produto Filho", value: "filho" },
@@ -86,8 +103,22 @@ const InformacoesAdicionais = ({ parentProduct, setParentProduct, productionType
   );
 };
 
-// Componente separado para dados financeiros
-const DadosFinanceiros = ({ costPrice, setCostPrice, salePrice, setSalePrice, stock, setStock }) => (
+InformacoesAdicionais.propTypes = {
+  parentProduct: PropTypes.string,
+  setParentProduct: PropTypes.func.isRequired,
+  productionType: PropTypes.string,
+  setProductionType: PropTypes.func.isRequired,
+};
+
+// Componente Dados Financeiros
+const DadosFinanceiros = ({
+  costPrice,
+  setCostPrice,
+  salePrice,
+  setSalePrice,
+  stock,
+  setStock,
+}) => (
   <div className="grid grid-cols-2 gap-4">
     <div className="field">
       <label htmlFor="costPrice" className="block">
@@ -133,9 +164,17 @@ const DadosFinanceiros = ({ costPrice, setCostPrice, salePrice, setSalePrice, st
   </div>
 );
 
-// Componente principal
+DadosFinanceiros.propTypes = {
+  costPrice: PropTypes.number,
+  setCostPrice: PropTypes.func.isRequired,
+  salePrice: PropTypes.number,
+  setSalePrice: PropTypes.func.isRequired,
+  stock: PropTypes.number,
+  setStock: PropTypes.func.isRequired,
+};
+
+// Componente Principal
 const CadastroProdutos = () => {
-  // Estados do formulário
   const [product, setProduct] = useState("");
   const [description, setDescription] = useState("");
   const [parentProduct, setParentProduct] = useState(null);
@@ -143,27 +182,71 @@ const CadastroProdutos = () => {
   const [costPrice, setCostPrice] = useState(null);
   const [salePrice, setSalePrice] = useState(null);
   const [stock, setStock] = useState(null);
+  const [products, setProducts] = useState([]);
 
-  // Submissão do formulário
-  const handleSubmit = () => {
-    console.log({
-      product,
-      description,
-      parentProduct,
-      productionType,
-      costPrice,
-      salePrice,
-      stock,
-    });
-    alert("Produto cadastrado com sucesso!");
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    const { data } = await supabase.from("viewBaseProducts").select("*");
+    setProducts(data || []);
   };
 
-  return (
-    <TabView>
-      <TabPanel header="Dados Gerais">
-        <DadosGerais product={product} setProduct={setProduct} description={description} setDescription={setDescription} />
-      </TabPanel>
+  const handleSubmit = async () => {
+    const { error } = await supabase.from("BaseProducts").insert([
+      {
+        product,
+        description,
+        parentProduct,
+        productionType,
+        costPrice,
+        salePrice,
+        stock,
+      },
+    ]);
 
+    if (error) {
+      alert("Erro ao salvar o produto!");
+      return;
+    }
+
+    alert("Produto cadastrado com sucesso!");
+    fetchProducts();
+  };
+
+  const handleDelete = async (id) => {
+    const { error } = await supabase.from("BaseProducts").delete().eq("id", id);
+
+    if (error) {
+      alert("Erro ao excluir o produto!");
+      return;
+    }
+
+    alert("Produto excluído com sucesso!");
+    fetchProducts();
+  };
+
+  const deleteTemplate = (rowData) => (
+    <Button
+      icon="pi pi-trash"
+      className="p-button-danger"
+      onClick={() => handleDelete(rowData.id)}
+    />
+  );
+
+  return (
+<div className="flex items-center justify-center min-h-screen p-4">
+  <div className="w-full max-w-4xl">
+    <TabView className="w-full">
+      <TabPanel header="Dados Gerais">
+        <DadosGerais
+          product={product}
+          setProduct={setProduct}
+          description={description}
+          setDescription={setDescription}
+        />
+      </TabPanel>
       <TabPanel header="Informações Adicionais">
         <InformacoesAdicionais
           parentProduct={parentProduct}
@@ -172,7 +255,6 @@ const CadastroProdutos = () => {
           setProductionType={setProductionType}
         />
       </TabPanel>
-
       <TabPanel header="Dados Financeiros">
         <DadosFinanceiros
           costPrice={costPrice}
@@ -182,12 +264,26 @@ const CadastroProdutos = () => {
           stock={stock}
           setStock={setStock}
         />
+        <Button
+          label="Cadastrar Produto"
+          icon="pi pi-check"
+          onClick={handleSubmit}
+          className="w-full mt-4 p-button-success"
+        />
       </TabPanel>
-
-      <TabPanel header="Ações">
-        <Button label="Cadastrar Produto" icon="pi pi-check" onClick={handleSubmit} className="w-full p-button-success" />
+      <TabPanel header="Produtos Cadastrados">
+        <DataTable value={products} responsiveLayout="scroll">
+          <Column field="material" header="Produto" />
+          <Column field="description" header="Descrição" />
+          <Column field="costPrice" header="Custo" />
+          <Column field="salePrice" header="Venda" />
+          <Column body={deleteTemplate} header="Ações" />
+        </DataTable>
       </TabPanel>
     </TabView>
+  </div>
+</div>
+
   );
 };
 

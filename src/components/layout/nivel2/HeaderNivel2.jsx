@@ -1,10 +1,10 @@
 import { Menubar } from "primereact/menubar";
-import { supabase } from "../../services/supabase";
+import { supabase } from "../../../services/supabase";
 import { useNavigate } from "react-router-dom";
-import logo from "../../assets/logo.png";
+import logo from "../../../assets/logo.png";
 import PropTypes from "prop-types";
 
-export default function Header({ toggleSidebar }) {
+export default function HeaderNivel2({ toggleSidebar }) {
   const navigate = useNavigate();
 
   // Função de logout
@@ -13,24 +13,17 @@ export default function Header({ toggleSidebar }) {
     navigate("/login"); // Redireciona para a página de login após o logout
   };
 
-  // Itens do menu
   const items = [
     {
-      label: "Menu",
-      icon: "pi pi-bars", // Alterei o ícone para o ícone de barras
-      command: () => toggleSidebar(), // Aqui, a função precisa ser chamada
+      label: "Menu Nível 2",
+      icon: "pi pi-bars", // Ícone de barras para o menu
+      command: () => toggleSidebar(), // Função para abrir/fechar a sidebar
     },
-    { label: "Home", icon: "pi pi-home", command: () => navigate("/home") },
-    { label: "Sobre", icon: "pi pi-info", command: () => navigate("/about") },
-    {
-      label: "Contato",
-      icon: "pi pi-envelope",
-      command: () => navigate("/contato"),
-    },
+    { label: "Home", icon: "pi pi-home", command: () => navigate("/home") }, // Home
     {
       label: "Sair",
       icon: "pi pi-sign-out",
-      command: handleLogout,
+      command: handleLogout, // Função para o logout
     },
   ];
 
@@ -48,6 +41,6 @@ export default function Header({ toggleSidebar }) {
   );
 }
 
-Header.propTypes = {
-  toggleSidebar: PropTypes.func.isRequired, // Agora especificamos que "toggleSidebar" é uma função
+HeaderNivel2.propTypes = {
+  toggleSidebar: PropTypes.func.isRequired,
 };

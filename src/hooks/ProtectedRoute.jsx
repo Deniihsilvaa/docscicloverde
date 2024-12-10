@@ -1,28 +1,46 @@
-// src/hooks/ProtectedRoute.jsx
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../services/supabase";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
-const ProtectedRoute = () => {
+const ProtectedRoute = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setIsAuthenticated(!!session); // Verifica se há sessão ativa
-      setLoading(false); // Finaliza o carregamento
-    };
+  const checkSessionAndRole = async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
 
-    checkSession();
+    if (session) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false); // Usuário não autenticado
+    }
+
+    setLoading(false); // Finaliza o carregamento
+  };
+
+  useEffect(() => {
+    checkSessionAndRole();
   }, []);
 
+  // Exibe um indicador de carregamento enquanto verifica a sessão
   if (loading) {
-    // Pode substituir por um spinner ou qualquer outro indicador visual
     return <div>Carregando...</div>;
   }
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+  // Redireciona para login se o usuário não estiver autenticado
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Renderiza os componentes protegidos
+  return children;
+};
+
+ProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired, // Componentes protegidos que serão renderizados
 };
 
 export default ProtectedRoute;
