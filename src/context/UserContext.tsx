@@ -7,8 +7,7 @@ export interface User {
 
 export interface UserContextType {
   user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>; // Função para atualizar o estado do usuário
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
-
-// Criando o contexto com um valor padrão vazio
+// Criando o contexto com um valor padrão undefined
 export const UserContext = createContext<UserContextType | undefined>(undefined);

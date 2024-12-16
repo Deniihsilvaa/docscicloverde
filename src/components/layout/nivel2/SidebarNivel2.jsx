@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { Button } from "primereact/button";
 import PropTypes from "prop-types"; // Importing PropTypes
 
-export default function SidebarNivel2({ isOpen, Isclose }) {
+export default function Sidebar({ isOpen, Isclose }) {
   const navigate = useNavigate();
 
   const handleNavigation = (path) => {
@@ -57,7 +57,7 @@ export default function SidebarNivel2({ isOpen, Isclose }) {
 }
 
 // PropTypes validation
-SidebarNivel2.propTypes = {
+Sidebar.propTypes = {
   isOpen: PropTypes.any, // isOpen should be a boolean and required
   Isclose: PropTypes.any,
 };

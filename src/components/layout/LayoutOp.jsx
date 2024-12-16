@@ -2,13 +2,13 @@ import { useState } from "react";
 import { Outlet } from "react-router";
 import "./layout.css";
 
-import Header from "./nivel3/HeaderNivel3";
-import Sidebar from "./nivel3/SidebarNivel3";
-import Footer from "./nivel3/FooterNivel3";
-
+import Header from "./nivel2/HeaderNivel2";
+import Sidebar from "./nivel2/SidebarNivel2";
+import Footer from "./nivel2/FooterNivel2";
+import UserOP from "../../pages/user"
 import PropTypes from "prop-types";
 
-const Layout = () => {
+const LayoutOp = () => {
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
 
   // Função para alternar o estado da sidebar
@@ -22,7 +22,9 @@ const Layout = () => {
       <div className="flex flex-1">
         <Sidebar isOpen={isOpenSidebar} closeSidebar={toggleSidebar} />
         <main>
-          <Outlet />
+          <Outlet>
+            <UserOP />
+          </Outlet>
         </main>
       </div>
       <Footer />
@@ -30,10 +32,10 @@ const Layout = () => {
   );
 };
 
-Layout.propTypes = {
+LayoutOp.propTypes = {
   userLevel: PropTypes.shape({
     role: PropTypes.string,
   }),
 };
 
-export default Layout;
+export default LayoutOp;

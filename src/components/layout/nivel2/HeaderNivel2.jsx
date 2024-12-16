@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import logo from "../../../assets/logo.png";
 import PropTypes from "prop-types";
 
-export default function HeaderNivel2({ toggleSidebar }) {
+export default function Header({ toggleSidebar }) {
   const navigate = useNavigate();
 
   // Função de logout
@@ -41,6 +41,6 @@ export default function HeaderNivel2({ toggleSidebar }) {
   );
 }
 
-HeaderNivel2.propTypes = {
+Header.propTypes = {
   toggleSidebar: PropTypes.func.isRequired,
 };

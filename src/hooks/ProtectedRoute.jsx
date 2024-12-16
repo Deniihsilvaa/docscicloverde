@@ -1,46 +1,25 @@
-import { useEffect, useState } from "react";
-import { supabase } from "../services/supabase";
 import { Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const ProtectedRoute = ({ children }) => {
-  const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const checkSessionAndRole = async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    if (session) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false); // Usuário não autenticado
-    }
-
-    setLoading(false); // Finaliza o carregamento
-  };
-
-  useEffect(() => {
-    checkSessionAndRole();
-  }, []);
-
-  // Exibe um indicador de carregamento enquanto verifica a sessão
-  if (loading) {
-    return <div>Carregando...</div>;
-  }
-
-  // Redireciona para login se o usuário não estiver autenticado
-  if (!isAuthenticated) {
+const ProtectedRoute = ({ userRole, requiredRole, children }) => {
+  console.log("PROTECTED ROUTE: userRole", userRole);
+  if (!userRole) {
+    alert("pagina protegida");
     return <Navigate to="/login" replace />;
   }
 
-  // Renderiza os componentes protegidos
+  if (userRole !== requiredRole) {
+    return <Navigate to="/unauthorized" replace />;
+  }
+
   return children;
 };
 
+export default ProtectedRoute;
+
+
 ProtectedRoute.propTypes = {
   children: PropTypes.node.isRequired, // Componentes protegidos que serão renderizados
+  userRole: PropTypes.string, // Role do usuário logado
+  requiredRole: PropTypes.string.isRequired, // Role exigida para acesso
 };
-
-export default ProtectedRoute;

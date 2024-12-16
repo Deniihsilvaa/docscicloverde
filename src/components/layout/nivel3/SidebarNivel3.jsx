@@ -3,11 +3,11 @@ import { useNavigate } from "react-router";
 import { Button } from "primereact/button";
 import PropTypes from "prop-types"; // Importing PropTypes
 
-export default function SidebarNivel3({ isOpen, Isclose }) {
+export default function Sidebar({ isOpen, Isclose }) {
   const navigate = useNavigate();
 
   const handleNavigation = (path) => {
-    navigate(path);
+    navigate.apply(this, [`/admin/${path}`]);
     Isclose();
   };
 
@@ -25,13 +25,19 @@ export default function SidebarNivel3({ isOpen, Isclose }) {
                 label="Pessoas"
                 text
                 raised
-                onClick={() => handleNavigation("/cadastropessoas")}
+                onClick={() => handleNavigation("cadastropessoas")}
+              />
+              <Button
+                label="Cadastro de Usuario"
+                text
+                raised
+                onClick={() => handleNavigation("UserRegistrationForm")}
               />
               <Button
                 label="Produtos"
                 text
                 raised
-                onClick={() => handleNavigation("/cadastroprodutos")}
+                onClick={() => handleNavigation("cadastroprodutos")}
               />
             </div>
           </div>
@@ -58,7 +64,7 @@ export default function SidebarNivel3({ isOpen, Isclose }) {
                 label="Registro de colaboradores"
                 text
                 raised
-                onClick={() => handleNavigation("/registro")}
+                onClick={() => handleNavigation("registro")}
               />
             </div>
           </div>
@@ -69,7 +75,7 @@ export default function SidebarNivel3({ isOpen, Isclose }) {
 }
 
 // PropTypes validation
-SidebarNivel3.propTypes = {
+Sidebar.propTypes = {
   isOpen: PropTypes.any, // isOpen should be a boolean and required
   Isclose: PropTypes.any,
 };

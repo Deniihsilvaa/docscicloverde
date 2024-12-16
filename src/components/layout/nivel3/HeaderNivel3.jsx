@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import logo from "../../../assets/logo.png";
 import PropTypes from "prop-types";
 
-export default function HeaderNivel3({ toggleSidebar }) {
+export default function Header({ toggleSidebar }) {
   const navigate = useNavigate();
 
   // Função de logout
@@ -12,7 +12,6 @@ export default function HeaderNivel3({ toggleSidebar }) {
     await supabase.auth.signOut();
     navigate("/login"); // Redireciona para a página de login após o logout
   };
-
   // Itens do menu
   const items = [
     {
@@ -20,12 +19,12 @@ export default function HeaderNivel3({ toggleSidebar }) {
       icon: "pi pi-bars", // Alterei o ícone para o ícone de barras
       command: () => toggleSidebar(), // Aqui, a função precisa ser chamada
     },
-    { label: "Home", icon: "pi pi-home", command: () => navigate("/home") },
-    { label: "Sobre", icon: "pi pi-info", command: () => navigate("/about") },
+    { label: "Home", icon: "pi pi-home", command: () => navigate.apply(this, [`/admin/home`])},
+    { label: "Sobre", icon: "pi pi-info", command: () => navigate.apply(this, ["/admin/about"]) },
     {
       label: "Contato",
       icon: "pi pi-envelope",
-      command: () => navigate("/contato"),
+      command: () => navigate.apply(this, ["/admin/contato"]),
     },
     {
       label: "Sair",
@@ -48,6 +47,6 @@ export default function HeaderNivel3({ toggleSidebar }) {
   );
 }
 
-HeaderNivel3.propTypes = {
+Header.propTypes = {
   toggleSidebar: PropTypes.func.isRequired,
 };

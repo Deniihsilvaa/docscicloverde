@@ -1,3 +1,4 @@
+// src/context/UserProvider.tsx
 import React, { useState, useEffect } from "react";
 import { UserContext, User } from "./UserContext";
 import { supabase } from "../services/supabase"; // Certifique-se de importar o Supabase corretamente
@@ -8,6 +9,8 @@ interface UserProviderProps {
 }
 
 const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
+
+
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -21,16 +24,18 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         const { data: userData, error } = await supabase
           .from("base_user")
           .select("role")
-          .eq("user_id", currentUser.id);
+          .eq("user_id", currentUser.id)
+          .single();
 
         if (error) {
           console.error("Erro ao buscar dados do usuário:", error);
           return;
         }
 
-        setUser({ role: userData[0].role });
+        setUser({ role: userData.role });
       }
     };
+
 
     getUser();
   }, []);

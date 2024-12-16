@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { supabase } from "../services/supabase";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { handleLogin } from "../context/types";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -8,54 +8,53 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError("");
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
+  // Mostra um alerta quando há um erro
+  useEffect(() => {
     if (error) {
-      setError(error.message);
-    } else {
-      navigate("/home"); // Redireciona após login bem-sucedido
+      alert(error);
     }
-  };
+  }, [error]);
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <form className="p-6 bg-white rounded shadow-md" onSubmit={handleLogin}>
-        <h1 className="mb-4 text-2xl font-bold">Login</h1>
-        {error && <p className="text-red-500">{error}</p>}
-        <div className="mb-4">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-inputtext"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <input
-            type="password"
-            placeholder="Senha"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-inputtext"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full cursor-pointer p-button p-button-primary"
+    <div className="flex items-center justify-center w-full h-screen bg-gray-100">
+      <div className="relative z-10 max-w-md p-8 bg-blue-800 rounded-lg shadow-lg bg-opacity-80">
+        <form
+          className="p-6 bg-white rounded shadow-md"
+          onSubmit={(e) => handleLogin(e, email, password, setError, navigate)} // Passa argumentos
         >
-          Entrar
-        </button>
-      </form>
+          <h1 className="mb-4 text-2xl font-bold">Login</h1>
+          {/* Mensagem de erro exibida no formulário */}
+          {error && <p className="text-red-500">{error}</p>}
+          <div className="mb-4">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full p-inputtext"
+              aria-label="Email"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <input
+              type="password"
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-inputtext"
+              aria-label="Senha"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full cursor-pointer p-button p-button-primary"
+          >
+            Entrar
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
