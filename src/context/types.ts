@@ -26,3 +26,22 @@ export const handleLogin = async (
     navigate("/Aut");
   }
 };
+export const tabeleMTR = async () =>{
+  const { data } = await supabase.from("baseMtr").select("*");
+  return data
+}
+export async function tableMTR() {
+  try {
+    const { data, error } = await supabase.from("baseMtr").select("*");
+
+    if (error) {
+      console.error("Error fetching tableMTR:", error);
+      return null; // ou outra forma de lidar com o erro
+    }
+
+    return data; // Retorna os dados da tabela baseMtr
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    return null; // ou tratar o erro conforme necessário
+  }
+}

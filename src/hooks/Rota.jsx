@@ -21,6 +21,7 @@ import PainelRegistro from "../components/Users/PainelDeRegistros/PainelRegistro
 import PainelFinanceiro from "../components/Users/PainelFinanceiro/PainelFinanceiro.jsx";
 import NotUse from "../pages/v2.jsx";
 import UserRegistrationForm from "../components/CadastroPessoas/UserRegistrationForm.tsx";
+import TableMTR from "../components/CadastroMTR/TableMTR.jsx";
 
 const Rota = () => {
   const [user, setUser] = useState(false);
@@ -78,6 +79,7 @@ const Rota = () => {
         <Route path="user" element={<UserOP />} />
         <Route path="user/painel" element={<PainelRegistro />} />
         <Route path="user/financeiro" element={<PainelFinanceiro />} />
+        <Route path="mtr" element={<TableMTR />} />
       </Route>
 
       {/* Rotas protegidas para Operacional */}

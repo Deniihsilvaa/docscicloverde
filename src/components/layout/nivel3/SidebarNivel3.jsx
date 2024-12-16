@@ -50,9 +50,14 @@ export default function Sidebar({ isOpen, Isclose }) {
                 label="NFE"
                 text
                 raised
-                onClick={() => handleNavigation("/nfe")}
+                onClick={() => handleNavigation("nfe")}
               />
-              <Button label="MTR" text raised />
+              <Button
+                label="MTR"
+                text
+                raised
+                onClick={() => handleNavigation("mtr")}
+              />
               <Button label="Request" text raised />
             </div>
           </div>
