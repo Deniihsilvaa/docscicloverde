@@ -11,7 +11,7 @@ import Home from "../pages/Home.jsx";
 import About from "../pages/About.jsx";
 import Contact from "../pages/Contact.jsx";
 import Login from "../pages/Login.jsx";
-import CadastroPessoas from "../components/CadastroPessoas/CadastroPessoas.jsx";
+import CadastroPessoas from "../components/CadastroPessoas/CadastroPessoas.tsx";
 import CadastroProdutos from "../components/CadastroProdutos/CadastroProdutos.jsx";
 import RegistroNotasFiscais from "../components/CadastroNFE/RegistroNotasFiscais.jsx";
 import Unauthorized from "../pages/Unauthorized.jsx";

@@ -11,30 +11,24 @@ function TableMTR() {
     const [mtrData, setMtrData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [manifestoTypes] = useState(['Recebido', 'Salvo']);
-    const [filters, setFilters] = useState({});
     const [lazyLoading, setLazyLoading] = useState(false);
-    const [totalRecords, setTotalRecords] = useState(0);
     const [viewDialog, setViewDialog] = useState(false);
     const [selectedRow, setSelectedRow] = useState(null);
 
-    const rowsPerPage = 10;
 
     // Fetch data from Supabase with lazy loading
-    const fetchData = async (page = 0) => {
+    const fetchData = async () => {
         setLazyLoading(true);
-        const from = page * rowsPerPage;
-        const to = from + rowsPerPage - 1;
 
-        const { data, error, count } = await supabase
-            .from('baseMtr')
-            .select('*', { count: 'exact' })
-            .range(from, to);
+        const { data, error } = await supabase.from("baseMtr").select("*")
 
-        if (error) {
-            console.error('Error fetching data:', error);
-        } else {
-            setMtrData((prev) => (page === 0 ? data : [...prev, ...data]));
-            setTotalRecords(count);
+            if (error) {
+                console.error('Error fetching data:', error);
+                alert("Erro ao carregar os dados!");
+                throw error;
+            } else {
+                console.log("CadastroProduto: Dados para renderização:", data);
+            setMtrData(data);
         }
         setLazyLoading(false);
         setLoading(false);
@@ -104,53 +98,34 @@ function TableMTR() {
         );
     };
 
-    const onFilterChange = (e, field) => {
-        const value = e.target.value;
-        setFilters((prev) => ({ ...prev, [field]: { value, matchMode: 'contains' } }));
-    };
 
-    const loadMoreData = () => {
-        const currentPage = Math.ceil(mtrData.length / rowsPerPage);
-        fetchData(currentPage);
-    };
 
     return (
         <div className="card p-fluid">
             <DataTable
-                value={mtrData}
+                value={mtrData || lazyLoading}
                 editMode="row"
                 dataKey="id"
                 onRowEditComplete={onRowEditComplete}
                 loading={loading || lazyLoading}
                 tableStyle={{ minWidth: '60rem' }}
-                filters={filters}
-                rows={rowsPerPage}
                 paginator
-                paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-                currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
-                totalRecords={totalRecords}
-                lazy // Enable lazy loading
                 scrollable
+                autoLayout
+                
                 scrollHeight="400px"
-                onVirtualScroll={(e) => loadMoreData()} // essa funcao faz o lazy loading
             >
                 <Column
                     field="mtr"
                     header="MTR"
                     editor={(options) => textEditor(options)}
                     style={{ width: '15%' }}
-                    filter
-                    filterPlaceholder="Search MTR"
-                    onFilterApplyClick={(e) => onFilterChange(e, 'mtr')}
                 ></Column>
                 <Column
                     field="situacao"
                     header="Situação"
                     editor={(options) => dropdownEditor(options)}
                     style={{ width: '15%' }}
-                    filter
-                    filterPlaceholder="Search Situação"
-                    onFilterApplyClick={(e) => onFilterChange(e, 'situacao')}
                 ></Column>
                 <Column field="responsavelemissao" header="Responsável Emissão" editor={(options) => textEditor(options)} style={{ width: '20%' }}></Column>
                 <Column field="gerador" header="Gerador" editor={(options) => textEditor(options)} style={{ width: '20%' }}></Column>
