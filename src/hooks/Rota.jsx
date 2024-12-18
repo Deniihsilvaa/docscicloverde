@@ -23,19 +23,19 @@ import TableMTR from "../components/CadastroMTR/TableMTR.jsx";
 
 const Rota = () => {
   const { user } = useAuth(); // Obtém o papel do usuário logado
-  const isUserAdmin = user?.role === "Admin";
+  const userRole = user?.role;
+  console.log("Papel do usuário:", userRole);
   return (
     <Routes>
       {/* Rota de Login */}
       <Route path="/login" element={<Login />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
-      <Route path="/" element="*" />
 
       {/* Rotas protegidas para Admin */}
       <Route
         path="/admin/*"
         element={
-          <ProtectedRoute userRole={user?.role} requiredRole="Admin">
+          <ProtectedRoute userRole={userRole} requiredRole="Admin">
             <Layout />
           </ProtectedRoute>
         }
@@ -58,7 +58,7 @@ const Rota = () => {
       <Route
         path="/op/*"
         element={
-          <ProtectedRoute userRole={user?.role} requiredRole="COLLABORATOR">
+          <ProtectedRoute userRole={userRole} requiredRole="COLLABORATOR">
             <LayoutOp />
           </ProtectedRoute>
         }
@@ -71,8 +71,9 @@ const Rota = () => {
 
       {/* Outras rotas */}
       <Route path="/NotUse" element={<NotUse />} />
-      <Route path="*" element={<Navigate to={isUserAdmin === "Admin" ? "/admin/home" : "/op/home"} replace />} />     </Routes>
+      <Route path="*" element={<Navigate to={userRole === "Admin" ? "/admin/home" : "/op/home"} replace />} /> 
+    </Routes>
   );
-};
+};  
 
 export default Rota;
