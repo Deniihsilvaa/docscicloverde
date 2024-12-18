@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import { useAuth } from "./AuthContext"; // Importa o contexto de autenticação
+import { Navigate } from "react-router-dom";
 
 import Layout from "../components/layout/Layout.jsx";
 import LayoutOp from "../components/layout/LayoutOp.jsx";
@@ -22,7 +23,7 @@ import TableMTR from "../components/CadastroMTR/TableMTR.jsx";
 
 const Rota = () => {
   const { user } = useAuth(); // Obtém o papel do usuário logado
-
+  const isUserAdmin = user?.role === "Admin";
   return (
     <Routes>
       {/* Rota de Login */}
@@ -70,7 +71,7 @@ const Rota = () => {
 
       {/* Outras rotas */}
       <Route path="/NotUse" element={<NotUse />} />
-    </Routes>
+      <Route path="*" element={<Navigate to={isUserAdmin === "Admin" ? "/admin/home" : "/op/home"} replace />} />     </Routes>
   );
 };
 

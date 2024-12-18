@@ -4,11 +4,7 @@ import PropTypes from "prop-types";
 
 const ProtectedRoute = ({ userRole, requiredRole, children }) => {
   console.log("PROTECTED ROUTE: userRole", userRole);
-  if (!userRole) {
-    alert("pagina protegida");
-    return <Navigate to="/login" replace />;
-  }
-
+  
   if (userRole !== requiredRole) {
     return <Navigate to="/unauthorized" replace />;
   }
