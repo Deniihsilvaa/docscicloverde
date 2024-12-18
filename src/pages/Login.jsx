@@ -7,6 +7,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   // Mostra um alerta quando há um erro
   useEffect(() => {
@@ -20,7 +21,9 @@ const Login = () => {
       <div className="relative z-10 max-w-md p-8 bg-blue-800 rounded-lg shadow-lg bg-opacity-80">
         <form
           className="p-6 bg-white rounded shadow-md"
-          onSubmit={(e) => handleLogin(e, email, password, setError, navigate)} // Passa argumentos
+          onSubmit={(e) =>
+            handleLogin(e, email, password, setError, navigate, setLoading)
+          } // Passa argumentos
         >
           <h1 className="mb-4 text-2xl font-bold">Login</h1>
           {/* Mensagem de erro exibida no formulário */}
@@ -47,11 +50,22 @@ const Login = () => {
               required
             />
           </div>
+
           <button
             type="submit"
-            className="w-full cursor-pointer p-button p-button-primary"
+            className={`w-full flex items-center justify-center gap-2 py-2 px-4 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={loading}
           >
-            Entrar
+            {loading ? (
+              <>
+                <span className="loader"></span>
+                <span>Carregando...</span>
+              </>
+            ) : (
+              "Entrar"
+            )}
           </button>
         </form>
       </div>

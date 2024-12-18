@@ -6,11 +6,14 @@ export const handleLogin = async (
   email: string,
   password: string,
   setError: (message: string) => void,
-  navigate: (path: string) => void
+  navigate: (path: string) => void,
+  setLoading: (loading: boolean) => void
 ) => {
   e.preventDefault();
   setError(""); // Limpa erros anteriores
+  setLoading(true);
   if (!email || !password) {
+    setLoading(false);
     setError("Por favor, preencha todos os campos.");
     return;
   }
@@ -23,7 +26,8 @@ export const handleLogin = async (
     setError(error.message); // Define mensagem de erro
   } else {
     alert("Login bem-sucedido!");
-    navigate("/Aut");
+    navigate("/");
+    setLoading(false);
   }
 };
 export const tabeleMTR = async () =>{

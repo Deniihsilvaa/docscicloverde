@@ -1,12 +1,9 @@
-// src/Rota.jsx
-import { Routes, Route, Navigate } from "react-router-dom";
-import { supabase } from "../services/supabase";
-import { useState, useEffect } from "react";
-import Aut from "./Aut.jsx";
+import { Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
+import { useAuth } from "./AuthContext"; // Importa o contexto de autenticação
 
 import Layout from "../components/layout/Layout.jsx";
 import LayoutOp from "../components/layout/LayoutOp.jsx";
-import ProtectedRoute from "./ProtectedRoute";
 import Home from "../pages/Home.jsx";
 import About from "../pages/About.jsx";
 import Contact from "../pages/Contact.jsx";
@@ -24,52 +21,26 @@ import UserRegistrationForm from "../components/CadastroPessoas/UserRegistration
 import TableMTR from "../components/CadastroMTR/TableMTR.jsx";
 
 const Rota = () => {
-  const [user, setUser] = useState(false);
-
-  const getUser = async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    if (session) {
-      const { user: currentUser } = session;
-      const { data: userData, error } = await supabase
-        .from("base_user")
-        .select("role")
-        .eq("user_id", currentUser.id)
-        .single();
-
-      if (error) {
-        console.error("Erro ao buscar dados do usuário:", error);
-        return;
-      }
-
-      setUser({ role: userData.role });
-    }
-  };
-
-  useEffect(() => {
-    getUser();
-  }, []);
-  console.log("ROTA: nivel de usuario", user.role);
+  const { user } = useAuth(); // Obtém o papel do usuário logado
 
   return (
     <Routes>
       {/* Rota de Login */}
       <Route path="/login" element={<Login />} />
-      <Route path="/Aut" element={<Aut />} />
+      <Route path="/unauthorized" element={<Unauthorized />} />
+      <Route path="/" element="*" />
 
       {/* Rotas protegidas para Admin */}
       <Route
         path="/admin/*"
         element={
-          <ProtectedRoute userRole={user.role} requiredRole="Admin">
+          <ProtectedRoute userRole={user?.role} requiredRole="Admin">
             <Layout />
           </ProtectedRoute>
         }
       >
         <Route path="home" element={<Home />} />
-        <Route path="UserRegistrationForm" element={<UserRegistrationForm/>} />
+        <Route path="UserRegistrationForm" element={<UserRegistrationForm />} />
         <Route path="cadastropessoas" element={<CadastroPessoas />} />
         <Route path="registro" element={<Registro />} />
         <Route path="cadastroprodutos" element={<CadastroProdutos />} />
@@ -86,7 +57,7 @@ const Rota = () => {
       <Route
         path="/op/*"
         element={
-          <ProtectedRoute userRole={user.role} requiredRole="COLLABORATOR">
+          <ProtectedRoute userRole={user?.role} requiredRole="COLLABORATOR">
             <LayoutOp />
           </ProtectedRoute>
         }
@@ -97,11 +68,8 @@ const Rota = () => {
         <Route path="user" element={<UserOP />} />
       </Route>
 
-      {/* Página de acesso negado */}
-      <Route path="/unauthorized" element={<Unauthorized />} />
+      {/* Outras rotas */}
       <Route path="/NotUse" element={<NotUse />} />
-      {/* Redirecionamento para home em caso de rota não encontrada */}
-      <Route path="*" element={<Navigate to={user.role === "Admin" ? "/admin/home" : "/op/home"} replace />} />
     </Routes>
   );
 };
