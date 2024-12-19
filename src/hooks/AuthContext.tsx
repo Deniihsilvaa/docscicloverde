@@ -58,17 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       setUser({ role: userData.role });
 
-      // Redirecionamento baseado no papel
-      switch (userData.role) {
-        case "Admin":
-          navigate("/admin/home");
-          break;
-        case "COLLABORATOR":
-          navigate("/op/home");
-          break;
-        default:
-          navigate("/login");
-      }
+
     } catch (err) {
       console.error("Erro ao verificar o usuário:", err);
       toast.current?.show({

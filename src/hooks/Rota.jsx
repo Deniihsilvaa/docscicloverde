@@ -19,12 +19,10 @@ import PainelRegistro from "../components/Users/PainelDeRegistros/PainelRegistro
 import PainelFinanceiro from "../components/Users/PainelFinanceiro/PainelFinanceiro.jsx";
 import NotUse from "../pages/v2.jsx";
 import UserRegistrationForm from "../components/CadastroPessoas/UserRegistrationForm.tsx";
-import TableMTR from "../components/CadastroMTR/TableMTR.jsx";
+import TableMTR from "../components/CadastroMTR/TableMTR.tsx";
 
 const Rota = () => {
   const { user } = useAuth(); // Obtém o papel do usuário logado
-  const userRole = user?.role;
-  console.log("Papel do usuário:", userRole);
   return (
     <Routes>
       {/* Rota de Login */}
@@ -35,7 +33,7 @@ const Rota = () => {
       <Route
         path="/admin/*"
         element={
-          <ProtectedRoute userRole={userRole} requiredRole="Admin">
+          <ProtectedRoute userRole={user?.role} requiredRole="Admin">
             <Layout />
           </ProtectedRoute>
         }
@@ -52,13 +50,14 @@ const Rota = () => {
         <Route path="user/painel" element={<PainelRegistro />} />
         <Route path="user/financeiro" element={<PainelFinanceiro />} />
         <Route path="mtr" element={<TableMTR />} />
+
       </Route>
 
       {/* Rotas protegidas para Operacional */}
       <Route
         path="/op/*"
         element={
-          <ProtectedRoute userRole={userRole} requiredRole="COLLABORATOR">
+          <ProtectedRoute userRole={user?.role} requiredRole="COLLABORATOR">
             <LayoutOp />
           </ProtectedRoute>
         }
@@ -71,9 +70,22 @@ const Rota = () => {
 
       {/* Outras rotas */}
       <Route path="/NotUse" element={<NotUse />} />
-      <Route path="*" element={<Navigate to={userRole === "Admin" ? "/admin/home" : "/op/home"} replace />} /> 
+      <Route
+        path="*"
+        element={
+          user ? (
+            user.role === "Admin" ? (
+              <Navigate to="/admin/home" />
+            ) : (
+              <Navigate to="/op/home" />
+            )
+          ) : (
+            <div>Carregando...</div>
+          ) // Enquanto carrega o usuário
+        }
+      />
     </Routes>
   );
-};  
+};
 
 export default Rota;

@@ -20,7 +20,7 @@ const Layout = () => {
     <div className="flex flex-col min-h-screen layout">
       <Header toggleSidebar={toggleSidebar} />
       <div className="flex flex-1">
-        <Sidebar isOpen={isOpenSidebar} closeSidebar={toggleSidebar} />
+        <Sidebar isOpen={isOpenSidebar} Isclose={toggleSidebar} />
         <main>
           <Outlet />
         </main>
