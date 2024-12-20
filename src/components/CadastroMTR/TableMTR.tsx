@@ -1,202 +1,119 @@
  // src/components/CadastroMTR/TableMTR.tsx
-import React, { useEffect, useState,useRef } from "react";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-import { InputText } from "primereact/inputtext";
-import { Dropdown } from "primereact/dropdown";
-import { Button } from "primereact/button";
-import { Sidebar } from "primereact/sidebar";
-import { supabase } from "../../services/supabase";
-import { Card } from "primereact/card";
-import { Calendar } from "primereact/calendar";
-import { Toast } from "primereact/toast";
+ import React, { useEffect, useState, useRef } from "react";
+ import { DataTable } from "primereact/datatable";
+ import { Column } from "primereact/column";
+ import { InputText } from "primereact/inputtext";
+ import { Dropdown } from "primereact/dropdown";
+ import { Button } from "primereact/button";
+ import { Sidebar } from "primereact/sidebar";
+ import { Calendar } from "primereact/calendar";
+ import { Toast } from "primereact/toast";
+ import { Card } from "primereact/card";
+ import { fetchData, searchMTRs,onDelete } from "./utils";
+ import { MTRData } from "./types";
+ 
+ const TableMTR: React.FC = () => {
+   const [mtrData, setMtrData] = useState<MTRData[]>([]);
+   const [loading, setLoading] = useState<boolean>(true);
+   const [viewSidebar, setViewSidebar] = useState<boolean>(false);
+   const [selectedRow, setSelectedRow] = useState<MTRData | null>(null);
+   const [search, setSearch] = useState<string>("");
+   const [dateStart, setDateStart] = useState<Date | null>(null);
+   const [dateEnd, setDateEnd] = useState<Date | null>(null);
+   const [selectSituacao, setSelectSituacao] = useState<string | null>(null);
+   const [isEditing, setIsEditing] = useState<boolean>(false);
+   const [deleteId, setDeleteId] = useState<string>("");
+   const [manifestoTypes] = useState<string[]>(["Recebido", "Salvo"]);
 
-import { fetchTransportadoras } from "./types";
-
-// Define a interface para os dados da MTR
-interface MTRData {
-  id: number;
-  mtr: string;
-  situacao: string;
-  responsavelemissao: string;
-  gerador: string;
-  transportadornome: string;
-  quantidaderecebida: string;
-  dataemissao: string;
-  geradorunidade: string;
-  transportadoraunidade: string;
-  transportadorunidade: string;
-  cdfnumero: string;
-  classe: string;
-  tipomanifesto: string;
-  tratamento: string;
-  unidade: string;  
-  
-}
-
-const TableMTR: React.FC = () => {
-  const [mtrData, setMtrData] = useState<MTRData[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [manifestoTypes] = useState<string[]>(["Recebido", "Salvo"]);
-  const [viewSidebar, setViewSidebar] = useState<boolean>(false);
-  const [selectedRow, setSelectedRow] = useState<MTRData | null>(null);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [search, setSearch] = useState<string>("");
-  const [dateStart, setDateStart] = useState<Date | null>(null);
-  const [dateEnd, setDateEnd] = useState<Date | null>(null);
-  const [selectSituacao, setSelectSituacao] = useState<string | null>(null);
-  const [transportadoras, setTransportadoras] = useState<
-    { code: string; value: string }[]
-  >([]);
-  const [transportadorasLoading, setTransportadorasLoading] =
-    useState<boolean>(false);
-    const toast = useRef<Toast>(null);
-
-  const fetchData = async (): Promise<void> => {
-    setLoading(true);
-    const { data, error } = await supabase.from("baseMtr").select("*");
-
-    if (error) return alert("Erro ao carregar os dados!");
-    setMtrData(data as MTRData[]);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    setTransportadorasLoading(true);
-    fetchTransportadoras()
-      .then((data) => setTransportadoras(data))
-      .catch((error) =>
-        toast.current?.show({
-          severity: "error",
-          summary:"Error",
-          detail: error.message,
-          life: 5000,
-        })
-      )
-      .finally(() => setTransportadorasLoading(false));
-  }, []);
-  const handleSearch = async () => {
-    setLoading(true);
+   const toast = useRef<Toast>(null);
+ 
+   const loadMTRData = async () => {
+     try {
+       const data = await fetchData();
+       setMtrData(data);
+     } catch (error) {
+       toast.current?.show({
+         severity: "error",
+         summary: "Erro",
+         detail: (error as Error).message,
+         life: 5000,
+       });
+     } finally {
+       setLoading(false);
+     }
+   };
+   useEffect(() => {
+     loadMTRData();
+   }, []);
+ 
+   const handleSearch = async () => {
+     setLoading(true);
+     try {
+       const data = await searchMTRs(search, dateStart, dateEnd, selectSituacao);
+       setMtrData(data);
+     } catch (error) {
+       toast.current?.show({
+         severity: "error",
+         summary: "Erro",
+         detail: (error as Error).message,
+         life: 5000,
+       });
+     } finally {
+       setLoading(false);
+     }
+   };
+   const handleDelete = async (id: number) => {
+    if (!id) {
+      toast.current?.show({
+        severity: "warn",
+        summary: "Aviso",
+        detail: "Nenhum MTR selecionado para exclusão",
+        life: 5000,
+      });
+      return;
+    }
     try {
-      let query = supabase.from("baseMtr").select("*");
-
-      if (search) {
-        query = query.ilike("mtr", `%${search}%`);
-      }
-
-      if (dateStart && dateEnd) {
-        query = query
-          .gte("dataEmissao", dateStart.toISOString())
-          .lte("dataEmissao", dateEnd.toISOString());
-      } else if (dateStart || dateEnd) {
-        alert("Por favor, preencha ambas as datas para filtrar por período!");
-        setLoading(false);
-        return;
-      }
-
-      if (selectSituacao) {
-        query = query.eq("situacao", selectSituacao);
-      }
-
-      const { data, error } = await query;
-      if (error) {
-        toast.current?.show({
-          severity: "error",
-          summary:"Error",
-          detail: error.message,
-          life: 5000,
-        })
-       
-        setLoading(false);
-        return;
-      } else {
-        setMtrData(data as MTRData[]);
-        setLoading(false);
-      }
+      await onDelete(id);
+      toast.current?.show({
+        severity: "success",
+        summary: "Sucesso",
+        detail: "MTR excluído com sucesso",
+        life: 5000,
+      });
+      loadMTRData(); // Atualiza a tabela após exclusão
+      setViewSidebar(false); // Fecha o sidebar após exclusão
     } catch (error) {
       toast.current?.show({
         severity: "error",
-        summary:"Error",
-        detail: error.message,
+        summary: "Erro",
+        detail: (error as Error).message,
         life: 5000,
-      })
-    } finally {
-      setLoading(false);
+      });
     }
   };
-  const onViewDetails = (rowData: MTRData): void => {
-    setSelectedRow(rowData);
-    setViewSidebar(true);
-    setIsEditing(false); 
-  };
-
-  const onDelete = async (): Promise<void> => {
-    if (!selectedRow) return;
-
-    const {error } = await supabase
-      .from("baseMtr")
-      .delete()
-      .eq("id", selectedRow.id);
-
-    if (error) {
-      toast.current?.show({
-        severity: "error",
-        summary:"Error",
-        detail: error.message,
-        life: 5000,
-      })
-    } else {
-      toast.current?.show({
-        severity: "success",
-        summary:"Success",
-        detail:"MTR deletado com sucesso",
-        life: 5000,
-      })
-      fetchData();
-      setViewSidebar(false);
-    }
-  };
-
-  const onSave = async (): Promise<void> => {
-    if (!selectedRow) return;
-
-    const { error } = await supabase
-      .from("baseMtr")
-      .update(selectedRow)
-      .eq("id", selectedRow.id);
-
-    if (error) {
-     toast.current?.show({
-       severity: "error",
-       summary:"Error",
-       detail: error.message,
-       life: 5000,
-       
-     })
-    } else {
-      toast.current?.show({
-        severity: "success",
-        summary:"Success",
-        detail:"MTR salvo com sucesso",
-        life: 5000,
-      })
-      fetchData();
-      setViewSidebar(false);
-    }
-  };
-
-  const actionTemplate = (rowData: MTRData): JSX.Element => (
+  
+ 
+   const onViewDetails = (rowData: MTRData): void => {
+      if (rowData) {
+        setSelectedRow(rowData);
+        setViewSidebar(true);
+      }else {
+        toast.current?.show({
+          severity: "error",
+          summary: "Erro",
+          detail: "Nenhuma linha selecionada",
+          life: 5000,
+            
+        });
+      }
+   };
+   const actionTemplate = (rowData: MTRData): JSX.Element => (
     <Button
       icon="pi pi-eye"
       className="p-button-rounded p-button-info"
       onClick={() => onViewDetails(rowData)}
     />
   );
-
   return (
     <div className="flex items-center justify-center min-h-screen p-2 bg-gray-50">
        <Toast ref={toast} />
@@ -530,7 +447,6 @@ const TableMTR: React.FC = () => {
                 label="Salvar"
                 icon="pi pi-save"
                 className="p-button-success"
-                onClick={onSave}
               />
             ) : (
               <Button
@@ -544,7 +460,8 @@ const TableMTR: React.FC = () => {
               label="Excluir"
               icon="pi pi-trash"
               className="p-button-danger"
-              onClick={onDelete}
+              onClick={() => handleDelete(selectedRow?.id || 0)}
+              
             />
             <Button
               label="Fechar"

@@ -1,18 +1,19 @@
- // src/components/CadastroMTR/index.ts
- import { supabase } from "../../services/supabase";
-
- export async function fetchTransportadoras() {
-   const { data, error } = await supabase.from("baseTransport").select("id, name");
-
-   if (error) {
-     console.error("Error fetching transportadoras:", error);
-     return [];
-   }
-   const transportadoras = data.map((transportadora) => ({
-     code: transportadora.id,
-     value: transportadora.name,
-   }));
-   return transportadoras;
- }
-
- 
+// src/components/CadastroMTR/types.ts
+export interface MTRData {
+  id: number;
+  mtr: string;
+  situacao: string;
+  responsavelemissao: string;
+  gerador: string;
+  transportadornome: string;
+  quantidaderecebida: string;
+  dataemissao: string;
+  geradorunidade: string;
+  transportadoraunidade: string;
+  transportadorunidade: string;
+  cdfnumero: string;
+  classe: string;
+  tipomanifesto: string;
+  tratamento: string;
+  unidade: string;  
+}
