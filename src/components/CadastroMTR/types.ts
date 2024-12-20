@@ -8,7 +8,11 @@
      console.error("Error fetching transportadoras:", error);
      return [];
    }
-
-   return data.map((t) => ({ code: t.id, value: t.name })); 
+   const transportadoras = data.map((transportadora) => ({
+     code: transportadora.id,
+     value: transportadora.name,
+   }));
+   return transportadoras;
  }
+
  
