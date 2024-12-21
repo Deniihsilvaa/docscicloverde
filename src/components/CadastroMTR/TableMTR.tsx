@@ -9,19 +9,29 @@ import { Sidebar } from "primereact/sidebar";
 import { Calendar } from "primereact/calendar";
 import { Toast } from "primereact/toast";
 import { Card } from "primereact/card";
-import { fetchData, searchMTRs, onDelete, onSalvUrl ,onDeleteUrl} from "./utils";
+import CpImport from "../CadastroMTR/CpImport";
+
+import {
+  fetchData,
+  searchMTRs,
+  onDelete,
+  onSalvUrl,
+  onDeleteUrl,
+} from "./utils";
 import { MTRData } from "./types";
 
 const TableMTR: React.FC = () => {
   const [mtrData, setMtrData] = useState<MTRData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [viewSidebar, setViewSidebar] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [importData, setImportData] = useState<boolean>(false);
+  const [dialogVisible, setDialogVisible] = useState<boolean>(false);
   const [selectedRow, setSelectedRow] = useState<MTRData | null>(null);
   const [search, setSearch] = useState<string>("");
   const [dateStart, setDateStart] = useState<Date | null>(null);
   const [dateEnd, setDateEnd] = useState<Date | null>(null);
   const [selectSituacao, setSelectSituacao] = useState<string | null>(null);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
   const [manifestoTypes] = useState<string[]>(["Recebido", "Salvo"]);
   const [urlArquivo, setUrlArquivo] = useState<string>("");
   const toast = useRef<Toast>(null);
@@ -44,6 +54,10 @@ const TableMTR: React.FC = () => {
   useEffect(() => {
     loadMTRData();
   }, []);
+
+  useEffect(() => {
+    setImportData(false);
+  }, [importData]);
 
   const handleSearch = async () => {
     setLoading(true);
@@ -90,7 +104,6 @@ const TableMTR: React.FC = () => {
       });
     }
   };
-  //salvar url de arquivo
   const InputTextTemplate = () => {
     return (
       <div className="flex gap-3 card flex-column md:flex-row">
@@ -157,6 +170,7 @@ const TableMTR: React.FC = () => {
       });
     }
   };
+
   const actionTemplate = (rowData: MTRData): JSX.Element => (
     <Button
       icon="pi pi-eye"
@@ -164,7 +178,6 @@ const TableMTR: React.FC = () => {
       onClick={() => onViewDetails(rowData)}
     />
   );
-  //icone de abrir pdf se tiver url mostrar icone se nao mostar icone traçado
   const iconTemplate = (rowData: MTRData): JSX.Element => {
     if (rowData.url) {
       return (
@@ -189,7 +202,6 @@ const TableMTR: React.FC = () => {
       );
     }
   };
-  //deletar url
   const deleteIconTemplate = (rowData: MTRData): JSX.Element => {
     const handleDeleteUrl = async () => {
       try {
@@ -200,8 +212,8 @@ const TableMTR: React.FC = () => {
           detail: "URL excluída com sucesso",
           life: 5000,
         });
-        loadMTRData(); // Atualiza os dados
-        setViewSidebar(false); // Fecha a sidebar
+        loadMTRData();
+        setViewSidebar(false);
       } catch (error) {
         toast.current?.show({
           severity: "error",
@@ -211,12 +223,18 @@ const TableMTR: React.FC = () => {
         });
       }
     };
-  
+
     return (
-      <button onClick={handleDeleteUrl}>Excluir</button> // O botão ou ícone para disparar a exclusão
+      <button onClick={handleDeleteUrl} disabled={!isEditing}>
+        Excluir
+      </button>
     );
   };
-  
+  const handleOpenImport = () => {
+    console.log("Abrindo import");
+    setDialogVisible(true);
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen p-2 bg-gray-50">
       <Toast ref={toast} />
@@ -262,8 +280,11 @@ const TableMTR: React.FC = () => {
                 placeholder="Selecione uma situação"
               />
             </div>
-            <div className="flex-1">
+            <div className="flex">
               <Button label="Buscar" onClick={handleSearch} />
+            </div>
+            <div className="flex">
+              <Button label="Importa" onClick={handleOpenImport} />
             </div>
           </div>
         </Card>
@@ -286,12 +307,7 @@ const TableMTR: React.FC = () => {
             header="Data Emissão"
             style={{ width: "15%" }}
           />
-          <Column
-            field="url"
-            header="url"
-            body={iconTemplate}
-            style={{ width: "15%" }}
-          />
+          <Column field="url" header="" body={iconTemplate} />
           <Column
             field="mtr"
             header="MTR"
@@ -578,6 +594,17 @@ const TableMTR: React.FC = () => {
             />
           </div>
         </Sidebar>
+
+          <CpImport
+            dialogVisible={dialogVisible}
+            setDialogVisible={() => setDialogVisible(false)}
+            onFileProcessed={(data) => {
+              console.log("Importado:", data);
+              setDialogVisible(false);
+              loadMTRData();
+            }}
+          />
+       
       </div>
     </div>
   );
