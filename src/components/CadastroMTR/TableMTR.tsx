@@ -1,68 +1,67 @@
- // src/components/CadastroMTR/TableMTR.tsx
- import React, { useEffect, useState, useRef } from "react";
- import { DataTable } from "primereact/datatable";
- import { Column } from "primereact/column";
- import { InputText } from "primereact/inputtext";
- import { Dropdown } from "primereact/dropdown";
- import { Button } from "primereact/button";
- import { Sidebar } from "primereact/sidebar";
- import { Calendar } from "primereact/calendar";
- import { Toast } from "primereact/toast";
- import { Card } from "primereact/card";
- import { fetchData, searchMTRs,onDelete } from "./utils";
- import { MTRData } from "./types";
- 
- const TableMTR: React.FC = () => {
-   const [mtrData, setMtrData] = useState<MTRData[]>([]);
-   const [loading, setLoading] = useState<boolean>(true);
-   const [viewSidebar, setViewSidebar] = useState<boolean>(false);
-   const [selectedRow, setSelectedRow] = useState<MTRData | null>(null);
-   const [search, setSearch] = useState<string>("");
-   const [dateStart, setDateStart] = useState<Date | null>(null);
-   const [dateEnd, setDateEnd] = useState<Date | null>(null);
-   const [selectSituacao, setSelectSituacao] = useState<string | null>(null);
-   const [isEditing, setIsEditing] = useState<boolean>(false);
-   const [deleteId, setDeleteId] = useState<string>("");
-   const [manifestoTypes] = useState<string[]>(["Recebido", "Salvo"]);
+// src/components/CadastroMTR/TableMTR.tsx
+import React, { useEffect, useState, useRef } from "react";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import { InputText } from "primereact/inputtext";
+import { Dropdown } from "primereact/dropdown";
+import { Button } from "primereact/button";
+import { Sidebar } from "primereact/sidebar";
+import { Calendar } from "primereact/calendar";
+import { Toast } from "primereact/toast";
+import { Card } from "primereact/card";
+import { fetchData, searchMTRs, onDelete, onSalvUrl ,onDeleteUrl} from "./utils";
+import { MTRData } from "./types";
 
-   const toast = useRef<Toast>(null);
- 
-   const loadMTRData = async () => {
-     try {
-       const data = await fetchData();
-       setMtrData(data);
-     } catch (error) {
-       toast.current?.show({
-         severity: "error",
-         summary: "Erro",
-         detail: (error as Error).message,
-         life: 5000,
-       });
-     } finally {
-       setLoading(false);
-     }
-   };
-   useEffect(() => {
-     loadMTRData();
-   }, []);
- 
-   const handleSearch = async () => {
-     setLoading(true);
-     try {
-       const data = await searchMTRs(search, dateStart, dateEnd, selectSituacao);
-       setMtrData(data);
-     } catch (error) {
-       toast.current?.show({
-         severity: "error",
-         summary: "Erro",
-         detail: (error as Error).message,
-         life: 5000,
-       });
-     } finally {
-       setLoading(false);
-     }
-   };
-   const handleDelete = async (id: number) => {
+const TableMTR: React.FC = () => {
+  const [mtrData, setMtrData] = useState<MTRData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [viewSidebar, setViewSidebar] = useState<boolean>(false);
+  const [selectedRow, setSelectedRow] = useState<MTRData | null>(null);
+  const [search, setSearch] = useState<string>("");
+  const [dateStart, setDateStart] = useState<Date | null>(null);
+  const [dateEnd, setDateEnd] = useState<Date | null>(null);
+  const [selectSituacao, setSelectSituacao] = useState<string | null>(null);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [manifestoTypes] = useState<string[]>(["Recebido", "Salvo"]);
+  const [urlArquivo, setUrlArquivo] = useState<string>("");
+  const toast = useRef<Toast>(null);
+
+  const loadMTRData = async () => {
+    try {
+      const data = await fetchData();
+      setMtrData(data);
+    } catch (error) {
+      toast.current?.show({
+        severity: "error",
+        summary: "Erro",
+        detail: (error as Error).message,
+        life: 5000,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    loadMTRData();
+  }, []);
+
+  const handleSearch = async () => {
+    setLoading(true);
+    try {
+      const data = await searchMTRs(search, dateStart, dateEnd, selectSituacao);
+      setMtrData(data);
+    } catch (error) {
+      toast.current?.show({
+        severity: "error",
+        summary: "Erro",
+        detail: (error as Error).message,
+        life: 5000,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleDelete = async (id: number) => {
     if (!id) {
       toast.current?.show({
         severity: "warn",
@@ -91,32 +90,136 @@
       });
     }
   };
-  
- 
-   const onViewDetails = (rowData: MTRData): void => {
-      if (rowData) {
-        setSelectedRow(rowData);
-        setViewSidebar(true);
-      }else {
+  //salvar url de arquivo
+  const InputTextTemplate = () => {
+    return (
+      <div className="flex gap-3 card flex-column md:flex-row">
+        <div className="flex-1 p-inputgroup">
+          <InputText
+            placeholder="insira o link do arquivo"
+            value={selectedRow?.id ? selectedRow.url : urlArquivo}
+            onChange={(e) => setUrlArquivo(e.target.value)}
+            disabled={!isEditing}
+          />
+          <Button
+            icon="pi pi-check"
+            className="p-button-success"
+            onClick={handleSaveurl}
+            disabled={!isEditing}
+          />
+        </div>
+        {selectedRow?.id ? iconTemplate(selectedRow) : null}
+        {selectedRow?.id ? deleteIconTemplate(selectedRow) : null}
+      </div>
+    );
+  };
+  const handleSaveurl = async () => {
+    try {
+      if (urlArquivo && selectedRow?.id) {
+        await onSalvUrl(urlArquivo, selectedRow?.id || 0);
+        toast.current?.show({
+          severity: "success",
+          summary: "Sucesso",
+          detail: "Url salva com sucesso",
+          life: 5000,
+        });
+        loadMTRData();
+        setViewSidebar(false);
+        setUrlArquivo("");
+      } else {
         toast.current?.show({
           severity: "error",
           summary: "Erro",
-          detail: "Nenhuma linha selecionada",
+          detail: "Insira uma url",
           life: 5000,
-            
         });
       }
-   };
-   const actionTemplate = (rowData: MTRData): JSX.Element => (
+    } catch (error) {
+      toast.current?.show({
+        severity: "error",
+        summary: "Erro",
+        detail: (error as Error).message,
+        life: 5000,
+      });
+    }
+  };
+
+  const onViewDetails = (rowData: MTRData): void => {
+    if (rowData) {
+      setSelectedRow(rowData);
+      setViewSidebar(true);
+    } else {
+      toast.current?.show({
+        severity: "error",
+        summary: "Erro",
+        detail: "Nenhuma linha selecionada",
+        life: 5000,
+      });
+    }
+  };
+  const actionTemplate = (rowData: MTRData): JSX.Element => (
     <Button
       icon="pi pi-eye"
       className="p-button-rounded p-button-info"
       onClick={() => onViewDetails(rowData)}
     />
   );
+  //icone de abrir pdf se tiver url mostrar icone se nao mostar icone traçado
+  const iconTemplate = (rowData: MTRData): JSX.Element => {
+    if (rowData.url) {
+      return (
+        <a
+          href={rowData.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Abrir PDF"
+        >
+          <Button
+            icon="pi pi-file-pdf"
+            className="p-button-rounded p-button-info"
+          />
+        </a>
+      );
+    } else {
+      return (
+        <Button
+          className="bg-gray-300 border-0"
+          icon="pi pi-exclamation-circle"
+        />
+      );
+    }
+  };
+  //deletar url
+  const deleteIconTemplate = (rowData: MTRData): JSX.Element => {
+    const handleDeleteUrl = async () => {
+      try {
+        await onDeleteUrl(rowData.id); // Chama a função para excluir a URL
+        toast.current?.show({
+          severity: "success",
+          summary: "Sucesso",
+          detail: "URL excluída com sucesso",
+          life: 5000,
+        });
+        loadMTRData(); // Atualiza os dados
+        setViewSidebar(false); // Fecha a sidebar
+      } catch (error) {
+        toast.current?.show({
+          severity: "error",
+          summary: "Erro",
+          detail: (error as Error).message,
+          life: 5000,
+        });
+      }
+    };
+  
+    return (
+      <button onClick={handleDeleteUrl}>Excluir</button> // O botão ou ícone para disparar a exclusão
+    );
+  };
+  
   return (
     <div className="flex items-center justify-center min-h-screen p-2 bg-gray-50">
-       <Toast ref={toast} />
+      <Toast ref={toast} />
       <div className="container">
         <Card title="Cadastro de MTR">
           <div className="flex gap-3 card flex-column md:flex-row">
@@ -184,6 +287,12 @@
             style={{ width: "15%" }}
           />
           <Column
+            field="url"
+            header="url"
+            body={iconTemplate}
+            style={{ width: "15%" }}
+          />
+          <Column
             field="mtr"
             header="MTR"
             style={{ width: "15%" }}
@@ -225,7 +334,7 @@
           onHide={() => setViewSidebar(false)}
           className="p-sidebar-lg"
           position="right"
-          header="Detalhes da MTR"
+          header={<span>Detalhes da MTR {InputTextTemplate()}</span>}
         >
           {selectedRow && (
             <div className="grid p-fluid">
@@ -329,7 +438,6 @@
                   }
                   disabled={!isEditing}
                 />
-
               </div>
 
               {/* Transportador Unidade */}
@@ -461,7 +569,6 @@
               icon="pi pi-trash"
               className="p-button-danger"
               onClick={() => handleDelete(selectedRow?.id || 0)}
-              
             />
             <Button
               label="Fechar"

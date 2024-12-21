@@ -16,4 +16,5 @@ export interface MTRData {
   tipomanifesto: string;
   tratamento: string;
   unidade: string;  
+  url: string;
 }

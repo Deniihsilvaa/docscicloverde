@@ -42,3 +42,13 @@ export const onDelete = async (id: number) => {
   const { error } = await supabase.from("baseMtr").delete().eq("id", id);
   if (error) throw error;
 };
+
+export const onSalvUrl = async (url: string, id: number) => {
+  const { error } = await supabase.from("baseMtr").update({ url }).eq("id", id);
+  if (error) throw error;
+}
+// exlcuir url
+export const onDeleteUrl = async (id: number) => {
+  const { error } = await supabase.from("baseMtr").update({ url: null }).eq("id", id);
+  if (error) throw error;
+}
