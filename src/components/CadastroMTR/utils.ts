@@ -52,3 +52,60 @@ export const onDeleteUrl = async (id: number) => {
   const { error } = await supabase.from("baseMtr").update({ url: null }).eq("id", id);
   if (error) throw error;
 }
+export const salvarDadosNoSupabase = async (tableData: any) => {
+  try {
+    if (!tableData || tableData.length === 0) {
+      return {
+        a: "Tabela Vazia",
+      };
+    };
+    // 1. Consulta os MTRs já existentes
+    const { data: existingMtrs, error: fetchError } = await supabase
+      .from('baseMtr')
+      .select('mtr');
+
+    if (fetchError) {
+      console.error('Erro ao buscar MTRs existentes:', fetchError);
+      return null;
+    }
+
+    // 2. Extrai os valores de MTR que já existem no Supabase
+    const existingMtrSet = new Set(existingMtrs.map((item: any) => item.mtr));
+
+    // 3. Filtra os registros que já existem (duplicados)
+    const registrosDuplicados = tableData.filter((row: any) =>
+      existingMtrSet.has(row.mtr)
+    );
+
+    // 4. Filtra registros que ainda não estão no Supabase
+    const novosRegistros = tableData.filter(
+      (row: any) => !existingMtrSet.has(row.mtr)
+    );
+
+    // 5. Insere apenas os registros novos
+    if (novosRegistros.length > 0) {
+      const { error: insertError } = await supabase
+        .from('baseMtr')
+        .insert(novosRegistros);
+
+
+        console.log("dados inseridos",novosRegistros)
+      if (insertError) {
+        console.error('Erro ao salvar dados no Supabase:', insertError);
+        return null;
+      }
+    }
+
+    // 6. Retorna os registros duplicados (ou true se não houver duplicados)
+    if (registrosDuplicados.length > 0) {
+      return {
+        d: registrosDuplicados,
+      };
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Erro geral no processo de salvamento:', error);
+    return null;
+  }
+};

@@ -231,7 +231,6 @@ const TableMTR: React.FC = () => {
     );
   };
   const handleOpenImport = () => {
-    console.log("Abrindo import");
     setDialogVisible(true);
   };
 
@@ -598,8 +597,7 @@ const TableMTR: React.FC = () => {
           <CpImport
             dialogVisible={dialogVisible}
             setDialogVisible={() => setDialogVisible(false)}
-            onFileProcessed={(data) => {
-              console.log("Importado:", data);
+            onFileProcessed={() => {
               setDialogVisible(false);
               loadMTRData();
             }}
