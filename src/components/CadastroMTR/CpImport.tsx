@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Dialog } from "primereact/dialog";
+import { Toast } from "primereact/toast";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Stepper } from "primereact/stepper";
@@ -28,7 +29,8 @@ const CpImport: React.FC<CpImportProps> = ({
   const [tableData, setTableData] = useState<any[]>([""]);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [totalRecords, setTotalRecords] = useState(0);
-
+  const toast = useRef<Toast>(null);
+   
   const requiredColumns = [
     "mtr", "tipomanifesto", "responsavelemissao", "gerador", 
     "geradorunidade", "geradorcnpjcpf", "transportadornome",
@@ -51,6 +53,12 @@ const CpImport: React.FC<CpImportProps> = ({
     if (uploadedFile) {
       setFile(uploadedFile);
       processFile(uploadedFile);
+      toast.current?.show({
+        severity: "success",
+        summary: "Sucesso",
+        detail: "Arquivo processado com sucesso",
+        life: 5000,
+      })
     }
   };
 
@@ -87,6 +95,7 @@ const CpImport: React.FC<CpImportProps> = ({
       }
 
       setTableData(sheet);
+      setTotalRecords(sheet.length);
       onFileProcessed(sheet);
     };
     reader.readAsBinaryString(file);
@@ -100,7 +109,7 @@ const CpImport: React.FC<CpImportProps> = ({
 
   const renderTable = () => (
     <div className="table-container">
-      <div className="p-2 text-sm">
+      <div className="p-2 ">
       {selectedRows.length > 0 && (
         <Button
           icon="pi pi-trash"
@@ -119,6 +128,12 @@ const CpImport: React.FC<CpImportProps> = ({
         selection={selectedRows}
         onSelectionChange={(e) => setSelectedRows(e.value)}
         dataKey="MTR"
+        responsiveLayout="scroll"
+        scrollHeight="300px"
+        className="font-normal p-datatable-sm"
+        header="MTRS IMPORTADO"
+        rowGroupMode="single"
+        
       >
         <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
         {requiredColumns.map((col) => (
@@ -131,6 +146,7 @@ const CpImport: React.FC<CpImportProps> = ({
 
   return (
     <div className="flex card justify-content-center">
+      <Toast ref={toast} position="top-center" />
       <Dialog
         header="Importar MTR"
         visible={dialogVisible}
@@ -151,10 +167,12 @@ const CpImport: React.FC<CpImportProps> = ({
             <Button label="Importar" onClick={() => stepperRef.current.nextCallback()} disabled={!file} />
           </StepperPanel>
           <StepperPanel header="Visualizar Dados">
+            <h3>TOTAL DE REGISTROS: {totalRecords}</h3>
             {tableData.length > 0 ? renderTable() : <p>Nenhum dado disponível.</p>}
             <div className="p-d-flex p-jc-between p-mt-4">
               <Button label="Voltar" onClick={() => stepperRef.current.prevCallback()} />
               <Button label="Próximo" onClick={() => stepperRef.current.nextCallback()} />
+                <Button label="Limpar" onClick={()=> setTableData([])} />
             </div>
           </StepperPanel>
         </Stepper>
