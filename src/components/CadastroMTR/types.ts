@@ -18,3 +18,10 @@ export interface MTRData {
   unidade: string;  
   url: string;
 }
+interface PlanilhaRow {
+  MTR: string;
+  tipomanifesto?: string;
+  responsavelemissao?: string;
+  gerador?: string;
+  // Adicione mais campos conforme necessário...
+}
