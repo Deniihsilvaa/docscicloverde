@@ -20,6 +20,7 @@ import PainelFinanceiro from "../components/Users/PainelFinanceiro/PainelFinance
 import NotUse from "../pages/v2.jsx";
 import UserRegistrationForm from "../components/CadastroPessoas/UserRegistrationForm.tsx";
 import TableMTR from "../components/CadastroMTR/TableMTR.tsx";
+import DashBoardRequest from "../components/PainelRequest/DashBoardRequest.tsx";
 
 const Rota = () => {
   const { user } = useAuth(); // Obtém o papel do usuário logado
@@ -50,7 +51,7 @@ const Rota = () => {
         <Route path="user/painel" element={<PainelRegistro />} />
         <Route path="user/financeiro" element={<PainelFinanceiro />} />
         <Route path="mtr" element={<TableMTR />} />
-
+        <Route path="request" element={<DashBoardRequest />} />
       </Route>
 
       {/* Rotas protegidas para Operacional */}
