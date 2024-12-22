@@ -31,51 +31,64 @@ const DashBoardRequest: React.FC = () => {
   };
 
   return (
-    <div className="container">
-      <div className="text-2xl font-bold header w-100">
-        Formulário de Solicitação Request
-      </div>
-      <Card title="Solicitacao">
-        <Toast ref={toast} />
-        <div className="p-4">
-          <div className="m-4">
-            <Button
-              label="Folha de solicitação"
-              onClick={() => setDialogVisible(true)}
-            />
-          </div>
-          <div className="m-4">
-            <Button
-              label="Request Diario..."
-              onClick={() => setDialogVisibleProducts(true)}
-            />
-          </div>
+<div className="container p-8 mx-auto">
+            <div className="mb-8 text-2xl font-bold text-center">
+                Formulário de Solicitação Request
+            </div>
+            <div className="grid grid-cols-3 gap-6">
+                <div className="col-span-1">
+                    <Card title="Solicitacao">
+                        <Toast ref={toast} />
+                        <div className="p-4">
+                            <div className="m-4">
+                                <Button
+                                    label="Folha de solicitação"
+                                    onClick={() => setDialogVisible(true)}
+                                />
+                            </div>
+                            <div className="m-4">
+                                <Button
+                                    label="Request Diario..."
+                                    onClick={() => setDialogVisibleProducts(true)}
+                                />
+                            </div>
+                        </div>
+
+                        <Dialog
+                            header="Folha de solicitação"
+                            visible={dialogVisible}
+                            style={{ width: '70vw', height: '79vh' }}
+                            onHide={() => setDialogVisible(false)}
+                        >
+                            <div className="contents shadow-neutral-400">
+                                <FormRequest onSubmit={handleSubmit} />
+                            </div>
+                        </Dialog>
+
+                        <Dialog
+                            header="Request Diario..."
+                            visible={dialogVisibleProducts}
+                            style={{ width: '70vw', height: '79vh' }}
+                            onHide={() => setDialogVisibleProducts(false)}
+                        >
+                            <div className="contents shadow-neutral-400">
+                                <FormRequestProduto onSubmit={handleSubmit} />
+                            </div>
+                        </Dialog>
+                    </Card>
+                </div>
+                <div className="col-span-2">
+                    <Card title="Tabela">
+                        <div className="p-6">
+                            {/* Conteúdo da tabela aqui */}
+                        </div>
+                    </Card>
+                </div>
+            </div>
         </div>
+    );
 
-        <Dialog
-          header="Folha de solicitação"
-          visible={dialogVisible}
-          style={{ width: "70vw", height: "79vh" }}
-          onHide={() => setDialogVisible(false)}
-        >
-          <div className="contents shadow-neutral-400">
-            <FormRequest onSubmit={handleSubmit} />
-          </div>
-        </Dialog>
-
-        <Dialog
-          header="Request Diario..."
-          visible={dialogVisibleProducts}
-          style={{ width: "70vw", height: "79vh" }}
-          onHide={() => setDialogVisibleProducts(false)}
-        >
-          <div className="contents shadow-neutral-400">
-            <FormRequestProduto onSubmit={handleSubmit} />
-          </div>
-        </Dialog>
-      </Card>
-    </div>
-  );
+ 
 };
 
 export default DashBoardRequest;

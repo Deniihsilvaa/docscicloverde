@@ -20,7 +20,7 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
   },
   storage: {
     params: {
-      cacheControl: "3600", // Define o cache control para 1 hora
+      cacheControl: "3600",
     },
   },
 });

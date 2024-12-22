@@ -22,8 +22,10 @@ import UserRegistrationForm from "../components/CadastroPessoas/UserRegistration
 import TableMTR from "../components/CadastroMTR/TableMTR.tsx";
 import DashBoardRequest from "../components/PainelRequest/DashBoardRequest.tsx";
 
+
 const Rota = () => {
   const { user } = useAuth(); // Obtém o papel do usuário logado
+
   return (
     <Routes>
       {/* Rota de Login */}

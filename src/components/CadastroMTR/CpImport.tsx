@@ -173,7 +173,6 @@ const CpImport: React.FC<CpImportProps> = ({
   };
   const handleSave = async (tableData: any) => {
     const resultado = await salvarDadosNoSupabase(tableData);
-    console.log(resultado);
     if (resultado && typeof resultado === "object" && resultado.d) {
       toast.current?.show({
         severity: "warn",
@@ -182,6 +181,7 @@ const CpImport: React.FC<CpImportProps> = ({
         life: 5000,
       });
     }
+    
     if (resultado && typeof resultado === "object" && resultado.a) {
       toast.current?.show({
         severity: "error",
@@ -242,7 +242,7 @@ const CpImport: React.FC<CpImportProps> = ({
       </div>
     </div>
   );
-
+  
   return (
     <div className="flex card justify-content-center">
       <Toast ref={toast} position="top-center" />
