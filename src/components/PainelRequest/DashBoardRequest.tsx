@@ -31,22 +31,22 @@ const DashBoardRequest: React.FC = () => {
   };
 
   return (
-<div className="container p-8 mx-auto">
-            <div className="mb-8 text-2xl font-bold text-center">
-                Formulário de Solicitação Request
-            </div>
+<div className="container p-1 mx-auto">
             <div className="grid grid-cols-3 gap-6">
                 <div className="col-span-1">
+            <div className="mb-4 text-2xl font-bold text-center header">
+                Formulário de Solicitação Request
+            </div>
                     <Card title="Solicitacao">
                         <Toast ref={toast} />
-                        <div className="p-4">
-                            <div className="m-4">
+                        <div className="grid grid-cols-2">
+                            <div className="m-2 ">
                                 <Button
                                     label="Folha de solicitação"
                                     onClick={() => setDialogVisible(true)}
                                 />
                             </div>
-                            <div className="m-4">
+                            <div className="m-2 ">
                                 <Button
                                     label="Request Diario..."
                                     onClick={() => setDialogVisibleProducts(true)}
@@ -78,6 +78,9 @@ const DashBoardRequest: React.FC = () => {
                     </Card>
                 </div>
                 <div className="col-span-2">
+                <div className="mb-4 text-2xl font-bold text-center header">
+                Dados 
+            </div>
                     <Card title="Tabela">
                         <div className="p-6">
                             {/* Conteúdo da tabela aqui */}
