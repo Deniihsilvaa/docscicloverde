@@ -29,7 +29,8 @@ export const searchMTRs = async (
   }
 
   if (selectSituacao) {
-    query = query.eq("situacao", selectSituacao);
+    console.log("util:selectSituacao", selectSituacao)
+      query = query.eq("situacao", selectSituacao);
   }
 
   const { data, error } = await query;

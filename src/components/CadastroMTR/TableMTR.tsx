@@ -172,11 +172,13 @@ const TableMTR: React.FC = () => {
   };
 
   const actionTemplate = (rowData: MTRData): JSX.Element => (
-    <Button
-      icon="pi pi-eye"
-      className="p-button-rounded p-button-info"
-      onClick={() => onViewDetails(rowData)}
-    />
+    <div className="content-start shadow-neutral-950">
+        <Button
+            icon="pi pi-pencil"
+            className="flex ml-4 p-button-text p-button-sm"
+            onClick={() => onViewDetails(rowData)}
+          />
+    </div>
   );
   const iconTemplate = (rowData: MTRData): JSX.Element => {
     if (rowData.url) {
@@ -271,7 +273,7 @@ const TableMTR: React.FC = () => {
               <Dropdown
                 value={selectSituacao}
                 options={[
-                  { label: "Todos", value: "" },
+                  { label: "Todos", value: null },
                   { label: "Recebido", value: "Recebido" },
                   { label: "Salvo", value: "salvo" },
                 ]}
@@ -339,8 +341,8 @@ const TableMTR: React.FC = () => {
           />
           <Column
             body={actionTemplate}
-            header="Ações"
-            style={{ width: "10%" }}
+            header=""
+            style={{width:"5%",justifyContent: "center"}}
           />
         </DataTable>
 
