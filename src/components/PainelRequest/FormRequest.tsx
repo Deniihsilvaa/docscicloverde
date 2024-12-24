@@ -72,7 +72,7 @@ export const FormRequest: React.FC<FormRequestProps> = ({ onSubmit }) => {
       <form onSubmit={handleSubmit} className="grid grid-cols-3 gap-4">
         <Stepper ref={stepperRef} linear={true}>
           <StepperPanel header="Dados Emitente">
-            <div className="col-span-1">
+            <div className="col-span-1 p-2">
               <label htmlFor="email">Email</label>
               <InputText
                 id="email"
@@ -83,7 +83,7 @@ export const FormRequest: React.FC<FormRequestProps> = ({ onSubmit }) => {
                 className="w-full"
               />
             </div>
-            <div className="col-span-1">
+            <div className="col-span-1 p-2">
               <label htmlFor="razaoSocial">Razão Social</label>
               <InputText
                 id="razaoSocial"
@@ -94,7 +94,7 @@ export const FormRequest: React.FC<FormRequestProps> = ({ onSubmit }) => {
                 className="w-full"
               />
             </div>
-            <div className="col-span-1">
+            <div className="col-span-1 p-2">
               <label htmlFor="cnpj">CNPJ</label>
               <InputText
                 id="cnpj"
@@ -111,7 +111,7 @@ export const FormRequest: React.FC<FormRequestProps> = ({ onSubmit }) => {
             />
           </StepperPanel>
           <StepperPanel header="Dados do Request">
-            <div className="col-span-1">
+            <div className="col-span-1 p-2">
               <label htmlFor="os">OS Comprador</label>
               <InputText
                 id="os"
@@ -123,7 +123,7 @@ export const FormRequest: React.FC<FormRequestProps> = ({ onSubmit }) => {
               />
             </div>
 
-            <div className="col-span-1">
+            <div className="col-span-1 p-2">
               <label htmlFor="numeroRelatorio">Número Relatório</label>
               <InputText
                 id="numeroRelatorio"
@@ -135,7 +135,7 @@ export const FormRequest: React.FC<FormRequestProps> = ({ onSubmit }) => {
               />
             </div>
 
-            <div className="col-span-1">
+            <div className="col-span-1 p-2">
               <label htmlFor="dataFinalizacao">Data Finalização</label>
               <Calendar
                 id="dataFinalizacao"
@@ -147,7 +147,7 @@ export const FormRequest: React.FC<FormRequestProps> = ({ onSubmit }) => {
                 className="w-full"
               />
             </div>
-            <div className="col-span-1">
+            <div className="col-span-1 p-2">
               <label htmlFor="valorFaturado">Valor Faturado</label>
               <InputNumber
                 id="valorFaturado"
@@ -173,7 +173,7 @@ export const FormRequest: React.FC<FormRequestProps> = ({ onSubmit }) => {
             />
           </StepperPanel>
           <StepperPanel header="Conclusão">
-            <div className="col-span-1">
+            <div className="col-span-1 p-2">
               <label htmlFor="solicitante">Solicitante</label>
               <InputText
                 id="solicitante"
@@ -185,7 +185,7 @@ export const FormRequest: React.FC<FormRequestProps> = ({ onSubmit }) => {
               />
             </div>
 
-            <div className="col-span-1">
+            <div className="col-span-1 p-2">
               <label htmlFor="comprador">Comprador</label>
               <InputText
                 id="comprador"
@@ -196,7 +196,7 @@ export const FormRequest: React.FC<FormRequestProps> = ({ onSubmit }) => {
                 className="w-full"
               />
             </div>
-            <div className="col-span-1">
+            <div className="col-span-1 p-2">
               <label htmlFor="comprador">Url do request</label>
               <InputText
                 id="urlsRequest"
@@ -207,7 +207,7 @@ export const FormRequest: React.FC<FormRequestProps> = ({ onSubmit }) => {
                 className="w-full"
               />
             </div>
-            <div className="col-span-1">
+            <div className="col-span-1 p-2">
               <label htmlFor="comprador">Status do request</label>
               <InputText
                 id="statusRequest"
