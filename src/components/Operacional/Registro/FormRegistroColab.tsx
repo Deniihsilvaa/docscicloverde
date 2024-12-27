@@ -15,10 +15,18 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
   const estadosCivis = ["Solteiro", "Casado", "Divorciado", "Viúvo"];
   const departamentos = ["RH", "TI", "Financeiro", "Operacional"];
   const cargos = ["Analista", "Gerente", "Assistente", "Técnico"];
+  const status = [
+    { label: "Ativo", value: true },
+    { label: "Inativo", value: false },
+  ];
   const stepperRef = useRef<any>(null);
 
   const [formRGData, setFormData] = useState<FormDataProsp>({
     onSubmit: () => handleSubmit,
+    state: {
+      label: initialValues.state === true ? "Ativo" : "Inativo",
+      value: initialValues.state,
+    },
     nome: initialValues.nome || "",
     cpf: initialValues.cpf || "",
     rg: initialValues.rg || "",
@@ -216,6 +224,7 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
                     placeholder="Digite o número"
                   />
                 </div>
+                
               </div>
             </fieldset>
             <Button
@@ -284,7 +293,23 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
                     placeholder="Digite observações"
                   />
                 </div>
+                <div>
+                  <label className="block mb-1 text-gray-700">
+                    Status
+                  </label>
+                  <Dropdown
+                    name="loginUsuario"
+                    value={formRGData.state}
+                    className="w-full"
+                     onChange={(e)=> setFormData({...formRGData, state: e.value})}
+                    options={status}
+                    placeholder="Selecione"
+                  />
+                </div>
+                
               </div>
+
+              
             </fieldset>
             <div className="col-span-4 mt-4 text-right">
               <Button
@@ -298,6 +323,10 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
                 type="button"
               />
             </div>
+
+
+
+            
             <Button
               label="Voltar"
               onClick={() => stepperRef.current.prevCallback()}

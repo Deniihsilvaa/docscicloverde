@@ -15,7 +15,7 @@ export interface FormDataProsp {
   departamento?: string;
   cargo?: string;
   observacoes?: string;
-  state:string;
+  state:boolean;
 }
 
 export interface FormData {
@@ -33,7 +33,7 @@ export interface FormData {
   departamento?: string;
   cargo?: string;
   observacoes?: string;
-  state:string;
+  state:boolean;
 }
 
 export interface TableRegistroColabProps {

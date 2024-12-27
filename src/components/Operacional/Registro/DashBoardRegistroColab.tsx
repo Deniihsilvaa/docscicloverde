@@ -11,26 +11,25 @@ export default function Registro() {
   const toast = useRef<Toast>(null);
   const [dialogVisible, setDialogVisible] = useState<boolean>(false);
 
-  function handleSubmit(data:FormDataProsp) {
+  function handleSubmit(data: FormDataProsp) {
     console.log("Dados para salvar:", data);
   }
   return (
-    <div className="container">
+    <div className="container flex flex-col items-center justify-center min-h-screen mx-auto">
       <Toast ref={toast} position="top-right" />
-      <Card title="Colaboradores" className="w-full">
-      <div className="flex gap-3 card flex-column md:flex-row">
-        <Button
-          label="Registrar Colaborador"
-          onClick={() => setDialogVisible(true)}
-        />
-         </div>
-      </Card>
-      <Card
-      title="Tabela de Colaboradores"
-      >
-        
-        <DataTableColaboradores />
-      </Card>
+      <div className="justify-center">
+        <Card title="Colaboradores" className="w-full">
+          <div className="flex gap-3 card flex-column md:flex-row">
+            <Button
+              label="Registrar Colaborador"
+              onClick={() => setDialogVisible(true)}
+            />
+          </div>
+        </Card>
+        <Card title="Tabela de Colaboradores" className="mt-1">
+          <DataTableColaboradores />
+        </Card>
+      </div>
       <Dialog
         header="Registro de Colaborador"
         visible={dialogVisible}
@@ -38,12 +37,9 @@ export default function Registro() {
         onHide={() => setDialogVisible(false)}
       >
         <div className="contents shadow-neutral-400">
-          <FormRegistroColab 
-             onSubmit={handleSubmit}
-          />
+          <FormRegistroColab onSubmit={handleSubmit} />
         </div>
       </Dialog>
-
     </div>
   );
 }

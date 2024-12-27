@@ -54,7 +54,7 @@ const DataTableColaboradores = () => {
   };
 
   return (
-    <div>
+    <>
       <h3>
         Colaboradores Ativo: {quantidadeColaboradores} Total de Salarios:{" "}
         {totalSalario.toLocaleString("pt-BR", {
@@ -105,7 +105,7 @@ const DataTableColaboradores = () => {
           style={{ width: "100px" }}
         />
       </DataTable>
-    </div>
+    </>
   );
 };
 
