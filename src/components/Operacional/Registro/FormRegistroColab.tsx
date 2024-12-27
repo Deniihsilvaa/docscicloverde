@@ -3,12 +3,15 @@ import { InputMask } from "primereact/inputmask";
 import { Dropdown } from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
 import { Button } from "primereact/button";
-import React, { useState, useRef, ChangeEvent ,useEffect} from "react";
+import React, { useState, useRef, ChangeEvent, useEffect } from "react";
 import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
-import { FormDataProsp ,ExtractLogins} from "./types";
+import { FormDataProsp, ExtractLogins } from "./types";
+type FormRegistoColabProps = {
+  onSubmit: (data: FormDataProsp) => void; // Tipar a função onSubmit
+};
 
-const FormRegistroColab: React.FC<FormDataProsp> = ({
+const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
   onSubmit,
   ...initialValues
 }) => {
@@ -21,30 +24,29 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
   ];
   const stepperRef = useRef<any>(null);
   const [logins, SetLogins] = useState<{ label: string; value: any }[]>([]);
+
   const [formRGData, setFormData] = useState<FormDataProsp>({
-    onSubmit: () => handleSubmit,
-    state: {
-      label: initialValues.state === true ? "Ativo" : "Inativo",
-      value: initialValues.state,
-    },
-    loginUsuario: initialValues.loginUsuario || "",
-    nome: initialValues.nome || "",
-    cpf: initialValues.cpf || "",
-    rg: initialValues.rg || "",
-    dataNascimento: initialValues.dataNascimento || null,
-    estadoCivil: initialValues.estadoCivil || "",
-    endereco: initialValues.endereco || "",
-    telefone: initialValues.telefone || "",
-    salario: initialValues.salario || "",
-    dataAdmissao: initialValues.dataAdmissao || null,
-    carteiraTrabalho: initialValues.carteiraTrabalho || "",
-    pis: initialValues.pis || "",
-    departamento: initialValues.departamento || "",
-    cargo: initialValues.cargo || "",
-    observacoes: initialValues.observacoes || "",
+    state: "",
+     user_id: "",
+    nome: "",
+    cpf: "",
+    rg: "",
+    dataNascimento: null,
+    estadoCivil: "",
+    endereco: "",
+    telefone: "",
+    salario: "",
+    dataAdmissao: null,
+    carteiraTrabalho: "",
+    pis: "",
+    departamento: "",
+    cargo: "",
+    observacoes: "",
   });
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement >
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -53,11 +55,11 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
   };
 
 
+
   const handleSubmit = () => {
-    console.log("Dados de envio", formRGData);
     setFormData(formRGData);
 
-    // if (onSubmit) onSubmit(formRGData);  // Envia os dados preenchidos para o componente pai
+    if (onSubmit) onSubmit(formRGData); // Envia os dados preenchidos para o componente pai
   };
   const optionsLogins = async () => {
     try {
@@ -73,12 +75,10 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
       SetLogins([]); // Ou tratar de outra forma caso haja erro
     }
   };
-  
-  
+
   useEffect(() => {
     optionsLogins(); // Chama a função para preencher as opções
   }, []);
-  
 
   return (
     <div>
@@ -118,7 +118,7 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
                   <InputText
                     name="rg"
                     value={formRGData.rg}
-                    className="w-full" 
+                    className="w-full"
                     onChange={handleChange}
                     placeholder="Digite o RG"
                   />
@@ -130,8 +130,10 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
                   <Calendar
                     name="dataNascimento"
                     value={formRGData.dataNascimento}
-                    className="w-full" 
-                    onChange={handleChange}
+                    className="w-full"
+                    onChange={(e)=>{
+                      setFormData({...formRGData,dataNascimento: e.value})
+                    }}
                     dateFormat="dd/mm/yy"
                     placeholder="DD/MM/AAAA"
                   />
@@ -143,8 +145,8 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
                   <Dropdown
                     name="estadoCivil"
                     value={formRGData.estadoCivil}
-                    className="w-full" 
-                    onChange={handleChange}
+                    className="w-full"
+                    onChange={()=>handleChange}
                     options={estadosCivis}
                     placeholder="Selecione"
                   />
@@ -154,7 +156,7 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
                   <InputText
                     name="endereco"
                     value={formRGData.endereco}
-                    className="w-full" 
+                    className="w-full"
                     onChange={handleChange}
                     placeholder="Digite o endereço"
                   />
@@ -164,7 +166,7 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
                   <InputMask
                     name="telefone"
                     value={formRGData.telefone}
-                    className="w-full" 
+                    className="w-full"
                     onChange={handleChange}
                     mask="(99) 99999-9999"
                     placeholder="(00) 00000-0000"
@@ -189,7 +191,7 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
                   <InputText
                     name="salario"
                     value={formRGData.salario}
-                    className="w-full" 
+                    className="w-full"
                     onChange={handleChange}
                     placeholder="R$ 0,00"
                   />
@@ -201,9 +203,11 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
                   <Calendar
                     name="dataAdmissao"
                     value={formRGData.dataAdmissao}
-                    className="w-full" 
-                    onChange={handleChange}
-                    dateFormat="dd/mm/yy"
+                    className="w-full"
+                    onChange={(e) => 
+                      setFormData(({...formRGData,dataAdmissao: e.target.value}))
+                    }
+                    dateFormat="dd/mm/yy HH:mm:ss"
                     placeholder="DD/MM/AAAA"
                   />
                 </div>
@@ -232,7 +236,7 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
                     name="carteiraTrabalho"
                     value={formRGData.carteiraTrabalho}
                     className="w-full"
-                     onChange={handleChange}
+                    onChange={handleChange}
                     placeholder="Digite o número"
                   />
                 </div>
@@ -241,12 +245,11 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
                   <InputText
                     name="pis"
                     value={formRGData.pis}
-                    className="w-full" 
+                    className="w-full"
                     onChange={handleChange}
                     placeholder="Digite o número"
                   />
                 </div>
-                
               </div>
             </fieldset>
             <Button
@@ -274,7 +277,7 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
                     name="departamento"
                     value={formRGData.departamento}
                     className="w-full"
-                     onChange={handleChange}
+                    onChange={handleChange}
                     options={departamentos}
                     placeholder="Selecione"
                   />
@@ -285,7 +288,7 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
                     name="cargo"
                     value={formRGData.cargo}
                     className="w-full"
-                     onChange={handleChange}
+                    onChange={handleChange}
                     options={cargos}
                     placeholder="Selecione"
                   />
@@ -295,13 +298,15 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
                     Email de acesso ao sistema
                   </label>
                   <Dropdown
-                    name="loginUsuario"
-                    value={formRGData.loginUsuario}
+                    name=" user_id"
+                    value={formRGData. user_id}
+                    onChange={(e) => {
+                      setFormData({ ...formRGData, user_id: e.value });
+                    }}
                     className="w-full"
-                    onChange = {handleChange}
                     options={logins}
                     placeholder="Selecione"
-                    required 
+                    required
                   />
                 </div>
                 <div className="col-span-1 md:col-span-2">
@@ -311,28 +316,25 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
                   <InputText
                     name="observacoes"
                     value={formRGData.observacoes}
-                    className="w-full" 
+                    className="w-full"
                     onChange={handleChange}
                     placeholder="Digite observações"
                   />
                 </div>
                 <div>
-                  <label className="block mb-1 text-gray-700">
-                    Status
-                  </label>
+                  <label className="block mb-1 text-gray-700">Status</label>
                   <Dropdown
                     name="status"
                     value={formRGData.state}
                     className="w-full"
-                     onChange={(e)=> setFormData({...formRGData, state: e.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formRGData, state: e.value })
+                    }
                     options={status}
                     placeholder="Selecione"
                   />
                 </div>
-                
               </div>
-
-              
             </fieldset>
             <div className="col-span-4 mt-4 text-right">
               <Button
@@ -347,9 +349,6 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
               />
             </div>
 
-
-
-            
             <Button
               label="Voltar"
               onClick={() => stepperRef.current.prevCallback()}

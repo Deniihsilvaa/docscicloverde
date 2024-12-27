@@ -1,22 +1,48 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Toast } from "primereact/toast";
+import {useToast} from "../../Toast/ToastContext";
+
 import FormRegistroColab from "./FormRegistroColab";
-import { FormDataProsp } from "./types";
+import { handleOnSubmit } from "./types";
 import { Card } from "primereact/card";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import DataTableColaboradores from "./TableRegistroColab";
-
 export default function Registro() {
-  const toast = useRef<Toast>(null);
+  const {showToast} = useToast();
+  
   const [dialogVisible, setDialogVisible] = useState<boolean>(false);
 
-  function handleSubmit(data: FormDataProsp) {
-    console.log("Dados para salvar:", data);
+  async function handleSubmit(data:any[]):Promise<void> {
+    const result = await handleOnSubmit(data);
+
+
+    console.log("Retorno do salvamento:", result);
+    if (result) {
+      showToast({
+        severity: "success",
+        summary: "Sucesso",
+        detail: "Dados salvos com sucesso!",
+        life:3000,
+      });
+      setDialogVisible(false);
+    }else if (!result || result === null) {
+      showToast({
+        severity: "error",
+        summary: "Erro",
+        detail: `Erro ao cadastrar Solicitação!${result}`,
+        life:5000,
+      })
+      showToast({
+        severity: "info",
+        summary: "Informação",
+        detail: "O colaborador nao foi cadastrado, Por favor tentar novamente ou falar com Adm!",
+        life:5000,
+      })
+    }
+
   }
   return (
     <div className="container flex flex-col items-center justify-center min-h-screen mx-auto">
-      <Toast ref={toast} position="top-right" />
       <div className="justify-center">
         <Card title="Colaboradores" className="w-full">
           <div className="flex gap-3 card flex-column md:flex-row">

@@ -218,8 +218,9 @@ const UserRegistrationForm = () => {
                   }
                   required
                 >
-                  <option value="COLLABORATOR">Colaborador</option>
-                  <option value="ADMIN">Admin</option>
+                  <option value="Colab">Colaborador</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Supervisao">Supervisão</option>
                 </select>
               </div>
               <Button

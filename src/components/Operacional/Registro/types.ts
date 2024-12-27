@@ -1,6 +1,6 @@
 import {supabase} from "../../../services/supabase";
+
 export interface FormDataProsp {
-  onSubmit: (data: any) => void;
   nome?: string;
   cpf?: string;
   rg?: string;
@@ -15,8 +15,8 @@ export interface FormDataProsp {
   departamento?: string;
   cargo?: string;
   observacoes?: string;
-  state:boolean;
-  loginUsuario?:string
+  state:any;
+  user_id?:string
 }
 
 export interface FormData {
@@ -52,7 +52,7 @@ export interface ColaboradorProps {
   endereco: string;
   telefone: string;
   salario: string;
-  dataAdmissao: string;
+  dataAdmissao: Date | null;
   carteiraTrabalho: string;
   pis: string;
   departamento: string;
@@ -71,7 +71,10 @@ export interface InputMenuProps {
 }
 export const deletarColaborador = async (id: number) => {
   const { error } = await supabase.from("base_colab").delete().eq("id", id);
-  if (error) throw error;
+  if (error){
+    return error.message
+  }
+  return true
 };
 
 // coletar login dos usuarios id_user e name
@@ -79,4 +82,22 @@ export const ExtractLogins = async () => {
   const { data, error } = await supabase.from("viewbase_user").select("user_id,email");
   if (error) throw new Error("Erro ao carregar os dados!");
   return data
+}
+
+export const handleOnSubmit = async (dados) => {
+  try{
+    const { data:dadosReturn, error } = await supabase.from("base_colab").insert(dados);
+    if (error){
+      throw new Error("Erro ao carregar os dados!");
+    }
+
+    return dadosReturn
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Erro ao salvar dados no Supabase:", error.message);
+
+    } else {
+      console.error("Erro ao salvar dados no Supabase:", error);
+  }
+  }
 }

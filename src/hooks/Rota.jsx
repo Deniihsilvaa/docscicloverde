@@ -60,7 +60,7 @@ const Rota = () => {
       <Route
         path="/op/*"
         element={
-          <ProtectedRoute userRole={user?.role} requiredRole="COLLABORATOR">
+          <ProtectedRoute userRole={user?.role} requiredRole="Colab">
             <LayoutOp />
           </ProtectedRoute>
         }
