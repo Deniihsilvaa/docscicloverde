@@ -7,6 +7,7 @@ import { FormRequest } from "./FormRequest";
 import { FormRequestProduto } from "./FormRequestProduto";
 import { Dialog } from "primereact/dialog";
 import { Card } from "primereact/card";
+import TableRequest from './table/TableRequest'
 const DashBoardRequest: React.FC = () => {
   const [formData, setFormData] = useState<ServiceRequest>({
     email: "",
@@ -31,65 +32,61 @@ const DashBoardRequest: React.FC = () => {
   };
 
   return (
-<div className="container p-1 mx-auto">
-            <div className="grid grid-cols-3 gap-6">
-                <div className="col-span-1">
-            <div className="mb-4 text-2xl font-bold text-center header">
-                Formulário de Solicitação Request
+    <div className="flex items-center justify-center min-h-screen p-4 bg-gray-50">
+      <div className="container max-w-5xl">
+        <div className="w-full align-content-center">
+          {/* Card de Solicitação */}
+          <Card title="Solicitação">
+            <Toast ref={toast} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Button
+                label="Folha de solicitação"
+                className="w-full"
+                onClick={() => setDialogVisible(true)}
+              />
+              <Button
+                label="Request Diário"
+                className="w-full"
+                onClick={() => setDialogVisibleProducts(true)}
+              />
             </div>
-                    <Card title="Solicitacao">
-                        <Toast ref={toast} />
-                        <div className="grid grid-cols-2">
-                            <div className="m-2 ">
-                                <Button
-                                    label="Folha de solicitação"
-                                    onClick={() => setDialogVisible(true)}
-                                />
-                            </div>
-                            <div className="m-2 ">
-                                <Button
-                                    label="Request Diario..."
-                                    onClick={() => setDialogVisibleProducts(true)}
-                                />
-                            </div>
-                        </div>
-
-                        <Dialog
-                            header="Folha de solicitação"
-                            visible={dialogVisible}
-                            style={{ width: '70vw', height: '79vh' }}
-                            onHide={() => setDialogVisible(false)}
-                        >
-                            <div className="contents shadow-neutral-400">
-                                <FormRequest onSubmit={handleSubmit} />
-                            </div>
-                        </Dialog>
-
-                        <Dialog
-                            header="Request Diario..."
-                            visible={dialogVisibleProducts}
-                            style={{ width: '70vw', height: '79vh' }}
-                            onHide={() => setDialogVisibleProducts(false)}
-                        >
-                            <div className="contents shadow-neutral-400">
-                                <FormRequestProduto onSubmit={handleSubmit} />
-                            </div>
-                        </Dialog>
-                    </Card>
-                </div>
-                <div className="col-span-2">
-                <div className="mb-4 text-2xl font-bold text-center header">
-                Dados 
+  
+            {/* Diálogo de Solicitação */}
+            <Dialog
+              header="Folha de solicitação"
+              visible={dialogVisible}
+              style={{ width: '70vw', maxHeight: '80vh' }}
+              onHide={() => setDialogVisible(false)}
+            >
+              <div className="contents shadow-neutral-400">
+                <FormRequest onSubmit={handleSubmit} />
+              </div>
+            </Dialog>
+  
+            {/* Diálogo de Produtos */}
+            <Dialog
+              header="Request Diário"
+              visible={dialogVisibleProducts}
+              style={{ width: '70vw', maxHeight: '80vh' }}
+              onHide={() => setDialogVisibleProducts(false)}
+            >
+              <div className="contents shadow-neutral-400">
+                <FormRequestProduto onSubmit={handleSubmit} />
+              </div>
+            </Dialog>
+          </Card>
+  
+          {/* Card da Tabela */}
+          <Card title="Tabela">
+            <div className="p-4">
+              <TableRequest />
             </div>
-                    <Card title="Tabela">
-                        <div className="p-6">
-                            {/* Conteúdo da tabela aqui */}
-                        </div>
-                    </Card>
-                </div>
-            </div>
+          </Card>
         </div>
-    );
+      </div>
+    </div>
+  );
+  
 
  
 };

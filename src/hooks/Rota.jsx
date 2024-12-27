@@ -13,7 +13,7 @@ import CadastroPessoas from "../components/CadastroPessoas/CadastroPessoas.tsx";
 import CadastroProdutos from "../components/CadastroProdutos/CadastroProdutos.jsx";
 import RegistroNotasFiscais from "../components/CadastroNFE/RegistroNotasFiscais.jsx";
 import Unauthorized from "../pages/Unauthorized.jsx";
-import Registro from "../components/Operacional/Registro/Registro.jsx";
+import DashBoardRegistroColab from "../components/Operacional/Registro/DashBoardRegistroColab.tsx";
 import UserOP from "../pages/user.jsx";
 import PainelRegistro from "../components/Users/PainelDeRegistros/PainelRegistro.jsx";
 import PainelFinanceiro from "../components/Users/PainelFinanceiro/PainelFinanceiro.jsx";
@@ -44,7 +44,7 @@ const Rota = () => {
         <Route path="home" element={<Home />} />
         <Route path="UserRegistrationForm" element={<UserRegistrationForm />} />
         <Route path="cadastropessoas" element={<CadastroPessoas />} />
-        <Route path="registro" element={<Registro />} />
+        <Route path="registro" element={<DashBoardRegistroColab />} />
         <Route path="cadastroprodutos" element={<CadastroProdutos />} />
         <Route path="nfe" element={<RegistroNotasFiscais />} />
         <Route path="about" element={<About />} />

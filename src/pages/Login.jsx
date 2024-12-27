@@ -1,20 +1,33 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { handleLogin } from "../context/types";
-
+import {useToast} from "../components/Toast/ToastContext";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
-  // Mostra um alerta quando há um erro
+  const { showToast } = useToast(); // Usa o contexto do Toast
+  
   useEffect(() => {
     if (error) {
-      alert(error);
+      showToast({
+        severity: "error",
+        summary: "Erro",
+        detail: error,
+        life: 5000,
+      })
+    }else if(success){
+      showToast({
+        severity: "success",
+        summary: success,
+        detail: "Seja bem vindo!",
+        life: 5000,
+      })
     }
-  }, [error]);
+  }, [error,success,showToast]);
 
   return (
     <div className="flex items-center justify-center w-full h-screen bg-gray-100">
@@ -22,7 +35,7 @@ const Login = () => {
         <form
           className="p-6 bg-white rounded shadow-md"
           onSubmit={(e) =>
-            handleLogin(e, email, password, setError, navigate, setLoading)
+            handleLogin(e, email, password, setError,setSuccess, navigate, setLoading)
           } // Passa argumentos
         >
           <h1 className="mb-4 text-2xl font-bold">Login</h1>

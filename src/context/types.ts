@@ -1,17 +1,21 @@
 // src/context/types.ts
 import { supabase } from "../services/supabase";
 
+
 export const handleLogin = async (
   e: React.FormEvent<HTMLFormElement>,
   email: string,
   password: string,
   setError: (message: string) => void,
+  setSuccess: (message: string) => void,
   navigate: (path: string) => void,
   setLoading: (loading: boolean) => void
 ) => {
   e.preventDefault();
   setError(""); // Limpa erros anteriores
   setLoading(true);
+  setSuccess("");
+
   if (!email || !password) {
     setLoading(false);
     setError("Por favor, preencha todos os campos.");
@@ -23,12 +27,12 @@ export const handleLogin = async (
   });
 
   if (error) {
-    setError(error.message); // Define mensagem de erro
+    setError(error.message);
   } else {
-    alert("Login bem-sucedido!");
     navigate("/");
-    setLoading(false);
+    setSuccess("Login efetuado com sucesso!");
   }
+  setLoading(false);
 };
 export const tabeleMTR = async () =>{
   const { data } = await supabase.from("baseMtr").select("*");

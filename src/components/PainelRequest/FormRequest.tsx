@@ -69,7 +69,7 @@ export const FormRequest: React.FC<FormRequestProps> = ({ onSubmit }) => {
   return (
     <div className="w-full p-2">
       <Toast ref={toast} />
-      <form onSubmit={handleSubmit} className="grid grid-cols-3 gap-4">
+      <form onSubmit={handleSubmit} >
         <Stepper ref={stepperRef} linear={true}>
           <StepperPanel header="Dados Emitente">
             <div className="col-span-1 p-2">

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { TabView, TabPanel } from "primereact/tabview";
 import FormularioNotaFiscal from "./FormularioNotaFiscal";
-
+import UploadXML from "./UploadXML";
 const RegistroNotasFiscais = () => {
-  const [notaTipo, setNotaTipo] = useState("entrada");
+  const [notaTipo] = useState("entrada");
   const [numeroNota, setNumeroNota] = useState("");
   const [dataEmissao, setDataEmissao] = useState(null);
   const [fornecedorCliente, setFornecedorCliente] = useState("");
@@ -11,7 +11,7 @@ const RegistroNotasFiscais = () => {
   const [produtos, setProdutos] = useState([]);
   const [produtoSelecionado, setProdutoSelecionado] = useState("");
   const [quantidade, setQuantidade] = useState(1);
-  const [errors, setErrors] = useState({});
+  const [errors] = useState({});
 
   const produtosDisponiveis = [
     { label: "Produto A", value: "produto_a" },
@@ -24,6 +24,8 @@ const RegistroNotasFiscais = () => {
   const handleSubmit = () => { /* Lógica */ };
 
   return (
+    <div className="p-4">
+      <UploadXML />
     <TabView>
       <TabPanel header="Nota de Entrada">
         <FormularioNotaFiscal
@@ -71,6 +73,7 @@ const RegistroNotasFiscais = () => {
         </div>
       </TabPanel>
     </TabView>
+    </div>
   );
 };
 

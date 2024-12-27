@@ -52,7 +52,7 @@ export const FormRequestProduto: React.FC<FormRequestProdutoProps> = ({
   return (
     <div className="mt-2">
       <Toast />
-      <form onSubmit={handleSubmit} className="grid grid-cols-3 gap-4">
+      <form onSubmit={handleSubmit}>
         <Stepper ref={stepperRef} linear={true}>
           <StepperPanel header="Informações da Solicitação">
             <div className="col-span-1 p-2">
