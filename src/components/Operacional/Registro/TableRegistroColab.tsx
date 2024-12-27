@@ -2,16 +2,18 @@ import React, { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { ColaboradorProps, fetchDataColaboradores } from "./types";
-import {useToast} from "../../Toast/ToastContext";
+import { useToast } from "../../Toast/ToastContext";
+import InputMenu from "./inputMenu"
+
 const DataTableColaboradores = () => {
   const [dadosInput, setDadosInput] = useState<ColaboradorProps[]>([]);
   const [quantidadeColaboradores, setQuantidadeColaboradores] = useState(0);
   const [totalSalario, setTotalSalario] = useState(0);
   const [selectRow, setSelectRow] = useState<ColaboradorProps | null>(null);
   const [loading, setLoading] = useState(false);
-  
-  const {showToast} = useToast();
-  
+
+  const { showToast } = useToast();
+
   useEffect(() => {
     setLoading(true);
     fetchColaboradores();
@@ -27,17 +29,16 @@ const DataTableColaboradores = () => {
       setQuantidadeColaboradores(totalAtivo);
       const totalSalarios = colaboradores
         .filter((colaborador) => colaborador.state === "true")
-        .reduce((total, colaborador) => total + colaborador.salario, 0)
-      setTotalSalario(totalSalarios)
-      
-      showToast({
-        severity:"success",
-        summary:"Sucesso",
-        detail:"Dados carregados com sucesso",
-        life:1000
-      })
+        .reduce((total, colaborador) => total + colaborador.salario, 0);
+      setTotalSalario(totalSalarios);
 
-      
+      showToast({
+        severity: "success",
+        summary: "Sucesso",
+        detail: "Dados carregados com sucesso",
+        life: 1000,
+      });
+
       setLoading(false);
     } catch (error) {
       showToast({
@@ -48,8 +49,10 @@ const DataTableColaboradores = () => {
       });
     }
   };
+  const onLoadTable = () => {
+    fetchColaboradores();
+  };
 
-  
   return (
     <div>
       <h3>
@@ -59,9 +62,7 @@ const DataTableColaboradores = () => {
           currency: "BRL",
         })}
       </h3>
-      <p>
-        {loading && <span>Carregando...</span>}
-      </p>
+      <p>{loading && <span>Carregando...</span>}</p>
       <DataTable
         value={dadosInput}
         selectionMode="single"
@@ -70,14 +71,13 @@ const DataTableColaboradores = () => {
         dragSelection
         tableStyle={{ minWidth: "50rem" }}
         header="Colaborador"
-        rowClassName={(rowData) =>
-          rowData.state === "true" ? "active-row" : ""
-        } // ESSA FUNCAO FAZ COM QUE A LINHA SEJA VERDE QUANDO O COLABORADOR ESTIVER ATIVO
         paginator
         rowsPerPageOptions={[10, 20, 50]}
         first={0}
         rows={10}
+        key={'id'}
         className="p-datatable-sm"
+        scrollable
       >
         <Column field="nome" header="Nome" />
         <Column field="cpf" header="CPF" />
@@ -95,6 +95,14 @@ const DataTableColaboradores = () => {
           field="state"
           header="Status"
           body={(state) => (state.state === "true" ? "Ativo" : "Inativo")}
+        />
+        <Column
+          field="editar"
+          header="Ações"
+          body={(row) => (
+            <InputMenu row={row} setRow={onLoadTable}/>
+          )}
+          style={{ width: "100px" }}
         />
       </DataTable>
     </div>

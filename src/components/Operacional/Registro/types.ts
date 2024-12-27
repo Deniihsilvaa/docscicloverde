@@ -64,3 +64,11 @@ export interface ColaboradorProps {
    if (error)  throw new Error("Erro ao carregar os dados!");
    return data
   };
+export interface InputMenuProps {
+  row: ColaboradorProps;
+  setRow: React.Dispatch<React.SetStateAction<ColaboradorProps[]>>;
+}
+export const deletarColaborador = async (id: number) => {
+  const { error } = await supabase.from("base_colab").delete().eq("id", id);
+  if (error) throw error;
+};
