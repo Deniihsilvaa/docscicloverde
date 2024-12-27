@@ -3,10 +3,10 @@ import { InputMask } from "primereact/inputmask";
 import { Dropdown } from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
 import { Button } from "primereact/button";
-import React, { useState, useRef, ChangeEvent } from "react";
+import React, { useState, useRef, ChangeEvent ,useEffect} from "react";
 import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
-import { FormDataProsp } from "./types";
+import { FormDataProsp ,ExtractLogins} from "./types";
 
 const FormRegistroColab: React.FC<FormDataProsp> = ({
   onSubmit,
@@ -20,13 +20,14 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
     { label: "Inativo", value: false },
   ];
   const stepperRef = useRef<any>(null);
-
+  const [logins, SetLogins] = useState<{ label: string; value: any }[]>([]);
   const [formRGData, setFormData] = useState<FormDataProsp>({
     onSubmit: () => handleSubmit,
     state: {
       label: initialValues.state === true ? "Ativo" : "Inativo",
       value: initialValues.state,
     },
+    loginUsuario: initialValues.loginUsuario || "",
     nome: initialValues.nome || "",
     cpf: initialValues.cpf || "",
     rg: initialValues.rg || "",
@@ -51,12 +52,33 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
     }));
   };
 
+
   const handleSubmit = () => {
     console.log("Dados de envio", formRGData);
     setFormData(formRGData);
 
     // if (onSubmit) onSubmit(formRGData);  // Envia os dados preenchidos para o componente pai
   };
+  const optionsLogins = async () => {
+    try {
+      const loginsExtraidos = await ExtractLogins(); // Espera a Promise resolver
+      // Agora loginsExtraidos é um array e você pode chamar map
+      const dadosLogin = loginsExtraidos.map((login) => ({
+        label: `${login.email}`,
+        value: login.user_id,
+      }));
+      SetLogins(dadosLogin);
+    } catch (error) {
+      console.error("Erro ao carregar logins:", error);
+      SetLogins([]); // Ou tratar de outra forma caso haja erro
+    }
+  };
+  
+  
+  useEffect(() => {
+    optionsLogins(); // Chama a função para preencher as opções
+  }, []);
+  
 
   return (
     <div>
@@ -270,15 +292,16 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
                 </div>
                 <div>
                   <label className="block mb-1 text-gray-700">
-                    Login de usuário
+                    Email de acesso ao sistema
                   </label>
                   <Dropdown
                     name="loginUsuario"
-                    value={formRGData.cargo}
+                    value={formRGData.loginUsuario}
                     className="w-full"
-                     onChange={handleChange}
-                    options={cargos}
+                    onChange = {handleChange}
+                    options={logins}
                     placeholder="Selecione"
+                    required 
                   />
                 </div>
                 <div className="col-span-1 md:col-span-2">
@@ -298,7 +321,7 @@ const FormRegistroColab: React.FC<FormDataProsp> = ({
                     Status
                   </label>
                   <Dropdown
-                    name="loginUsuario"
+                    name="status"
                     value={formRGData.state}
                     className="w-full"
                      onChange={(e)=> setFormData({...formRGData, state: e.value})}

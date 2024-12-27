@@ -16,6 +16,7 @@ export interface FormDataProsp {
   cargo?: string;
   observacoes?: string;
   state:boolean;
+  loginUsuario?:string
 }
 
 export interface FormData {
@@ -72,3 +73,10 @@ export const deletarColaborador = async (id: number) => {
   const { error } = await supabase.from("base_colab").delete().eq("id", id);
   if (error) throw error;
 };
+
+// coletar login dos usuarios id_user e name
+export const ExtractLogins = async () => {
+  const { data, error } = await supabase.from("viewbase_user").select("user_id,email");
+  if (error) throw new Error("Erro ao carregar os dados!");
+  return data
+}
