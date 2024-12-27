@@ -21,12 +21,7 @@ export default function Sidebar({ isOpen, Isclose }) {
         <AccordionTab header="Cadastros">
           <div className="m-0">
             <div className="grid grid-cols-1 gap-4">
-              <Button
-                label="Pessoas"
-                text
-                raised
-                onClick={() => handleNavigation("cadastropessoas")}
-              />
+
               <Button
                 label="Cadastro de Usuario"
                 text

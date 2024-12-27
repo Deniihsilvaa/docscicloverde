@@ -43,7 +43,6 @@ const Rota = () => {
       >
         <Route path="home" element={<Home />} />
         <Route path="UserRegistrationForm" element={<UserRegistrationForm />} />
-        <Route path="cadastropessoas" element={<CadastroPessoas />} />
         <Route path="registro" element={<DashBoardRegistroColab />} />
         <Route path="cadastroprodutos" element={<CadastroProdutos />} />
         <Route path="nfe" element={<RegistroNotasFiscais />} />

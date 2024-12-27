@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import {useToast} from "../../Toast/ToastContext";
-
+import { useNavigate } from "react-router";
 import FormRegistroColab from "./FormRegistroColab";
 import { handleOnSubmit,FormDataProsp } from "./types";
 import { Card } from "primereact/card";
@@ -13,6 +13,7 @@ export default function Registro() {
   
   const [dialogVisible, setDialogVisible] = useState<boolean>(false);
   const [reloadTable, setReloadTable] = useState(false);
+  const navigate = useNavigate();
   
   const handleSubmit = async (data:FormProps)=> {
     try{
@@ -39,14 +40,19 @@ export default function Registro() {
   return (
     <div className="container flex flex-col items-center justify-center min-h-screen mx-auto">
       <div className="justify-center">
-        <Card title="Colaboradores" className="w-full">
-          <div className="flex gap-3 card flex-column md:flex-row">
-            <Button
-              label="Registrar Colaborador"
-              onClick={() => setDialogVisible(true)}
-            />
-          </div>
-        </Card>
+      <Card title="Colaboradores" className="w-full">
+  <div className="flex flex-col gap-3">
+    <Button
+      label="Registrar Colaborador"
+      onClick={() => setDialogVisible(true)}
+    />
+    <Button
+      label="Registrar Usuário"
+      onClick={() => navigate("/admin/UserRegistrationForm")}
+    />
+  </div>
+</Card>
+
         <Card title="Tabela de Colaboradores" className="mt-1">
           <DataTableColaboradores key={reloadTable ? 'reload' : 'default'} />
         </Card>
