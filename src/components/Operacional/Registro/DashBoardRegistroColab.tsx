@@ -2,42 +2,37 @@ import React, { useState, useRef, useEffect } from "react";
 import {useToast} from "../../Toast/ToastContext";
 
 import FormRegistroColab from "./FormRegistroColab";
-import { handleOnSubmit } from "./types";
+import { handleOnSubmit,FormDataProsp } from "./types";
 import { Card } from "primereact/card";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import DataTableColaboradores from "./TableRegistroColab";
+import { FormProps } from "react-router";
 export default function Registro() {
   const {showToast} = useToast();
   
   const [dialogVisible, setDialogVisible] = useState<boolean>(false);
-
-  async function handleSubmit(data:any[]):Promise<void> {
-    const result = await handleOnSubmit(data);
-
-
-    console.log("Retorno do salvamento:", result);
-    if (result) {
+  const [reloadTable, setReloadTable] = useState(false);
+  
+  const handleSubmit = async (data:FormProps)=> {
+    try{
+      await handleOnSubmit(data);
+      setDialogVisible(false);
+      setReloadTable(prev => !prev);
       showToast({
         severity: "success",
         summary: "Sucesso",
-        detail: "Dados salvos com sucesso!",
-        life:3000,
-      });
-      setDialogVisible(false);
-    }else if (!result || result === null) {
+        detail: "Colaborador registrado com sucesso",
+        life: 5000,
+      })
+      
+    }catch(error){
       showToast({
         severity: "error",
         summary: "Erro",
-        detail: `Erro ao cadastrar Solicitação!${result}`,
-        life:5000,
-      })
-      showToast({
-        severity: "info",
-        summary: "Informação",
-        detail: "O colaborador nao foi cadastrado, Por favor tentar novamente ou falar com Adm!",
-        life:5000,
-      })
+        detail: error.message,
+        life: 5000,
+      });
     }
 
   }
@@ -53,7 +48,7 @@ export default function Registro() {
           </div>
         </Card>
         <Card title="Tabela de Colaboradores" className="mt-1">
-          <DataTableColaboradores />
+          <DataTableColaboradores key={reloadTable ? 'reload' : 'default'} />
         </Card>
       </div>
       <Dialog
@@ -63,7 +58,7 @@ export default function Registro() {
         onHide={() => setDialogVisible(false)}
       >
         <div className="contents shadow-neutral-400">
-          <FormRegistroColab onSubmit={handleSubmit} />
+          <FormRegistroColab onSubmit={handleSubmit} refreshTable={() => setReloadTable(prev => !prev)}/>
         </div>
       </Dialog>
     </div>

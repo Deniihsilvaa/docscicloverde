@@ -8,7 +8,9 @@ import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
 import { FormDataProsp, ExtractLogins } from "./types";
 type FormRegistoColabProps = {
-  onSubmit: (data: FormDataProsp) => void; // Tipar a função onSubmit
+  onSubmit: (data: FormDataProsp) => void;
+  initialValues?: Partial<FormDataProsp>;
+  refreshTable?: () => void;
 };
 
 const FormRegistroColab: React.FC<FormRegistoColabProps> = ({

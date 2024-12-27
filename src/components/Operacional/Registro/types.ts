@@ -86,12 +86,12 @@ export const ExtractLogins = async () => {
 
 export const handleOnSubmit = async (dados) => {
   try{
-    const { data:dadosReturn, error } = await supabase.from("base_colab").insert(dados);
+    const {error } = await supabase.from("base_colab").insert(dados);
     if (error){
+      console.log(error.message)
       throw new Error("Erro ao carregar os dados!");
     }
-
-    return dadosReturn
+    return true
   } catch (error) {
     if (error instanceof Error) {
       console.error("Erro ao salvar dados no Supabase:", error.message);
