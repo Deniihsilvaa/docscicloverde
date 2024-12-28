@@ -5,6 +5,7 @@ import { Toast } from "primereact/toast";
 
 interface User {
   role: string;
+  user_id: string;
 }
 
 interface AuthContextType {
@@ -56,7 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      setUser({ role: userData.role });
+      setUser({ role: userData.role, user_id: currentUser.id });
 
 
     } catch (err) {
