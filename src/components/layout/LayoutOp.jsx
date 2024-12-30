@@ -5,9 +5,9 @@ import "./layout.css";
 import Header from "./nivel2/HeaderNivel2";
 import Sidebar from "./nivel2/SidebarNivel2";
 import Footer from "./nivel2/FooterNivel2";
-import UserOP from "../../pages/user"
-import PropTypes from "prop-types";
+import UserOP from "../../pages/leader/user"
 
+import PropTypes from "prop-types";
 const LayoutOp = () => {
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
 
@@ -17,18 +17,20 @@ const LayoutOp = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen layout">
-      <Header toggleSidebar={toggleSidebar} />
-      <div className="flex flex-1">
-        <Sidebar isOpen={isOpenSidebar} closeSidebar={toggleSidebar} />
-        <main>
-          <Outlet>
-            <UserOP />
-          </Outlet>
-        </main>
-      </div>
-      <Footer />
-    </div>
+<div className="flex flex-col min-h-screen shadow-neutral-300 layout">
+  <Header toggleSidebar={toggleSidebar} />
+  
+  <div className="flex flex-col flex-1 md:flex-row">
+    <main className="flex-1 w-full px-4 py-4 md:px-6">
+      <Outlet>
+        <UserOP />
+      </Outlet>
+    </main>
+  </div>
+  
+  <Footer className="w-full py-2 text-sm text-center" />
+</div>
+
   );
 };
 

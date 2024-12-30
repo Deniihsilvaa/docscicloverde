@@ -23,7 +23,7 @@ export default function Sidebar({ isOpen, Isclose }) {
             <div className="grid grid-cols-1 gap-4">
 
               <Button
-                label="Produtos"
+                label="Teste"
                 text
                 raised
                 onClick={() => handleNavigation("/cadastroprodutos")}
@@ -32,20 +32,6 @@ export default function Sidebar({ isOpen, Isclose }) {
           </div>
         </AccordionTab>
 
-        <AccordionTab header="Registros">
-          <div className="m-0 ">
-            <div className="grid grid-cols-1 gap-4">
-              <Button
-               label="NFE"
-               text raised
-               onClick={()=> handleNavigation('/nfe')}
-               
-               />
-              <Button label="MTR" text raised />
-              <Button label="Request" text raised />
-            </div>
-          </div>
-        </AccordionTab>
       </Accordion>
     </div>
   );

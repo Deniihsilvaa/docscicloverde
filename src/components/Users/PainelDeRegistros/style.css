@@ -1,0 +1,17 @@
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px; /* Espaçamento entre os botões */
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+  
+  .button-container button {
+    flex: 1;  /* Faz com que cada botão ocupe o mesmo espaço */
+    min-width: 50px;  /* Tamanho mínimo do botão */
+    max-width: 200px;  /* Tamanho máximo do botão */
+    white-space: nowrap;  /* Evita que o texto do botão quebre */
+    text-align: center;
+    padding: 8px 16px;  /* Ajusta o padding para não aumentar muito o botão */
+  }
+  

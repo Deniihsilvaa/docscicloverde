@@ -13,7 +13,7 @@ import CadastroProdutos from "../components/CadastroProdutos/CadastroProdutos.js
 import RegistroNotasFiscais from "../components/CadastroNFE/RegistroNotasFiscais.jsx";
 import Unauthorized from "../pages/Unauthorized.jsx";
 import DashBoardRegistroColab from "../components/Operacional/Registro/DashBoardRegistroColab.tsx";
-import UserOP from "../pages/user.jsx";
+import UserOP from "../pages/leader/user.jsx";
 import PainelRegistro from "../components/Users/PainelDeRegistros/PainelRegistro.tsx";
 import PainelFinanceiro from "../components/Users/PainelFinanceiro/PainelFinanceiro.jsx";
 import NotUse from "../pages/v2.jsx";

@@ -6,6 +6,7 @@ import { Toast } from "primereact/toast";
 interface User {
   role: string;
   user_id: string;
+  email:string;
 }
 
 interface AuthContextType {
@@ -42,7 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { user: currentUser } = session;
       const { data: userData, error } = await supabase
         .from("base_user")
-        .select("role")
+        .select("role,email")
         .eq("user_id", currentUser.id)
         .single();
 
@@ -57,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      setUser({ role: userData.role, user_id: currentUser.id });
+      setUser({ role: userData.role, user_id: currentUser.id , email: userData.email});
 
 
     } catch (err) {
