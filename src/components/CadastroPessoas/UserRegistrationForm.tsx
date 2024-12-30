@@ -151,10 +151,10 @@ const UserRegistrationForm = () => {
   }, []);
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-2 bg-gray-50">
+    <div className="flex items-center justify-center min-h-screen p-2 overflow-x-auto bg-gray-50">
       <Toast ref={toast} />
-      <div className="grid w-full grid-cols-2 gap-4 p-4 bg-white shadow-2xl max-w-7xl rounded-xl">
-        <div className="p-4 rounded-lg bg-slate-500">
+      <div className="grid w-full grid-cols-2 gap-4 p-4 overflow-x-auto bg-white shadow-2xl max-w-7xl rounded-xl">
+        <div className="p-4 overflow-x-auto rounded-lg bg-slate-500">
           <h1 className="mb-4 text-3xl font-bold text-center text-gray-900">
             {editingUserId ? "Editar Usuario" : "Registrar Usuario"}
           </h1>

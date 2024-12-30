@@ -1,33 +1,32 @@
 import React, { useState } from "react";
-import {useToast} from "../../Toast/ToastContext";
+import { useToast } from "../../Toast/ToastContext";
 import { useNavigate } from "react-router";
 import FormRegistroColab from "./FormRegistroColab";
-import { handleOnSubmit,FormDataProsp } from "./types";
+import { handleOnSubmit, FormDataProsp } from "./types";
 import { Card } from "primereact/card";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import DataTableColaboradores from "./TableRegistroColab";
 import { FormProps } from "react-router";
 export default function Registro() {
-  const {showToast} = useToast();
-  
+  const { showToast } = useToast();
+
   const [dialogVisible, setDialogVisible] = useState<boolean>(false);
   const [reloadTable, setReloadTable] = useState(false);
   const navigate = useNavigate();
-  
-  const handleSubmit = async (data:FormProps)=> {
-    try{
+
+  const handleSubmit = async (data: FormProps) => {
+    try {
       await handleOnSubmit(data);
       setDialogVisible(false);
-      setReloadTable(prev => !prev);
+      setReloadTable((prev) => !prev);
       showToast({
         severity: "success",
         summary: "Sucesso",
         detail: "Colaborador registrado com sucesso",
         life: 5000,
-      })
-      
-    }catch(error){
+      });
+    } catch (error) {
       showToast({
         severity: "error",
         summary: "Erro",
@@ -35,26 +34,27 @@ export default function Registro() {
         life: 5000,
       });
     }
-
-  }
+  };
   return (
     <div className="container flex flex-col items-center justify-center min-h-screen mx-auto">
-      <div className="justify-center">
-      <Card title="Colaboradores" className="w-full">
-  <div className="flex flex-col gap-3">
-    <Button
-      label="Registrar Colaborador"
-      onClick={() => setDialogVisible(true)}
-    />
-    <Button
-      label="Registrar Usuário"
-      onClick={() => navigate("/admin/UserRegistrationForm")}
-    />
-  </div>
-</Card>
+      <div className="justify-center bg-black">
+        <Card title="Colaboradores" className="w-full">
+          <div className="flex flex-col gap-3">
+            <Button
+              label="Registrar Colaborador"
+              onClick={() => setDialogVisible(true)}
+            />
+            <Button
+              label="Registrar Usuário"
+              onClick={() => navigate("/admin/UserRegistrationForm")}
+            />
+          </div>
+        </Card>
 
         <Card title="Tabela de Colaboradores" className="mt-1">
-          <DataTableColaboradores key={reloadTable ? 'reload' : 'default'} />
+        <div className="overflow-x-auto">
+          <DataTableColaboradores key={reloadTable ? "reload" : "default"} />
+          </div>
         </Card>
       </div>
       <Dialog
@@ -64,7 +64,10 @@ export default function Registro() {
         onHide={() => setDialogVisible(false)}
       >
         <div className="contents shadow-neutral-400">
-          <FormRegistroColab onSubmit={handleSubmit} refreshTable={() => setReloadTable(prev => !prev)}/>
+          <FormRegistroColab
+            onSubmit={handleSubmit}
+            refreshTable={() => setReloadTable((prev) => !prev)}
+          />
         </div>
       </Dialog>
     </div>
