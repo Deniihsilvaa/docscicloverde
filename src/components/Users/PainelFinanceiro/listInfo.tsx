@@ -7,19 +7,27 @@ import { useAuth } from "../../../hooks/AuthContext";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { Dialog } from "primereact/dialog";
 import DocsColabProps from "../../../components/buttons/buttonStyle";
-import { Button } from "primereact/button";
-import { formtMoney } from "../../../utils/formtMoney";
+
+import { formatMoney } from "../../../utils/formatMoney";
 
 export const CreateListInfo: React.FC = () => {
-  const [colaborador, setColaborador] = useState<PainelFinanceiroProps[{}]>([]);
+  const [colaborador, setColaborador] = useState<PainelFinanceiroProps | null>(null);
+
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
   const fetchData = async () => {
+    if (!user?.user_id) {
+      console.error("Usuário não encontrado");
+      setLoading(false);
+      return;
+    }
+  
     try {
-      const response = await loadingDateColaborador(user?.user_id);
+      const response = await loadingDateColaborador(user.user_id);
       if (typeof response) {
-        setColaborador(response);
+        setColaborador(response);  // Armazena o resultado em um array
+        console.log("Retorno colaborador",response)
       }
     } catch (e) {
       console.error("ERRO DE CARREGAMENTO", e);
@@ -27,11 +35,13 @@ export const CreateListInfo: React.FC = () => {
       setLoading(false);
     }
   };
+  
   const [visible, setVisible] = useState(false);
 
   const openModal = () => {
     setVisible(true);
   };
+
   useEffect(() => {
     setLoading(true);
     fetchData();
@@ -42,6 +52,8 @@ export const CreateListInfo: React.FC = () => {
   }
 
   return (
+    <>
+
 <Card title="Informações">
   <Accordion multiple activeIndex={[0]}>
     {/* Salário */}
@@ -53,7 +65,7 @@ export const CreateListInfo: React.FC = () => {
         </span>
       }
     >
-      <b>Salário:</b> {formtMoney(colaborador?.salario)}
+      <b>Salário:</b> {formatMoney(colaborador?.salario)}
       <p className="font-bold">Informações sobre o Adiantamento:</p>
       <p>
         O colaborador pode solicitar adiantamento de até 40% do seu salário até o dia 18 de cada mês. O pagamento do adiantamento será feito no dia 20 (útil) do mesmo mês. O pagamento do salário é realizado no 5º dia útil de cada mês.
@@ -69,7 +81,7 @@ export const CreateListInfo: React.FC = () => {
         </span>
       }
     >
-      <p>{formtMoney(colaborador?.cesta_basica)}</p>
+      <p>{formatMoney(colaborador?.cesta_basica)}</p>
       <p className="font-bold">Informações:</p>
       <span>
       A cesta básica é um benefício oferecido pela Ciclo Verde aos seus colaboradores, no valor de R$ 130,00, e é pago diretamente na folha de pagamento. Esse benefício tem como objetivo auxiliar no custo de alimentação dos funcionários, garantindo uma maior qualidade de vida e bem-estar.
@@ -87,7 +99,7 @@ O valor da cesta básica é automaticamente descontado no salário, sendo parte 
         </span>
       }
     >
-      <p>{formtMoney(colaborador?.vt) || "Sem VT"}</p>
+      <p>{formatMoney(colaborador?.vt) || "Sem VT"}</p>
       <p className="font-bold">Informações:</p>
       <p>
         Vale Transporte (VT) é um benefício concedido pelas empresas aos seus colaboradores para cobrir os custos com deslocamento entre a residência e o local de trabalho. O VT é obrigatório para empresas com mais de 10 empregados, conforme a legislação brasileira (Lei nº 7.418/1985), e deve ser fornecido mensalmente, permitindo que o trabalhador utilize meios de transporte público, como ônibus, metrô ou trem. O valor do benefício não pode exceder 6% do salário base e é descontado do salário do empregado. Caso o trabalhador precise de mais transporte, ele pode complementar com recursos próprios.
@@ -142,6 +154,6 @@ O valor da cesta básica é automaticamente descontado no salário, sendo parte 
     <p>Conteúdo do modal aqui...</p>
   </Dialog>
 </Card>
-
+</>
   );
 };

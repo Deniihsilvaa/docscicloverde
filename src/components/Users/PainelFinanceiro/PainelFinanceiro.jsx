@@ -1,12 +1,19 @@
+import { CreateListInfo } from "./listInfo";
+import { BreadCrumb } from "primereact/breadcrumb";
 
-
-import {CreateListInfo} from "./listInfo"
 const PainelFinanceiro = () => {
+  const items = [
+    {
+      label: "financeiro",
+      template: () => <a className="font-semibold text-primary">financeiro</a>,
+    },
+  ];
+  const home = { icon: "pi pi-home", url: "/home" };
+
   return (
     <div>
-
-      <CreateListInfo/>
-
+      <BreadCrumb model={items} home={home} />
+      <CreateListInfo />
     </div>
   );
 };
