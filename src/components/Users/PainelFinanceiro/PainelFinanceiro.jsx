@@ -1,6 +1,7 @@
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 
+
 const PainelFinanceiro = () => {
   return (
     <div>
@@ -10,9 +11,6 @@ const PainelFinanceiro = () => {
       <Card title="Informações">
         <div>
           <b>Salário:</b>
-        </div>
-        <div>
-          <b>Próximo Pagamento:</b>
         </div>
         <div>
           <b>Descrição:</b>
