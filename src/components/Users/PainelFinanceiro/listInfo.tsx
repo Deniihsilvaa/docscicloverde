@@ -28,7 +28,6 @@ export const CreateListInfo: React.FC = () => {
       const response = await loadingDateColaborador(user.user_id);
       if (typeof response) {
         setColaborador(response);  // Armazena o resultado em um array
-        console.log("Retorno colaborador",response)
       }
     } catch (e) {
       console.error("ERRO DE CARREGAMENTO", e);
@@ -142,7 +141,7 @@ O valor da cesta básica é automaticamente descontado no salário, sendo parte 
       <div className="grid grid-cols-1 gap-3">
         <DocsColabProps label={"Extrato de Pagamento"} onClick={() => handleNavigation("extrato")} />
         <DocsColabProps label={"Extrato de Adiantamento"} onClick={()=> handleNavigation("extrato/adiantamento")} />
-        <DocsColabProps label={"Folha de Ponto"} onClick={openModal} />
+        <DocsColabProps label={"Folha de Ponto"} onClick={() => handleNavigation("extrato/folha")} />
       </div>
     </AccordionTab>
   </Accordion>

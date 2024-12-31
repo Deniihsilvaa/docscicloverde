@@ -22,6 +22,8 @@ import TableMTR from "../components/CadastroMTR/TableMTR.tsx";
 import DashBoardRequest from "../components/PainelRequest/DashBoardRequest.tsx";
 import ExtratoPGSMensal from "../components/Users/PainelFinanceiro/Pages/ExtratoPGSMensal.tsx";
 import ExtratoPGAMensal from "../components/Users/PainelFinanceiro/Pages/ExtratoPGAMensal.tsx";
+import ExtratoFolhaPonto from "../components/Users/PainelFinanceiro/Pages/ExtratoFolhaPonto.tsx";
+
 const Rota = () => {
   const { user } = useAuth(); // Obtém o papel do usuário logado
 
@@ -68,6 +70,7 @@ const Rota = () => {
         <Route path="financeiro" element={<PainelFinanceiro />} />
         <Route path="extrato" element={<ExtratoPGSMensal />} />
         <Route path="extrato/adiantamento" element={<ExtratoPGAMensal />} />
+        <Route path="extrato/folha" element={<ExtratoFolhaPonto />} />
         <Route path="user" element={<UserOP />} />
       </Route>
 
