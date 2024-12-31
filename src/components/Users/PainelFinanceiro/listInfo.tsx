@@ -141,7 +141,7 @@ O valor da cesta básica é automaticamente descontado no salário, sendo parte 
     <AccordionTab header="Extratos">
       <div className="grid grid-cols-1 gap-3">
         <DocsColabProps label={"Extrato de Pagamento"} onClick={() => handleNavigation("extrato")} />
-        <DocsColabProps label={"Extrato de Adiantamento"} onClick={openModal} />
+        <DocsColabProps label={"Extrato de Adiantamento"} onClick={()=> handleNavigation("extrato/adiantamento")} />
         <DocsColabProps label={"Folha de Ponto"} onClick={openModal} />
       </div>
     </AccordionTab>

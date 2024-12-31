@@ -20,10 +20,8 @@ import NotUse from "../pages/v2.jsx";
 import UserRegistrationForm from "../components/CadastroPessoas/UserRegistrationForm.tsx";
 import TableMTR from "../components/CadastroMTR/TableMTR.tsx";
 import DashBoardRequest from "../components/PainelRequest/DashBoardRequest.tsx";
-import ExtratoMensal from "../components/Users/PainelFinanceiro/Pages/ExtratoMensal.tsx";
-
-
-
+import ExtratoPGSMensal from "../components/Users/PainelFinanceiro/Pages/ExtratoPGSMensal.tsx";
+import ExtratoPGAMensal from "../components/Users/PainelFinanceiro/Pages/ExtratoPGAMensal.tsx";
 const Rota = () => {
   const { user } = useAuth(); // Obtém o papel do usuário logado
 
@@ -68,7 +66,8 @@ const Rota = () => {
         <Route path="home" element={<UserOP />} />
         <Route path="painel" element={<PainelRegistro />} />
         <Route path="financeiro" element={<PainelFinanceiro />} />
-        <Route path="extrato" element={<ExtratoMensal />} />
+        <Route path="extrato" element={<ExtratoPGSMensal />} />
+        <Route path="extrato/adiantamento" element={<ExtratoPGAMensal />} />
         <Route path="user" element={<UserOP />} />
       </Route>
 
