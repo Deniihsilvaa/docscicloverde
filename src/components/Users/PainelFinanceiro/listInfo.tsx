@@ -7,12 +7,13 @@ import { useAuth } from "../../../hooks/AuthContext";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { Dialog } from "primereact/dialog";
 import DocsColabProps from "../../../components/buttons/buttonStyle";
+import { useNavigate } from "react-router";
 
 import { formatMoney } from "../../../utils/formatMoney";
 
 export const CreateListInfo: React.FC = () => {
   const [colaborador, setColaborador] = useState<PainelFinanceiroProps | null>(null);
-
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
@@ -41,7 +42,9 @@ export const CreateListInfo: React.FC = () => {
   const openModal = () => {
     setVisible(true);
   };
-
+  const handleNavigation = (path) => {
+    navigate.apply(this, [`/op/${path}`]);
+  };
   useEffect(() => {
     setLoading(true);
     fetchData();
@@ -137,7 +140,7 @@ O valor da cesta básica é automaticamente descontado no salário, sendo parte 
     {/* Extratos */}
     <AccordionTab header="Extratos">
       <div className="grid grid-cols-1 gap-3">
-        <DocsColabProps label={"Extrato de Pagamento"} onClick={openModal} />
+        <DocsColabProps label={"Extrato de Pagamento"} onClick={() => handleNavigation("extrato")} />
         <DocsColabProps label={"Extrato de Adiantamento"} onClick={openModal} />
         <DocsColabProps label={"Folha de Ponto"} onClick={openModal} />
       </div>

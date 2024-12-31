@@ -20,6 +20,8 @@ import NotUse from "../pages/v2.jsx";
 import UserRegistrationForm from "../components/CadastroPessoas/UserRegistrationForm.tsx";
 import TableMTR from "../components/CadastroMTR/TableMTR.tsx";
 import DashBoardRequest from "../components/PainelRequest/DashBoardRequest.tsx";
+import ExtratoMensal from "../components/Users/PainelFinanceiro/Pages/ExtratoMensal.tsx";
+
 
 
 const Rota = () => {
@@ -66,6 +68,7 @@ const Rota = () => {
         <Route path="home" element={<UserOP />} />
         <Route path="painel" element={<PainelRegistro />} />
         <Route path="financeiro" element={<PainelFinanceiro />} />
+        <Route path="extrato" element={<ExtratoMensal />} />
         <Route path="user" element={<UserOP />} />
       </Route>
 
