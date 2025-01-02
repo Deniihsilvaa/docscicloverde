@@ -3,6 +3,7 @@ import { createContext } from "react";
 // Definindo o tipo do usuário
 export interface User {
   role: string | null; // Pode ser string ou null
+  user_id: string | null; // Pode ser string ou null
 }
 
 export interface UserContextType {

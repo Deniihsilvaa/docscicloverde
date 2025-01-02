@@ -19,7 +19,7 @@ import PainelFinanceiro from "../components/Users/PainelFinanceiro/PainelFinance
 import NotUse from "../pages/v2.jsx";
 import UserRegistrationForm from "../components/CadastroPessoas/UserRegistrationForm.tsx";
 import TableMTR from "../components/CadastroMTR/TableMTR.tsx";
-import DashBoardRequest from "../components/PainelRequest/DashBoardRequest.tsx";
+import DashBoardRequest from '../pages/DashBoardRequest.tsx';
 import ExtratoPGSMensal from "../components/Users/PainelFinanceiro/Pages/ExtratoPGSMensal.tsx";
 import ExtratoPGAMensal from "../components/Users/PainelFinanceiro/Pages/ExtratoPGAMensal.tsx";
 import ExtratoFolhaPonto from "../components/Users/PainelFinanceiro/Pages/ExtratoFolhaPonto.tsx";
