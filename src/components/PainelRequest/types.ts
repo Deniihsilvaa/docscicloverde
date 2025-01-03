@@ -12,9 +12,9 @@ export interface ServiceRequest {
   manutencaoPreventiva: boolean;
 }
 export interface FormData {
-  id:number;
+  id: number;
   email: string;
-  data_coleta: string;
+  data_coleta: string | Date;
   pesagem_inicial: number;
   pesagem_final: number;
   item_coletado: string;
@@ -30,17 +30,14 @@ export interface FormData {
   nfe: number;
 }
 export const handleSubmintRequestProduct = async (dados: FormData) => {
-  console.log("Dados para Submint", dados);
   try {
-    // Caso seja uma atualização (id existente)
     if (dados.id) {
-      // Desestrutura para remover 'id' do objeto antes de atualizar
       const { id, ...dadosParaAtualizar } = dados;
-      
+
       const { error } = await supabase
         .from("base_request")
-        .update(dadosParaAtualizar)  // Atualiza sem o campo 'id'
-        .eq("id", id);  // Filtra pelo 'id' original
+        .update(dadosParaAtualizar)
+        .eq("id", id);
 
       if (error) {
         console.error("Erro ao atualizar dados:", error);
@@ -48,15 +45,15 @@ export const handleSubmintRequestProduct = async (dados: FormData) => {
       }
       return true;
     }
-    const { id, ...dadosParaSalvar} = dados;
-    // Caso seja uma inserção (novo registro)
-    const { error } = await supabase.from("base_request").insert([dadosParaSalvar]);
+    const { id, ...dadosParaSalvar } = dados;
 
+    const { error } = await supabase
+      .from("base_request")
+      .insert([dadosParaSalvar]);
     if (error) {
       console.error("Erro ao inserir dados:", error);
       throw new Error("Erro ao salvar os dados!");
     }
-
     return true;
   } catch (err) {
     console.error("Erro durante o processo de submissão:", err);
@@ -65,16 +62,20 @@ export const handleSubmintRequestProduct = async (dados: FormData) => {
 };
 
 export const viewTableRequestProduct = async () => {
-  const { data, error } = await supabase.from("base_request").select("*");
-  return data|| error;
-}
+  const { data, error } = await supabase
+  .from("base_request")
+  .select("*")
+  .order("numero_request", { ascending: false });
+
+  return data || error;
+};
 export const deletTableRequestProduct = async (id: number) => {
   const { error } = await supabase.from("base_request").delete().eq("id", id);
-  if (error){
-    return error.message
+  if (error) {
+    return error.message;
   }
-  return true
-}
+  return true;
+};
 
 export const handleOnSubmit = async (e: React.FormEvent) => {
   e.preventDefault();

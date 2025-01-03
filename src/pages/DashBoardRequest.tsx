@@ -75,7 +75,6 @@ const DashBoardRequest: React.FC = () => {
     
   }
   const visiblrProducts = ()=>{
-    // limpar input iniciaisl do FormData
     setEditDataTableRequest([])
     setDialogVisibleProducts(true)
     
@@ -84,8 +83,6 @@ useEffect(() => {
   loadingDataView()
 },[])
   
-
-
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-gray-50 min-w-screen">
       <Toast ref={toast} />

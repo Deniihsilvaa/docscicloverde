@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { InputText } from "primereact/inputtext";
-import { Calendar } from "primereact/calendar";
+import { Calendar } from 'primereact/calendar';
 
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
@@ -19,6 +19,8 @@ const items = [
   { label: "SUCATA DE PAPEL KRAFT", value: "219869" },
   { label: "SUCATA DE FELTRO", value: "219867" },
   { label: "SUCATA DE PAPELÃO", value: "2000383" },
+  { label: "SUCATA DE MADEIRA", value: "2198690" },
+  { label: "SUCATA DE FERRO", value: "2198677" },
 ];
 
 export const FormRequestProduto: React.FC<FormRequestProps> = ({
@@ -30,7 +32,7 @@ export const FormRequestProduto: React.FC<FormRequestProps> = ({
   const [formData, setFormData] = useState<FormData>({
     id: initialValues?.id,
     email: initialValues?.email || "",
-    data_coleta: initialValues?.data_coleta || "",
+    data_coleta: initialValues?.data_coleta || new Date(),
     pesagem_inicial: initialValues?.pesagem_inicial || 0,
     pesagem_final: initialValues?.pesagem_final || 0,
     item_coletado: initialValues?.item_coletado || "",
@@ -102,7 +104,20 @@ export const FormRequestProduto: React.FC<FormRequestProps> = ({
     onSubmit(formData);
     //form.reset();
   };
-
+  const ajustarParaHorarioLocal = (data: Date) => {
+    const offset = data.getTimezoneOffset() * 60000;  // Offset em milissegundos
+    return new Date(data.getTime() - offset);
+  };
+  const converterParaDate = (dataString: string) => {
+    const [mes, dia, ano] = dataString.split('-');  // Quebra a string MM-DD-AAAA
+    return new Date(`${ano}-${mes}-${dia}`);  // Cria um objeto Date
+  };
+  
+  // Ao carregar os dados:
+  const dataFormatada = (data: string)=>{
+    return converterParaDate(data);
+  }
+    
   return (
     <div className="mt-2">
       <Toast />
@@ -125,8 +140,8 @@ export const FormRequestProduto: React.FC<FormRequestProps> = ({
               <Calendar
                 name="data_coleta"
                 value={formData.data_coleta}
-                onChange={handleChange}
-                className="w-full"
+  
+                dateFormat="dd/mm/yy"
                 required
               />
             </div>
