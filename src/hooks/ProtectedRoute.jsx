@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
 const ProtectedRoute = ({ userRole, requiredRole, children }) => {
+  
   console.log('ProtectedRoute:',userRole + ' ' + requiredRole)
   if(!userRole) return <Navigate to="/login" replace />
   

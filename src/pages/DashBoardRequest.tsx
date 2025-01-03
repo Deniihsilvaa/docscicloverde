@@ -8,15 +8,19 @@ import { FormRequestProduto } from "../components/PainelRequest/FormRequestProdu
 import { Dialog } from "primereact/dialog";
 import { Card } from "primereact/card";
 import {handleSubmintRequestProduct,viewTableRequestProduct,deletTableRequestProduct} from "../components/PainelRequest/types"
-
+import { useNavigate } from "react-router";
 import TableRequest from "../components/PainelRequest/table/TableRequest";
 const DashBoardRequest: React.FC = () => {
-
+  const navigate = useNavigate();
   const toast = useRef<Toast>(null);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [dialogVisibleProducts, setDialogVisibleProducts] = useState(false);
   const [dataTableRequest, setDataTableRequest] = useState<any>([]);
   const [editDataTableRequest, setEditDataTableRequest] = useState<any>([]);
+
+  const handleNavigation = (path) => {
+    navigate.apply(this, [`/admin/request/${path}`]);
+  };
   const handleSubmitRequestProd = async (data) => {
     const retorno = await handleSubmintRequestProduct(data);
    
@@ -101,6 +105,13 @@ useEffect(() => {
                 label="Request Diário"
                 className="w-full"
                 onClick={() => visiblrProducts()}
+              />
+            </div>
+            <div className="col-2">
+              <Button
+                label="Informação Produtos"
+                className="w-full"
+                onClick={() => handleNavigation("infoproducts")}
               />
             </div>
           </div>

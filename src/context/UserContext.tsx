@@ -1,3 +1,4 @@
+//src/context/UserContext.ts
 import { createContext } from "react";
 
 // Definindo o tipo do usuário
@@ -11,4 +12,7 @@ export interface UserContextType {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 // Criando o contexto com um valor padrão undefined
-export const UserContext = createContext<UserContextType | undefined>(undefined);
+export const UserContext = createContext<UserContextType>({
+  user: null,
+  setUser: () => {}  // Função vazia para evitar erros
+});

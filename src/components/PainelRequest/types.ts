@@ -66,8 +66,11 @@ export const viewTableRequestProduct = async () => {
   .from("base_request")
   .select("*")
   .order("numero_request", { ascending: false });
-
-  return data || error;
+  if (error){
+    console.log(error.message)
+    return error.message
+  }
+  return data;
 };
 export const deletTableRequestProduct = async (id: number) => {
   const { error } = await supabase.from("base_request").delete().eq("id", id);
