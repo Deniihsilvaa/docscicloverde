@@ -6,14 +6,13 @@ import { InputText } from "primereact/inputtext";
 import { Password } from 'primereact/password';
 import { Button } from "primereact/button";
 import { UserCircle2 } from "lucide-react";
-import { classNames } from "primereact/utils";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword] = useState(false);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const { showToast } = useToast();

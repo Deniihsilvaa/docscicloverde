@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { InputText } from "primereact/inputtext";
+import { InputNumber } from "primereact/inputnumber";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
@@ -16,49 +17,96 @@ const items = [
 ];
 
 const FormRequestProduto = ({ onSubmit, initialValues }) => {
+  const [loading, setLoading] = useState(false);
   const [isEdit] = useState<boolean>(!!initialValues?.id);
   const [formData, setFormData] = useState({
-    id: initialValues?.id,
-    url_nuvem: initialValues?.url_nuvem || "",
-    email: initialValues?.email || "",
-    data_coleta: initialValues?.data_coleta || new Date(),
-    pesagem_inicial: initialValues?.pesagem_inicial || 0,
-    pesagem_final: initialValues?.pesagem_final || 0,
-    item_coletado: initialValues?.item_coletado || "",
-    material: initialValues?.material || "",
-    preco_por_kg: initialValues?.preco_por_kg || 0,
-    peso_total: initialValues?.peso_total || 0,
-    valor_total: initialValues?.valor_total || 0,
-    responsavel: initialValues?.responsavel || "",
-    telefone: initialValues?.telefone || "",
-    numero_request: initialValues?.numero_request || 0,
-    historico_aprovacao: initialValues?.historico_aprovacao || "",
-    status_confirmacao: initialValues?.status_confirmacao || "",
-    nfe: initialValues?.nfe || 0,
-    
+    id: "",
+    url_nuvem: "",
+    email: "" ,
+    data_coleta: new Date() || initialValues?.data_coleta,
+    pesagem_inicial: 0 || initialValues?.pesagem_inicial,
+    pesagem_final: 0 || initialValues?.pesagem_final,
+    item_coletado: "" || initialValues?.item_coletado,
+    material: "",
+    preco_por_kg: 0 || initialValues?.preco_por_kg,
+    peso_total: 0,
+    valor_total: 0,
+    responsavel: "",
+    telefone: "",
+    numero_request: 0 || initialValues?.numero_request,
+    historico_aprovacao: "",
+    status_confirmacao: "",
+    nfe: 0 || initialValues?.nfe,
   });
 
   const stepperRef = useRef<any>(null);
   const toast = useRef<any>(null);
 
+  // Preencher formData com initialValues ao carregar o componente
+  useEffect(() => {
+    if (initialValues) {
+      setFormData({
+        ...initialValues,
+        data_coleta: initialValues.data_coleta
+          ? formatDate(initialValues.data_coleta)
+          : new Date(),
+      });
+    }
+  }, [initialValues]);
+
+
+  const formatDate = (dateString) => {
+      const dataFormatada = new Date(dateString);
+      
+      dataFormatada.setHours(dataFormatada.getHours() + 3);
+    return dataFormatada
+  };
+  
   const handleDateChange = (e) => {
-    setFormData((prev) => ({ ...prev, data_coleta: e.value }));
+  
+    setFormData({ ...formData, data_coleta: e.value });
   };
 
   const handleSubmit = (e) => {
+    setLoading(true);
     e.preventDefault();
-    if (!formData.email || !formData.data_coleta) {
+    try{
+      if (
+        !formData.url_nuvem ||
+        !formData.email ||
+        !formData.data_coleta ||
+        !formData.pesagem_inicial ||
+        !formData.pesagem_final ||
+        !formData.item_coletado ||
+        !formData.preco_por_kg ||
+        !formData.peso_total ||
+        !formData.valor_total ||
+        !formData.responsavel ||
+        !formData.telefone ||
+        !formData.numero_request ||
+        !formData.historico_aprovacao ||
+        !formData.status_confirmacao ||
+        !formData.nfe
+      ) {
+        toast.current?.show({
+          severity: "warn",
+          summary: "Campos obrigatórios",
+          detail: "Preencha todos os campos.",
+        });
+        return;
+      }
+  
+      const { material, ...rest } = formData;
+      onSubmit(rest);
+    }catch (error) {
       toast.current?.show({
-        severity: "warn",
-        summary: "Campos obrigatórios",
-        detail: "Preencha todos os campos.",
+        severity: "error",
+        summary: "Erro",
+        detail: "Erro ao enviar formulário",
       });
-      return;
+    } finally {
+      setLoading(false);
     }
-    // desestuturar formData e retirar material
-    const { material, ...rest } = formData;
-    // enviar para onSubmit
-    onSubmit(rest);
   };
 
   const handleChangeSomar = (e) => {
@@ -101,9 +149,9 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
                 name="data_coleta"
                 value={formData.data_coleta}
                 onChange={(e) =>
-                  setFormData({ ...formData, data_coleta: e.target.value })
+                  handleDateChange(e)
                 }
-                showButtonBar
+                icon="fa-calendar"
                 dateFormat="dd/mm/yy"
                 required
               />
@@ -117,24 +165,23 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
           <StepperPanel header="Informações da Pesagem">
             <div className="col-span-1 p-2">
               <span>Pesagem Inicial (kg)</span>
-              <InputText
+              <InputNumber
                 name="pesagem_inicial"
                 value={formData.pesagem_inicial}
-                onChange={handleChangeSomar}
+                onValueChange={handleChangeSomar}
                 placeholder="Pesagem Inicial (kg)"
-                type="number"
                 className="w-full"
                 required
               />
             </div>
             <div className="col-span-1 p-2">
               <span>Pesagem Final (kg)</span>
-              <InputText
+              <InputNumber
                 name="pesagem_final"
                 value={formData.pesagem_final}
-                onChange={handleChangeSomar}
+                onValueChange={handleChangeSomar}
                 placeholder="Pesagem Final (kg)"
-                type="number"
+                
                 className="w-full"
                 required
               />
@@ -160,36 +207,37 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
 
             <div className="col-span-1 p-2">
               <span>Peso Total (kg)</span>
-              <InputText
+              <InputNumber
                 name="peso_total"
-                value={formData.peso_total?.toString()}
+                value={formData.peso_total}
                 placeholder="Peso Total (kg)"
-                type="number"
                 className="w-full"
+                disabled 
                 required
               />
             </div>
             <div className="col-span-1 p-2">
               <span>Preço por kg (R$)</span>
-              <InputText
+              <InputNumber
                 name="preco_por_kg"
                 value={formData.preco_por_kg}
-                onChange={handleChangeSomar}
+                onValueChange={handleChangeSomar}
                 placeholder="Preço por kg (R$)"
-                type="number"
                 className="w-full"
+                mode="decimal" minFractionDigits={2}
                 required
               />
             </div>
             <div className="col-span-1 p-2">
               <span>Valor Total (R$)</span>
-              <InputText
+              <InputNumber
                 name="valor_total"
                 value={formData.valor_total}
                 placeholder="Valor Total (R$)"
-                type="number"
                 className="w-full"
                 required
+                disabled
+                mode="currency" currency="BRL" locale="pt-BR"
               />
             </div>
             <Button
@@ -246,15 +294,17 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
 
             <div className="col-span-1 p-2">
               <span>Numero do Request</span>
-              <InputText
+              <InputNumber
                 name="numero_request"
                 value={formData.numero_request}
-                onChange={(e) =>
+                onValueChange={(e) =>
                   setFormData({
                     ...formData,
-                    numero_request: e.target.value,
+                    numero_request: e.value,
                   })
                 }
+                useGrouping={false}
+               
                 placeholder="Numero request"
                 className="w-full"
               />
@@ -292,12 +342,13 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
             </div>
             <div className="col-span-1 p-2">
               <span>Nfe</span>
-              <InputText
+              <InputNumber
                 name="nfe"
                 value={formData.nfe}
-                onChange={(e) => setFormData({ ...formData, nfe: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, nfe: e.value })}
                 placeholder="Nº Nfe"
                 className="w-full"
+                useGrouping={false}
                 required
               />
             </div>
