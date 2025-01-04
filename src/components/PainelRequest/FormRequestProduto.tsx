@@ -1,19 +1,11 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { InputText } from "primereact/inputtext";
-import { Calendar } from 'primereact/calendar';
-
-import { Button } from "primereact/button";
+import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
-import { FormData } from "./types";
-
+import { Button } from "primereact/button";
 import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
 import Toast from "../Toast/ToastModel";
-
-type FormRequestProps = {
-  onSubmit: (data: FormData) => void;
-  initialValues?: Partial<FormData>;
-};
 
 const items = [
   { label: "SUCATA DE PAPEL KRAFT", value: "219869" },
@@ -23,64 +15,39 @@ const items = [
   { label: "SUCATA DE FERRO", value: "2198677" },
 ];
 
-export const FormRequestProduto: React.FC<FormRequestProps> = ({
-  onSubmit,
-  initialValues,
-}) => {
-
+const FormRequestProduto = ({ onSubmit, initialValues }) => {
   const [isEdit] = useState<boolean>(!!initialValues?.id);
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState({
     id: initialValues?.id,
+    url_nuvem: initialValues?.url_nuvem || "",
     email: initialValues?.email || "",
     data_coleta: initialValues?.data_coleta || new Date(),
     pesagem_inicial: initialValues?.pesagem_inicial || 0,
     pesagem_final: initialValues?.pesagem_final || 0,
     item_coletado: initialValues?.item_coletado || "",
-    peso_total: initialValues?.peso_total || 0,
+    material: initialValues?.material || "",
     preco_por_kg: initialValues?.preco_por_kg || 0,
+    peso_total: initialValues?.peso_total || 0,
     valor_total: initialValues?.valor_total || 0,
     responsavel: initialValues?.responsavel || "",
     telefone: initialValues?.telefone || "",
     numero_request: initialValues?.numero_request || 0,
-    url_nuvem: initialValues?.url_nuvem || "http://",
     historico_aprovacao: initialValues?.historico_aprovacao || "",
     status_confirmacao: initialValues?.status_confirmacao || "",
-    nfe: initialValues?.nfe || 0
+    nfe: initialValues?.nfe || 0,
+    
   });
+
   const stepperRef = useRef<any>(null);
+  const toast = useRef<any>(null);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => {
-      const newFormData = { ...prev, [name]: value };
-
-      // Recalcular valor total se campos relevantes forem alterados
-      if (
-        name === "pesagem_inicial" ||
-        name === "pesagem_final" ||
-        name === "preco_por_kg"
-      ) {
-        const peso_total =
-          (Number(newFormData.pesagem_final) || 0) -
-          (Number(newFormData.pesagem_inicial) || 0);
-        const valor_total =
-          peso_total * (Number(newFormData.preco_por_kg) || 0);
-
-        newFormData.peso_total = peso_total;
-        newFormData.valor_total = valor_total;
-      }
-
-      return newFormData;
-    });
+  const handleDateChange = (e) => {
+    setFormData((prev) => ({ ...prev, data_coleta: e.value }));
   };
 
-  const toast = useRef<any>(null);
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    if (!form.checkValidity()) {
+    if (!formData.email || !formData.data_coleta) {
       toast.current?.show({
         severity: "warn",
         summary: "Campos obrigatórios",
@@ -88,48 +55,41 @@ export const FormRequestProduto: React.FC<FormRequestProps> = ({
       });
       return;
     }
-    if (isEdit) {
-      toast.current?.show({
-        severity: "info",
-        summary: "Edição",
-        detail: "Registro atualizado com sucesso.",
-      });
-    } else {
-      toast.current?.show({
-        severity: "success",
-        summary: "Novo Registro",
-        detail: "Registro salvo com sucesso.",
-      });
-    }
-    onSubmit(formData);
-    //form.reset();
+    // desestuturar formData e retirar material
+    const { material, ...rest } = formData;
+    // enviar para onSubmit
+    onSubmit(rest);
   };
-  const ajustarParaHorarioLocal = (data: Date) => {
-    const offset = data.getTimezoneOffset() * 60000;  // Offset em milissegundos
-    return new Date(data.getTime() - offset);
+
+  const handleChangeSomar = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => {
+      const newFormData = { ...prev, [name]: value };
+      const pesagem_inicial = Number(newFormData.pesagem_inicial) || 0;
+      const pesagem_final = Number(newFormData.pesagem_final) || 0;
+      const preco_por_kg = Number(newFormData.preco_por_kg) || 0;
+
+      const peso_total = pesagem_final - pesagem_inicial;
+      const valor_total = peso_total > 0 ? peso_total * preco_por_kg : 0;
+
+      return { ...newFormData, peso_total, valor_total };
+    });
   };
-  const converterParaDate = (dataString: string) => {
-    const [mes, dia, ano] = dataString.split('-');  // Quebra a string MM-DD-AAAA
-    return new Date(`${ano}-${mes}-${dia}`);  // Cria um objeto Date
-  };
-  
-  // Ao carregar os dados:
-  const dataFormatada = (data: string)=>{
-    return converterParaDate(data);
-  }
-    
+
   return (
     <div className="mt-2">
-      <Toast />
+      <Toast ref={toast} />
       <form onSubmit={handleSubmit}>
         <Stepper ref={stepperRef} linear={true}>
-          <StepperPanel header="Informações da Solicitação">
+          <StepperPanel header="Informações da Solicitação">
             <div className="col-span-1 p-2">
               <span>E-mail</span>
               <InputText
                 name="email"
                 value={formData.email}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
                 placeholder="E-mail"
                 className="w-full"
                 required
@@ -140,24 +100,27 @@ export const FormRequestProduto: React.FC<FormRequestProps> = ({
               <Calendar
                 name="data_coleta"
                 value={formData.data_coleta}
-  
+                onChange={(e) =>
+                  setFormData({ ...formData, data_coleta: e.target.value })
+                }
+                showButtonBar
                 dateFormat="dd/mm/yy"
                 required
               />
             </div>
-
             <Button
               label="Avançar"
               onClick={() => stepperRef.current?.nextCallback()}
             />
           </StepperPanel>
+
           <StepperPanel header="Informações da Pesagem">
             <div className="col-span-1 p-2">
               <span>Pesagem Inicial (kg)</span>
               <InputText
                 name="pesagem_inicial"
                 value={formData.pesagem_inicial}
-                onChange={handleChange}
+                onChange={handleChangeSomar}
                 placeholder="Pesagem Inicial (kg)"
                 type="number"
                 className="w-full"
@@ -169,31 +132,37 @@ export const FormRequestProduto: React.FC<FormRequestProps> = ({
               <InputText
                 name="pesagem_final"
                 value={formData.pesagem_final}
-                onChange={handleChange}
+                onChange={handleChangeSomar}
                 placeholder="Pesagem Final (kg)"
                 type="number"
                 className="w-full"
                 required
               />
             </div>
+
             <div className="col-span-1 p-2">
               <span>Item Coletado</span>
-              <Dropdown
+              <select
                 name="item_coletado"
                 value={formData.item_coletado}
-                options={items}
-                onChange={(e) =>{setFormData({...formData, item_coletado: e.value})}}
-                placeholder="Selecione o item"
-                className="w-full"
-                required
-              />
+                onChange={(e) => {
+                  setFormData({ ...formData, item_coletado: e.target.value });
+                }}
+              >
+                <option value="">Selecione um item</option>
+                {items.map((item) => (
+                  <option key={item.value} value={item.value}>
+                    {item.label}
+                  </option>
+                ))}
+              </select>
             </div>
+
             <div className="col-span-1 p-2">
               <span>Peso Total (kg)</span>
               <InputText
                 name="peso_total"
                 value={formData.peso_total?.toString()}
-                onChange={handleChange}
                 placeholder="Peso Total (kg)"
                 type="number"
                 className="w-full"
@@ -205,7 +174,7 @@ export const FormRequestProduto: React.FC<FormRequestProps> = ({
               <InputText
                 name="preco_por_kg"
                 value={formData.preco_por_kg}
-                onChange={handleChange}
+                onChange={handleChangeSomar}
                 placeholder="Preço por kg (R$)"
                 type="number"
                 className="w-full"
@@ -217,7 +186,6 @@ export const FormRequestProduto: React.FC<FormRequestProps> = ({
               <InputText
                 name="valor_total"
                 value={formData.valor_total}
-                onChange={handleChange}
                 placeholder="Valor Total (R$)"
                 type="number"
                 className="w-full"
@@ -234,37 +202,59 @@ export const FormRequestProduto: React.FC<FormRequestProps> = ({
             />
           </StepperPanel>
 
-          <StepperPanel header="Informações de Contato">
+          <StepperPanel header="Informações do Contato">
             <div className="col-span-1 p-2">
               <span>Responsável</span>
               <InputText
                 name="responsavel"
                 value={formData.responsavel}
-                onChange={handleChange}
-                placeholder="Responsável"
+                onChange={(e) => {
+                  setFormData({ ...formData, responsavel: e.target.value });
+                }}
+                placeholder="Nome do responsável"
                 className="w-full"
                 required
               />
             </div>
-
             <div className="col-span-1 p-2">
               <span>Telefone</span>
               <InputText
                 name="telefone"
                 value={formData.telefone}
-                onChange={handleChange}
-                placeholder="Telefone"
+                onChange={(e) =>
+                  setFormData({ ...formData, telefone: e.target.value })
+                }
+                placeholder="(XX) XXXXX-XXXX"
                 className="w-full"
                 required
               />
             </div>
+
+
+            <Button
+              label="Voltar"
+              onClick={() => stepperRef.current?.prevCallback()}
+            />
+                        <Button
+              label="Avançar"
+              onClick={() => stepperRef.current?.nextCallback()}
+            />
+            
+          </StepperPanel>
+
+          <StepperPanel header="Informações de finais">
 
             <div className="col-span-1 p-2">
               <span>Numero do Request</span>
               <InputText
                 name="numero_request"
                 value={formData.numero_request}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    numero_request: e.target.value,
+                  })
+                }
                 placeholder="Numero request"
                 className="w-full"
               />
@@ -275,7 +265,9 @@ export const FormRequestProduto: React.FC<FormRequestProps> = ({
               <InputText
                 name="url_nuvem"
                 value={formData.url_nuvem}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setFormData({ ...formData, url_nuvem: e.target.value })
+                }
                 placeholder="https//"
                 className="w-full"
               />
@@ -303,13 +295,12 @@ export const FormRequestProduto: React.FC<FormRequestProps> = ({
               <InputText
                 name="nfe"
                 value={formData.nfe}
-                onChange={handleChange}
+                onChange={(e) => setFormData({ ...formData, nfe: e.target.value })}
                 placeholder="Nº Nfe"
                 className="w-full"
                 required
               />
             </div>
-
 
             {/* Confirmação de Status */}
             <div className="col-span-1 p-2">

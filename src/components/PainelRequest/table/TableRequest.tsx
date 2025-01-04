@@ -3,6 +3,8 @@ import { DataTable } from "primereact/datatable";
 import { TabView, TabPanel } from "primereact/tabview";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
+import {FormData} from "../types";
+
 
 type Props = {
   dataview: any;
@@ -64,6 +66,7 @@ const TableRequest: React.FC<Props> = ({ dataview, onDelet, onEdit }) => {
           >
             <Column field="numero_request" header="N° Request" filter />
             <Column field="status_confirmacao" header="Status" />
+            <Column field="material" header="Material" />
             <Column
               field="data_coleta"
               header="Data de Coleta"

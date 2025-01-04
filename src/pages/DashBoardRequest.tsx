@@ -4,7 +4,7 @@ import { Toast } from "primereact/toast";
 import { useRef } from "react";
 import { Button } from "primereact/button";
 import { FormRequest } from "../components/PainelRequest/FormRequest";
-import { FormRequestProduto } from "../components/PainelRequest/FormRequestProduto";
+import  FormRequestProduto  from "../components/PainelRequest/FormRequestProduto";
 import { Dialog } from "primereact/dialog";
 import { Card } from "primereact/card";
 import {handleSubmintRequestProduct,viewTableRequestProduct,deletTableRequestProduct} from "../components/PainelRequest/types"
@@ -90,7 +90,7 @@ useEffect(() => {
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-gray-50 min-w-screen">
       <Toast ref={toast} />
-      <div className="container w-full">
+      <div className="container w-full p-4 overflow-x-auto rounded-lg bg-slate-500">
         <Card title="Registros">
           <div className="grid grid-cols-1 gap-4">
             <div className="col-2">
@@ -143,7 +143,7 @@ useEffect(() => {
         </Card>
 
         <Card title="Informações" >
-          <div className="p-4">
+          <div className="p-4 overflow-x-auto rounded-lg bg-slate-500">
             <TableRequest  dataview={dataTableRequest} onDelet={onDelet} onEdit={onEdit}/>
           </div>
         </Card>

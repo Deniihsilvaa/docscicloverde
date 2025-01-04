@@ -14,10 +14,11 @@ export interface ServiceRequest {
 export interface FormData {
   id: number;
   email: string;
-  data_coleta: string | Date;
+  data_coleta: Date ;
   pesagem_inicial: number;
   pesagem_final: number;
   item_coletado: string;
+  material: string;
   peso_total: number;
   preco_por_kg: number;
   valor_total: number;
@@ -61,16 +62,34 @@ export const handleSubmintRequestProduct = async (dados: FormData) => {
   }
 };
 
+export interface viewTableRequestProductPros {
+  email: string;
+  responsavel: string;
+  telefone: string;
+  historico_aprovacao: string;
+  item_coletado: string;
+  material:string;
+  nfe: string;
+  pesagem_inicial: number;
+  pesagem_final: number;
+  url_nuvem: string;
+  numero_request: number;
+  data_coleta: string;
+  peso_total: number;
+  preco_por_kg: number;
+  valor_total: number;
+  status_confirmacao: string;
+}
 export const viewTableRequestProduct = async () => {
   const { data, error } = await supabase
-  .from("base_request")
+  .from("viewbaseRequest")
   .select("*")
   .order("numero_request", { ascending: false });
   if (error){
     console.log(error.message)
     return error.message
   }
-  return data;
+  return data
 };
 export const deletTableRequestProduct = async (id: number) => {
   const { error } = await supabase.from("base_request").delete().eq("id", id);
