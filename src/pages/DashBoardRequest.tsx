@@ -7,7 +7,8 @@ import { FormRequest } from "../components/PainelRequest/FormRequest";
 import  FormRequestProduto  from "../components/PainelRequest/FormRequestProduto";
 import { Dialog } from "primereact/dialog";
 import { Card } from "primereact/card";
-import {handleSubmintRequestProduct,viewTableRequestProduct,deletTableRequestProduct} from "../components/PainelRequest/types"
+import { viewTableRequestProduct,deleteTableRequestProduct } from "../api/Api";
+import {handleSubmintRequestProduct,deletTableRequestProduct} from "../components/PainelRequest/types"
 import { useNavigate } from "react-router";
 import TableRequest from "../components/PainelRequest/table/TableRequest";
 const DashBoardRequest: React.FC = () => {
@@ -55,7 +56,7 @@ const DashBoardRequest: React.FC = () => {
     
   };
   const onDelet = async(onDelet)=>{
-    const retorno = await deletTableRequestProduct(onDelet);
+    const retorno = await deleteTableRequestProduct(onDelet);
     if (retorno) {
       toast.current?.show({
         severity: "success",

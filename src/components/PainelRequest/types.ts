@@ -1,4 +1,6 @@
 import { supabase } from "../../services/supabase";
+
+
 export interface ServiceRequest {
   email: string;
   razaoSocial: string;
@@ -80,7 +82,8 @@ export interface viewTableRequestProductPros {
   valor_total: number;
   status_confirmacao: string;
 }
-export const viewTableRequestProduct = async () => {
+
+export const viewTableRequestProduct_Original = async () => {
   const { data, error } = await supabase
   .from("viewbaseRequest")
   .select("*")
@@ -89,8 +92,11 @@ export const viewTableRequestProduct = async () => {
     console.log(error.message)
     return error.message
   }
+  console.log("Dados sendo trazido:",data)
   return data
 };
+
+
 export const deletTableRequestProduct = async (id: number) => {
   const { error } = await supabase.from("base_request").delete().eq("id", id);
   if (error) {

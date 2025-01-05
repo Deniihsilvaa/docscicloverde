@@ -7,22 +7,18 @@ import { Button } from "primereact/button";
 import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
 import Toast from "../Toast/ToastModel";
-
-const items = [
-  { label: "SUCATA DE PAPEL KRAFT", value: "219869" },
-  { label: "SUCATA DE FELTRO", value: "219867" },
-  { label: "SUCATA DE PAPELÃO", value: "2000383" },
-  { label: "SUCATA DE MADEIRA", value: "2198690" },
-  { label: "SUCATA DE FERRO", value: "2198677" },
-];
-
+import { listProdutc } from "../../api/Api";
+interface Item {
+  pdv: string;
+  material: string;
+}
 const FormRequestProduto = ({ onSubmit, initialValues }) => {
   const [loading, setLoading] = useState(false);
   const [isEdit] = useState<boolean>(!!initialValues?.id);
   const [formData, setFormData] = useState({
     id: "",
     url_nuvem: "",
-    email: "" ,
+    email: "",
     data_coleta: new Date() || initialValues?.data_coleta,
     pesagem_inicial: 0 || initialValues?.pesagem_inicial,
     pesagem_final: 0 || initialValues?.pesagem_final,
@@ -38,39 +34,30 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
     status_confirmacao: "",
     nfe: 0 || initialValues?.nfe,
   });
-
+  const [items, setItems] = useState<Item[]>([]);
   const stepperRef = useRef<any>(null);
   const toast = useRef<any>(null);
 
-  // Preencher formData com initialValues ao carregar o componente
-  useEffect(() => {
-    if (initialValues) {
-      setFormData({
-        ...initialValues,
-        data_coleta: initialValues.data_coleta
-          ? formatDate(initialValues.data_coleta)
-          : new Date(),
-      });
-    }
-  }, [initialValues]);
-
-
-  const formatDate = (dateString) => {
-      const dataFormatada = new Date(dateString);
-      
-      dataFormatada.setHours(dataFormatada.getHours() + 3);
-    return dataFormatada
+  const listaProdutos = async () => {
+    const response = await listProdutc();
+    console.log("Lista:", response);
+    setItems(response);
   };
-  
+  const formatDate = (dateString) => {
+    const dataFormatada = new Date(dateString);
+
+    dataFormatada.setHours(dataFormatada.getHours() + 3);
+    return dataFormatada;
+  };
+
   const handleDateChange = (e) => {
-  
     setFormData({ ...formData, data_coleta: e.value });
   };
 
   const handleSubmit = (e) => {
     setLoading(true);
     e.preventDefault();
-    try{
+    try {
       if (
         !formData.url_nuvem ||
         !formData.email ||
@@ -95,10 +82,10 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
         });
         return;
       }
-  
+
       const { material, ...rest } = formData;
       onSubmit(rest);
-    }catch (error) {
+    } catch (error) {
       toast.current?.show({
         severity: "error",
         summary: "Erro",
@@ -123,6 +110,20 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
       return { ...newFormData, peso_total, valor_total };
     });
   };
+  useEffect(() => {
+    listaProdutos();
+  }, []);
+  useEffect(() => {
+    if (initialValues) {
+      setFormData({
+        ...initialValues,
+        data_coleta: initialValues.data_coleta
+          ? formatDate(initialValues.data_coleta)
+          : new Date(),
+      });
+    }
+    console.log(listProdutc);
+  }, [initialValues]);
 
   return (
     <div className="mt-2">
@@ -148,9 +149,7 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
               <Calendar
                 name="data_coleta"
                 value={formData.data_coleta}
-                onChange={(e) =>
-                  handleDateChange(e)
-                }
+                onChange={(e) => handleDateChange(e)}
                 icon="fa-calendar"
                 dateFormat="dd/mm/yy"
                 required
@@ -181,7 +180,6 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
                 value={formData.pesagem_final}
                 onValueChange={handleChangeSomar}
                 placeholder="Pesagem Final (kg)"
-                
                 className="w-full"
                 required
               />
@@ -190,16 +188,20 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
             <div className="col-span-1 p-2">
               <span>Item Coletado</span>
               <select
+                aria-label="Select item coletado"
                 name="item_coletado"
                 value={formData.item_coletado}
                 onChange={(e) => {
-                  setFormData({ ...formData, item_coletado: e.target.value });
+                  setFormData({
+                    ...formData,
+                    item_coletado: e.target.value,
+                  });
                 }}
               >
                 <option value="">Selecione um item</option>
                 {items.map((item) => (
-                  <option key={item.value} value={item.value}>
-                    {item.label}
+                  <option key={item.pdv} value={item.pdv}>
+                    {item.material}
                   </option>
                 ))}
               </select>
@@ -212,7 +214,7 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
                 value={formData.peso_total}
                 placeholder="Peso Total (kg)"
                 className="w-full"
-                disabled 
+                disabled
                 required
               />
             </div>
@@ -224,7 +226,8 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
                 onValueChange={handleChangeSomar}
                 placeholder="Preço por kg (R$)"
                 className="w-full"
-                mode="decimal" minFractionDigits={2}
+                mode="decimal"
+                minFractionDigits={2}
                 required
               />
             </div>
@@ -237,7 +240,9 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
                 className="w-full"
                 required
                 disabled
-                mode="currency" currency="BRL" locale="pt-BR"
+                mode="currency"
+                currency="BRL"
+                locale="pt-BR"
               />
             </div>
             <Button
@@ -278,20 +283,17 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
               />
             </div>
 
-
             <Button
               label="Voltar"
               onClick={() => stepperRef.current?.prevCallback()}
             />
-                        <Button
+            <Button
               label="Avançar"
               onClick={() => stepperRef.current?.nextCallback()}
             />
-            
           </StepperPanel>
 
           <StepperPanel header="Informações de finais">
-
             <div className="col-span-1 p-2">
               <span>Numero do Request</span>
               <InputNumber
@@ -304,7 +306,6 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
                   })
                 }
                 useGrouping={false}
-               
                 placeholder="Numero request"
                 className="w-full"
               />
