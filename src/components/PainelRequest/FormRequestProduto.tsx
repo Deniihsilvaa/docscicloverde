@@ -40,7 +40,6 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
 
   const listaProdutos = async () => {
     const response = await listProdutc();
-    console.log("Lista:", response);
     setItems(response);
   };
   const formatDate = (dateString) => {
