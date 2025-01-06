@@ -59,7 +59,6 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
     e.preventDefault();
     try {
       if (
-        !formData.url_nuvem ||
         !formData.email ||
         !formData.data_coleta ||
         !formData.pesagem_inicial ||
