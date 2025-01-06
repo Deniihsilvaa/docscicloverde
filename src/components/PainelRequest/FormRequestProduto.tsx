@@ -80,11 +80,10 @@ const FormRequestProduto = ({ metodo, onSubmit, initialValues }) => {
         return;
       }
       console.log(metodo)
-      debugger
       if (metodo === "duplic") {
         const { id, material, ...rest } = formData;
         onSubmit(rest);
-      } else if (metodo === "edit") {
+      } else {
         const { material, ...rest } = formData;
         onSubmit(rest);
       }
