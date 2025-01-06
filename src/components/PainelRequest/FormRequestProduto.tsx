@@ -308,6 +308,7 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
                 useGrouping={false}
                 placeholder="Numero request"
                 className="w-full"
+                required
               />
             </div>
 
@@ -350,7 +351,7 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
                 placeholder="Nº Nfe"
                 className="w-full"
                 useGrouping={false}
-                required
+                
               />
             </div>
 
