@@ -3,7 +3,6 @@ import { DataTable } from "primereact/datatable";
 import { TabView, TabPanel } from "primereact/tabview";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import {FormData} from "../types";
 
 
 type Props = {
@@ -48,7 +47,18 @@ const TableRequest: React.FC<Props> = ({ dataview, onDelet, onEdit ,duplic}) => 
   
     return `${diaFormatado}/${mesFormatado}/${anoFormatado}`;
   };
-  
+  const getStatusStyle = (status: string) => {
+    switch (status) {
+      case "completo":
+        return { className: "bg-green-200 text-green-800", label: "Pendente" };
+      case "negado":
+        return { className: "bg-red-200 text-red-800", label: "Negado" };
+      case "registrado":
+        return { className: "bg-yellow-200 text-yellow-800", label: "Registrado" };
+      default:
+        return { className: "bg-gray-200 text-gray-800", label: "Desconhecido" };
+    }
+  }
 
   return (
     <div>
@@ -73,10 +83,24 @@ const TableRequest: React.FC<Props> = ({ dataview, onDelet, onEdit ,duplic}) => 
             showGridlines
             scrollHeight="600px"
           >
-            <Column field="numero_request" header="N° Request" filter />
-            <Column field="status_confirmacao" header="Status" />
-            <Column field="material" header="Material" />
+            <Column field="numero_request"
+             header="N° Request"
+             sortable
+              filter 
+              />
+            <Column field="status_confirmacao" header="Status"
+            body={(rowData) => {
+              const { className, label } = getStatusStyle(rowData.status_confirmacao);
+              return (
+                <span className={`px-2 py-1 rounded ${className}`}>
+                  {label}
+                </span>
+              );
+            }}
+            sortable />
+            <Column field="material" header="Material" sortable />
             <Column
+            sortable
               field="data_coleta"
               header="Data de Coleta"
               body={(e) => dataFormatada(e.data_coleta)}

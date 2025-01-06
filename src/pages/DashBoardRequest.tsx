@@ -18,15 +18,15 @@ const DashBoardRequest: React.FC = () => {
   const [dialogVisibleProducts, setDialogVisibleProducts] = useState(false);
   const [dataTableRequest, setDataTableRequest] = useState<any>([]);
   const [editDataTableRequest, setEditDataTableRequest] = useState<any>([]);
-  const [metodo,setMetodo] = useState("")
+  const [metodo,setMetodo] = useState<string>("")
 
   const handleNavigation = (path) => {
     navigate.apply(this, [`/admin/request/${path}`]);
   };
   const handleSubmitRequestProd = async (data) => {
-    const retorno = await handleSubmintRequestProduct(data);
-   
     
+
+    const retorno = await handleSubmintRequestProduct(data);    
     if (!retorno) {
       toast.current?.show({
         severity: "error",

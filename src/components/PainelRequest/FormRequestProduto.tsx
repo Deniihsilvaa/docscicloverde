@@ -12,7 +12,7 @@ interface Item {
   label: string;
   value: string;
 }
-const FormRequestProduto = ({ metodo ,onSubmit, initialValues }) => {
+const FormRequestProduto = ({ metodo, onSubmit, initialValues }) => {
   const [loading, setLoading] = useState(false);
   const [isEdit] = useState<boolean>(!!initialValues?.id);
   const [formData, setFormData] = useState({
@@ -70,8 +70,8 @@ const FormRequestProduto = ({ metodo ,onSubmit, initialValues }) => {
         !formData.telefone ||
         !formData.numero_request ||
         !formData.status_confirmacao
-        
       ) {
+
         toast.current?.show({
           severity: "warn",
           summary: "Campos obrigatórios",
@@ -79,12 +79,15 @@ const FormRequestProduto = ({ metodo ,onSubmit, initialValues }) => {
         });
         return;
       }
-      if (metodo === "duplic"){
-        const { id,material,...rest } = formData;
+      console.log(metodo)
+      debugger
+      if (metodo === "duplic") {
+        const { id, material, ...rest } = formData;
+        onSubmit(rest);
+      } else if (metodo === "edit") {
+        const { material, ...rest } = formData;
         onSubmit(rest);
       }
-      const { material, ...rest } = formData;
-      onSubmit(rest);
     } catch (error) {
       toast.current?.show({
         severity: "error",
