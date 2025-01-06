@@ -4,15 +4,19 @@ import { TabView, TabPanel } from "primereact/tabview";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 
-
 type Props = {
   dataview: any;
   onDelet: (e: any) => void;
   onEdit: (e: any) => void;
-  duplic: (e: any) => void
+  duplic: (e: any) => void;
 };
 
-const TableRequest: React.FC<Props> = ({ dataview, onDelet, onEdit ,duplic}) => {
+const TableRequest: React.FC<Props> = ({
+  dataview,
+  onDelet,
+  onEdit,
+  duplic,
+}) => {
   const [data, setData] = useState<any[]>([DataTable]);
   useEffect(() => {
     setData(dataview);
@@ -26,25 +30,25 @@ const TableRequest: React.FC<Props> = ({ dataview, onDelet, onEdit ,duplic}) => 
   function edit(e: any) {
     onEdit(e);
   }
-  
+
   function duplicar(e: any) {
     duplic(e);
   }
 
   // Ao carregar os dados:
   const dataFormatada = (data: string) => {
-    if (!data) return '';  
-  
+    if (!data) return "";
+
     // Forçar interpretação como data local, evitando UTC
-    const [ano, mes, dia] = data.split('-');
+    const [ano, mes, dia] = data.split("-");
     const dataObj = new Date(Number(ano), Number(mes) - 1, Number(dia));
-  
-    if (isNaN(dataObj.getTime())) return 'Data Inválida';
-  
-    const diaFormatado = String(dataObj.getDate()).padStart(2, '0');
-    const mesFormatado = String(dataObj.getMonth() + 1).padStart(2, '0');
+
+    if (isNaN(dataObj.getTime())) return "Data Inválida";
+
+    const diaFormatado = String(dataObj.getDate()).padStart(2, "0");
+    const mesFormatado = String(dataObj.getMonth() + 1).padStart(2, "0");
     const anoFormatado = dataObj.getFullYear();
-  
+
     return `${diaFormatado}/${mesFormatado}/${anoFormatado}`;
   };
   const getStatusStyle = (status: string) => {
@@ -54,11 +58,17 @@ const TableRequest: React.FC<Props> = ({ dataview, onDelet, onEdit ,duplic}) => 
       case "negado":
         return { className: "bg-red-200 text-red-800", label: "Negado" };
       case "registrado":
-        return { className: "bg-yellow-200 text-yellow-800", label: "Registrado" };
+        return {
+          className: "bg-yellow-200 text-yellow-800",
+          label: "Registrado",
+        };
       default:
-        return { className: "bg-gray-200 text-gray-800", label: "Desconhecido" };
+        return {
+          className: "bg-gray-200 text-gray-800",
+          label: "Desconhecido",
+        };
     }
-  }
+  };
 
   return (
     <div>
@@ -72,7 +82,7 @@ const TableRequest: React.FC<Props> = ({ dataview, onDelet, onEdit ,duplic}) => 
             value={data}
             paginator
             rows={20}
-            rowsPerPageOptions={[10, 20, 50,100]}
+            rowsPerPageOptions={[10, 20, 50, 100]}
             dataKey="id"
             responsiveLayout="stack"
             about="Request Serviços"
@@ -83,24 +93,30 @@ const TableRequest: React.FC<Props> = ({ dataview, onDelet, onEdit ,duplic}) => 
             showGridlines
             scrollHeight="600px"
           >
-            <Column field="numero_request"
-             header="N° Request"
-             sortable
-              filter 
-              />
-            <Column field="status_confirmacao" header="Status"
-            body={(rowData) => {
-              const { className, label } = getStatusStyle(rowData.status_confirmacao);
-              return (
-                <span className={`px-2 py-1 rounded ${className}`}>
-                  {label}
-                </span>
-              );
-            }}
-            sortable />
+            <Column
+              field="numero_request"
+              header="N° Request"
+              sortable
+              filter
+            />
+            <Column
+              field="status_confirmacao"
+              header="Status"
+              body={(rowData) => {
+                const { className, label } = getStatusStyle(
+                  rowData.status_confirmacao
+                );
+                return (
+                  <span className={`px-2 py-1 rounded ${className}`}>
+                    {label}
+                  </span>
+                );
+              }}
+              sortable
+            />
             <Column field="material" header="Material" sortable />
             <Column
-            sortable
+              sortable
               field="data_coleta"
               header="Data de Coleta"
               body={(e) => dataFormatada(e.data_coleta)}
@@ -133,8 +149,6 @@ const TableRequest: React.FC<Props> = ({ dataview, onDelet, onEdit ,duplic}) => 
                     onClick={() => delet(e)}
                   />
                   <Button
-                    
-
                     icon="pi pi-clipboard"
                     className="p-row-editor-init"
                     onClick={() => duplicar(e)}
