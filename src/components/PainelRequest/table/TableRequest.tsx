@@ -10,9 +10,10 @@ type Props = {
   dataview: any;
   onDelet: (e: any) => void;
   onEdit: (e: any) => void;
+  duplic: (e: any) => void
 };
 
-const TableRequest: React.FC<Props> = ({ dataview, onDelet, onEdit }) => {
+const TableRequest: React.FC<Props> = ({ dataview, onDelet, onEdit ,duplic}) => {
   const [data, setData] = useState<any[]>([DataTable]);
   useEffect(() => {
     setData(dataview);
@@ -26,10 +27,10 @@ const TableRequest: React.FC<Props> = ({ dataview, onDelet, onEdit }) => {
   function edit(e: any) {
     onEdit(e);
   }
-  const converterParaDate = (dataString: string) => {
-    const [mes, dia, ano] = dataString.split("-"); // Quebra a string MM-DD-AAAA
-    return new Date(`${ano}-${mes}-${dia}`); // Cria um objeto Date
-  };
+  
+  function duplicar(e: any) {
+    duplic(e);
+  }
 
   // Ao carregar os dados:
   const dataFormatada = (data: string) => {
@@ -60,9 +61,17 @@ const TableRequest: React.FC<Props> = ({ dataview, onDelet, onEdit }) => {
           <DataTable
             value={data}
             paginator
-            rows={10}
+            rows={20}
+            rowsPerPageOptions={[10, 20, 50,100]}
+            dataKey="id"
+            responsiveLayout="stack"
+            about="Request Serviços"
+            totalRecords={data.length}
             className="p-datatable-sm"
             scrollable
+            selectionPageOnly={true}
+            showGridlines
+            scrollHeight="600px"
           >
             <Column field="numero_request" header="N° Request" filter />
             <Column field="status_confirmacao" header="Status" />
@@ -86,18 +95,25 @@ const TableRequest: React.FC<Props> = ({ dataview, onDelet, onEdit }) => {
               }}
             />
             <Column
-              header="Ações"
+              header=""
               body={(e) => (
                 <div>
                   <Button
                     icon="pi pi-eye"
-                    className="mr-2 p-button-rounded p-button-success"
+                    className="p-row-editor-init"
                     onClick={() => edit(e)}
                   />
                   <Button
                     icon="pi pi-trash"
-                    className="p-button-rounded p-button-danger"
+                    className="p-row-editor-init"
                     onClick={() => delet(e)}
+                  />
+                  <Button
+                    
+
+                    icon="pi pi-clipboard"
+                    className="p-row-editor-init"
+                    onClick={() => duplicar(e)}
                   />
                 </div>
               )}

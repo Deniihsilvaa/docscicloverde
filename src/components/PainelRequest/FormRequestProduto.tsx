@@ -12,7 +12,7 @@ interface Item {
   label: string;
   value: string;
 }
-const FormRequestProduto = ({ onSubmit, initialValues }) => {
+const FormRequestProduto = ({ metodo ,onSubmit, initialValues }) => {
   const [loading, setLoading] = useState(false);
   const [isEdit] = useState<boolean>(!!initialValues?.id);
   const [formData, setFormData] = useState({
@@ -40,7 +40,6 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
 
   const listaProdutos = async () => {
     const response = await listProdutc();
-    console.log("FormRequestProd",response);
     setItems(response);
   };
   const formatDate = (dateString) => {
@@ -80,7 +79,10 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
         });
         return;
       }
-
+      if (metodo === "duplic"){
+        const { id,material,...rest } = formData;
+        onSubmit(rest);
+      }
       const { material, ...rest } = formData;
       onSubmit(rest);
     } catch (error) {
@@ -120,7 +122,6 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
           : new Date(),
       });
     }
-    console.log(listProdutc);
   }, [initialValues]);
 
   return (
@@ -158,7 +159,6 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
               onClick={() => stepperRef.current?.nextCallback()}
             />
           </StepperPanel>
-
           <StepperPanel header="Informações da Pesagem">
             <div className="col-span-1 p-2">
               <span>Pesagem Inicial (kg)</span>
@@ -252,7 +252,6 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
               onClick={() => stepperRef.current?.nextCallback()}
             />
           </StepperPanel>
-
           <StepperPanel header="Informações do Contato">
             <div className="col-span-1 p-2">
               <span>Responsável</span>
@@ -290,7 +289,6 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
               onClick={() => stepperRef.current?.nextCallback()}
             />
           </StepperPanel>
-
           <StepperPanel header="Informações de finais">
             <div className="col-span-1 p-2">
               <span>Numero do Request</span>
@@ -309,7 +307,6 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
                 required
               />
             </div>
-
             <div className="col-span-1 p-2">
               <span>Link</span>
               <InputText
@@ -322,8 +319,6 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
                 className="w-full"
               />
             </div>
-
-            {/* Histórico de Aprovação */}
             <div className="col-span-1 p-2">
               <span>Histórico de Aprovação</span>
               <textarea
@@ -349,11 +344,8 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
                 placeholder="Nº Nfe"
                 className="w-full"
                 useGrouping={false}
-                
               />
             </div>
-
-            {/* Confirmação de Status */}
             <div className="col-span-1 p-2">
               <span>Confirmação de Status</span>
               <Dropdown
@@ -372,7 +364,6 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
                 required
               />
             </div>
-
             <div className="flex justify-end p-2">
               <Button
                 label={isEdit ? "Atualizar" : "Registrar"}

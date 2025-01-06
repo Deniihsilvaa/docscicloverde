@@ -18,6 +18,7 @@ const DashBoardRequest: React.FC = () => {
   const [dialogVisibleProducts, setDialogVisibleProducts] = useState(false);
   const [dataTableRequest, setDataTableRequest] = useState<any>([]);
   const [editDataTableRequest, setEditDataTableRequest] = useState<any>([]);
+  const [metodo,setMetodo] = useState("")
 
   const handleNavigation = (path) => {
     navigate.apply(this, [`/admin/request/${path}`]);
@@ -75,7 +76,14 @@ const DashBoardRequest: React.FC = () => {
     }
   }
   const onEdit = async(onEdit)=>{
+    setMetodo("edit")
     setEditDataTableRequest(onEdit)
+    setDialogVisibleProducts(true);
+    
+  }
+  const duplicar = async(onDuplic)=>{
+    setMetodo("duplic")
+    setEditDataTableRequest(onDuplic)
     setDialogVisibleProducts(true);
     
   }
@@ -138,14 +146,14 @@ useEffect(() => {
             
           >
             <div className="contents shadow-neutral-400">
-              <FormRequestProduto onSubmit={handleSubmitRequestProd} initialValues={editDataTableRequest}  />
+              <FormRequestProduto onSubmit={handleSubmitRequestProd} initialValues={editDataTableRequest} metodo={metodo}/>
             </div>
           </Dialog>
         </Card>
 
         <Card title="Informações" >
           <div className="p-4 overflow-x-auto rounded-lg bg-slate-500">
-            <TableRequest  dataview={dataTableRequest} onDelet={onDelet} onEdit={onEdit}/>
+            <TableRequest  dataview={dataTableRequest} onDelet={onDelet} onEdit={onEdit} duplic={duplicar}/>
           </div>
         </Card>
       </div>
