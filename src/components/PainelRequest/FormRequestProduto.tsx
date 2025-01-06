@@ -71,8 +71,7 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
         !formData.responsavel ||
         !formData.telefone ||
         !formData.numero_request ||
-        
-        !formData.status_confirmacao ||
+        !formData.status_confirmacao
         
       ) {
         toast.current?.show({
