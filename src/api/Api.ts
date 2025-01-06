@@ -20,8 +20,13 @@ export const viewTableRequestProduct = async (year?: number) => {
   return data;
 };
 export const viewTableListProducts = async (): Promise<
-  { material: string; year: number; months: { [key: string]: number }; peso_total: number }[]
-  > => {
+  {
+    material: string;
+    year: number;
+    months: { [key: string]: number };
+    peso_total: number;
+  }[]
+> => {
   try {
     const { data, error } = await supabase
       .from("viewbaseRequest")
@@ -81,13 +86,12 @@ export const viewTableListProducts = async (): Promise<
   }
 };
 
-
 export const deleteTableRequestProduct = async (id: number) => {
   try {
     //const response = await axios.delete(
     // `https://backendcicloverde-chj4wpjov-denilson-silvas-projects-63b429e7.vercel.app/api/request-products/d/${id}`
     //);
-    const { data, error } = await await supabase
+    const { error } = await await supabase
       .from("base_request")
       .delete()
       .eq("id", id);
@@ -95,7 +99,7 @@ export const deleteTableRequestProduct = async (id: number) => {
       console.error("Erro ao carregar os dados!", error);
       throw new Error("Erro ao carregar os dados!");
     }
-    return data;
+    return true;
   } catch (error) {
     console.log("Erro ao deletar item:", error);
     return false;

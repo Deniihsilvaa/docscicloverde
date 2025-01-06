@@ -9,8 +9,8 @@ import { StepperPanel } from "primereact/stepperpanel";
 import Toast from "../Toast/ToastModel";
 import { listProdutc } from "../../api/Api";
 interface Item {
-  pdv: string;
-  material: string;
+  label: string;
+  value: string;
 }
 const FormRequestProduto = ({ onSubmit, initialValues }) => {
   const [loading, setLoading] = useState(false);
@@ -40,6 +40,7 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
 
   const listaProdutos = async () => {
     const response = await listProdutc();
+    console.log("FormRequestProd",response);
     setItems(response);
   };
   const formatDate = (dateString) => {
@@ -199,8 +200,8 @@ const FormRequestProduto = ({ onSubmit, initialValues }) => {
               >
                 <option value="">Selecione um item</option>
                 {items.map((item) => (
-                  <option key={item.pdv} value={item.pdv}>
-                    {item.material}
+                  <option key={item.value} value={item.value}>
+                    {item.label}
                   </option>
                 ))}
               </select>
