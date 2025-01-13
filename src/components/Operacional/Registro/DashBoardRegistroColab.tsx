@@ -17,15 +17,26 @@ export default function Registro() {
 
   const handleSubmit = async (data: FormProps) => {
     try {
-      await handleOnSubmit(data);
-      setDialogVisible(false);
-      setReloadTable((prev) => !prev);
-      showToast({
-        severity: "success",
-        summary: "Sucesso",
-        detail: "Colaborador registrado com sucesso",
-        life: 5000,
-      });
+      console.log("Dados enviado:",data)
+      const result = await handleOnSubmit(data);
+      if (result){
+        showToast({
+          severity: "success",
+          summary: "Sucesso",
+          detail: "Colaborador registrado com sucesso",
+          life: 5000,
+        });
+        setReloadTable((prev) => !prev)
+        setDialogVisible(false);
+        
+      }else{
+        showToast({
+          severity: "error",
+          summary: "Erro",
+          detail: "Erro ao salvar",
+          life: 5000,
+        });
+      }
     } catch (error) {
       showToast({
         severity: "error",

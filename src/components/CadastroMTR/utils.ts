@@ -76,7 +76,6 @@ export const salvarDadosNoSupabase = async (tableData: any) => {
       (row: any) => !existingMtrSet.has(row.mtr)
     );
 
-    // TODO: Implementar a lógica de salvamento no Supabase
     if (novosRegistros.length > 0) {
       const { error: insertError } = await supabase
         .from('baseMtr')

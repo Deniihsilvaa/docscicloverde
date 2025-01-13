@@ -81,13 +81,13 @@ const DataTableColaboradores = () => {
       >
         <Column field="nome" header="Nome" />
         <Column field="cpf" header="CPF" />
-        <Column field="datanascimento" header="Nascimento" />
+        <Column field="data_nascimento" header="Nascimento" />
         <Column
           field="salario"
           header="Salário"
           body={(salario) => `R$ ${salario.salario.toFixed(2)}`}
         />
-        <Column field="dataadmissao" header="Admissão" />
+        <Column field="data_admissao" header="Admissão" />
         <Column field="departamento" header="Departamento" />
         <Column field="cargo" header="Cargo" />
         <Column field="observacoes" header="Observações" />

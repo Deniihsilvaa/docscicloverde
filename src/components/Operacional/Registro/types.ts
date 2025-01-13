@@ -2,34 +2,34 @@ import {supabase} from "../../../services/supabase";
 
 export interface FormDataProsp {
   nome?: string;
-  cpf?: string;
+  cpf: string | null;
   rg?: string;
-  dataNascimento?: Date | null;
-  estadoCivil?: string;
+  data_nascimento?: Date | null;
+  estado_civil?: string;
   endereco?: string;
-  telefone?: string;
+  telefone?: string | null;
   salario?: string;
-  dataAdmissao?: Date | null;
-  carteiraTrabalho?: string;
+  data_admissao?: Date | null;
+  carteira_trabalho?: string;
   pis?: string;
   departamento?: string;
   cargo?: string;
   observacoes?: string;
   state:any;
-  user_id?:string
+  user_id?:string | null;
 }
 
 export interface FormData {
   nome?: string;
-  cpf?: string;
+  cpf: string | null;
   rg?: string;
-  dataNascimento?: Date | null; // Change the type here
-  estadoCivil?: string;
+  data_nascimento?: Date | null; // Change the type here
+  estado_civil?: string;
   endereco?: string;
   telefone?: string;
   salario?: string;
-  dataAdmissao?: Date | null; // Change the type here
-  carteiraTrabalho?: string;
+  data_admissao?: Date | null; // Change the type here
+  carteira_trabalho?: string;
   pis?: string;
   departamento?: string;
   cargo?: string;
@@ -45,15 +45,15 @@ export interface TableRegistroColabProps {
 export interface ColaboradorProps {
   id: number;
   nome: string;
-  cpf: string;
+  cpf: string | null;
   rg: string;
-  dataNascimento: string;
-  estadoCivil: string;
+  data_nascimento: string;
+  estado_civil: string;
   endereco: string;
   telefone: string;
   salario: string;
-  dataAdmissao: Date | null;
-  carteiraTrabalho: string;
+  data_admissao: Date | null;
+  carteira_trabalho: string;
   pis: string;
   departamento: string;
   cargo: string;
@@ -88,7 +88,6 @@ export const handleOnSubmit = async (dados) => {
   try{
     const {error } = await supabase.from("base_colab").insert(dados);
     if (error){
-      console.log(error.message)
       throw new Error("Erro ao carregar os dados!");
     }
     return true

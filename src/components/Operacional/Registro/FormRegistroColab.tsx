@@ -19,7 +19,7 @@ const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
 }) => {
   const estadosCivis = ["Solteiro", "Casado", "Divorciado", "Viúvo"];
   const departamentos = ["RH", "TI", "Financeiro", "Operacional"];
-  const cargos = ["Analista", "Gerente", "Assistente", "Técnico"];
+  const cargos = ["Analista", "Gerente", "Assistente", "Separador de reciclaveis"];
   const status = [
     { label: "Ativo", value: true },
     { label: "Inativo", value: false },
@@ -29,17 +29,17 @@ const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
 
   const [formRGData, setFormData] = useState<FormDataProsp>({
     state: "",
-     user_id: "",
+     user_id: null,
     nome: "",
     cpf: "",
     rg: "",
-    dataNascimento: null,
-    estadoCivil: "",
+    data_nascimento: null,
+    estado_civil: "",
     endereco: "",
     telefone: "",
     salario: "",
-    dataAdmissao: null,
-    carteiraTrabalho: "",
+    data_admissao: null,
+    carteira_trabalho: "",
     pis: "",
     departamento: "",
     cargo: "",
@@ -108,11 +108,13 @@ const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
                   <label className="block mb-1 text-gray-700">CPF</label>
                   <InputMask
                     name="cpf"
-                    value={formRGData.cpf}
+                    value={formRGData.cpf ?? ""}
                     className="w-full"
                     mask="999.999.999-99"
                     placeholder="000.000.000-00"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      setFormData({ ...formRGData, cpf: e.target.value });
+                    }}
                   />
                 </div>
                 <div>
@@ -130,11 +132,11 @@ const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
                     Data de Nascimento
                   </label>
                   <Calendar
-                    name="dataNascimento"
-                    value={formRGData.dataNascimento}
+                    name="data_nascimento"
+                    value={formRGData.data_nascimento}
                     className="w-full"
                     onChange={(e)=>{
-                      setFormData({...formRGData,dataNascimento: e.value})
+                      setFormData({...formRGData,data_nascimento: e.value})
                     }}
                     dateFormat="dd/mm/yy"
                     placeholder="DD/MM/AAAA"
@@ -145,10 +147,10 @@ const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
                     Estado Civil
                   </label>
                   <Dropdown
-                    name="estadoCivil"
-                    value={formRGData.estadoCivil}
+                    name="estado_civil"
+                    value={formRGData.estado_civil}
                     className="w-full"
-                    onChange={()=>handleChange}
+                    onChange={(e)=>setFormData({...formRGData,estado_civil: e.value})}
                     options={estadosCivis}
                     placeholder="Selecione"
                   />
@@ -169,7 +171,7 @@ const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
                     name="telefone"
                     value={formRGData.telefone}
                     className="w-full"
-                    onChange={handleChange}
+                    onChange={(e)=>setFormData(({...formRGData,telefone: e.value}))}
                     mask="(99) 99999-9999"
                     placeholder="(00) 00000-0000"
                   />
@@ -203,13 +205,13 @@ const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
                     Data de Admissão
                   </label>
                   <Calendar
-                    name="dataAdmissao"
-                    value={formRGData.dataAdmissao}
+                    name="data_admissao"
+                    value={formRGData.data_admissao}
                     className="w-full"
                     onChange={(e) => 
-                      setFormData(({...formRGData,dataAdmissao: e.target.value}))
+                      setFormData(({...formRGData,data_admissao: e.target.value}))
                     }
-                    dateFormat="dd/mm/yy HH:mm:ss"
+                    dateFormat="dd/mm/yy"
                     placeholder="DD/MM/AAAA"
                   />
                 </div>
@@ -235,8 +237,8 @@ const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
                     Carteira de Trabalho
                   </label>
                   <InputText
-                    name="carteiraTrabalho"
-                    value={formRGData.carteiraTrabalho}
+                    name="carteira_trabalho"
+                    value={formRGData.carteira_trabalho}
                     className="w-full"
                     onChange={handleChange}
                     placeholder="Digite o número"
@@ -279,7 +281,9 @@ const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
                     name="departamento"
                     value={formRGData.departamento}
                     className="w-full"
-                    onChange={handleChange}
+                    onChange={(e) => setFormData(({...formRGData, departamento: e.value,}))}
+                    
+                    
                     options={departamentos}
                     placeholder="Selecione"
                   />
@@ -290,7 +294,7 @@ const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
                     name="cargo"
                     value={formRGData.cargo}
                     className="w-full"
-                    onChange={handleChange}
+                    onChange={(e) => setFormData(({...formRGData,cargo: e.value}))}
                     options={cargos}
                     placeholder="Selecione"
                   />
@@ -301,7 +305,7 @@ const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
                   </label>
                   <Dropdown
                     name=" user_id"
-                    value={formRGData. user_id}
+                    value={formRGData.user_id}
                     onChange={(e) => {
                       setFormData({ ...formRGData, user_id: e.value });
                     }}
