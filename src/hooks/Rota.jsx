@@ -24,6 +24,8 @@ import ExtratoPGSMensal from "../components/Users/PainelFinanceiro/Pages/Extrato
 import ExtratoPGAMensal from "../components/Users/PainelFinanceiro/Pages/ExtratoPGAMensal.tsx";
 import ExtratoFolhaPonto from "../components/Users/PainelFinanceiro/Pages/ExtratoFolhaPonto.tsx";
 import TableInfo from "../pages/Request/TableInfo.tsx";
+import PaymentRegistration from "../pages/leaderADM/PaymentRegistration.tsx";
+
 const Rota = () => {
   const { user } = useAuth(); // Obtém o papel do usuário logado
 
@@ -55,6 +57,7 @@ const Rota = () => {
         <Route path="mtr" element={<TableMTR />} />
         <Route path="request" element={<DashBoardRequest />} />
         <Route path="request/infoproducts" element={<TableInfo />} />
+        <Route path="registro/payment" element={<PaymentRegistration />} />
       </Route>
 
       {/* Rotas protegidas para Operacional */}

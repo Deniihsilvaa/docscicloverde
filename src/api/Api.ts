@@ -123,3 +123,103 @@ export const listProdutc = async () => {
   }));
   return produtos;
 };
+
+// PayRegistration
+export const viewTableBasePagamentos = async ()=>{
+  try{
+    const {data,error} = await supabase
+      .from("viewbasepagamento")
+      .select("*")
+      .order("data_pagamento", { ascending: false });
+      
+      if(error){
+        throw new Error("Erro ao carregar dados")
+      }
+      const baseData = data.map((item: any) => ({
+        id: item.id,
+        user_id: item.nome,
+        valor_total: item.valor_total,
+        status: item.status,
+        data_pagamento: item.data_pagamento,
+        mes_referente: item.mes_referente,
+        yearRef: item.ano,
+        type_pg: item.type_pg,
+        data_vencimento: item.data_vencimento
+
+      }))
+      return baseData
+  }catch(error){
+    console.log(error)
+    return error
+  }
+}
+export const saveOrUpdatePayment = async (payment) => {
+  try {
+    //definir ano e mes referente
+    payment.ano = new Date(payment.data_pagamento).getFullYear();
+    console.log("Dados para salvar ou alterar:", payment);
+    const { id, ...rest } = payment;
+
+    const { data, error } = id
+      ? await supabase // Atualizar (se ID existir)
+          .from("base_pagamentos")
+          .update(rest)
+          .eq("id", id)
+      : await supabase // Inserir (se ID não existir)
+          .from("base_pagamentos")
+          .insert([rest]);
+
+    if (error) {
+      throw new Error("Erro ao salvar os dados");
+    }
+
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Erro ao salvar ou atualizar pagamento");
+  }
+};
+export const deletePayment = async (id: string) => {
+  try {
+    const {error } = await supabase
+      .from("base_pagamentos")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      throw new Error("Erro ao excluir o pagamento");
+    }
+
+    return true;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Erro ao excluir pagamento");
+  }
+};
+export const listColab = async () => {
+  try {
+    const { data, error } = await supabase
+      .from("base_colab")
+      .select("*")
+      .order("nome", { ascending: false });
+
+    if (error) {
+      console.error("Erro ao carregar dados de base_colab:", error.message);
+      throw new Error("Não foi possível carregar os dados dos colaboradores.");
+    }
+
+    const baseData = data
+      .filter((item: any) => item.user_id && item.nome)
+      .map((item: any) => ({
+        value: item.user_id,
+        label: item.nome,
+      }));
+
+    return baseData;
+  } catch (error) {
+    console.error("Erro inesperado ao carregar colaboradores:", error);
+    return []; // Retorna um array vazio em caso de falha
+  }
+};
+
+

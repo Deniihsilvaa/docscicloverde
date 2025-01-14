@@ -71,6 +71,12 @@ export default function Sidebar({ isOpen, Isclose }) {
                 raised
                 onClick={() => handleNavigation("registro")}
               />
+              <Button
+                label="Registrar Pagamentos"
+                text
+                raised
+                onClick={() => handleNavigation("registro/payment")}
+              />
             </div>
           </div>
         </AccordionTab>

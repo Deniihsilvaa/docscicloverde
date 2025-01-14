@@ -72,7 +72,7 @@ export default function ListInforUser() {
                       </p>
                       <p className="text-sm text-gray-600">
                         <span className="font-bold">Data de Admissão:</span>{" "}
-                        {new Date(colab.dataAdmissao).toLocaleDateString()}
+                        {new Date(colab.data_admissao).toLocaleDateString()}
                       </p>
                       <p className="mt-2 text-lg font-semibold">
                         <span className="font-bold">Salário:</span>{" "}

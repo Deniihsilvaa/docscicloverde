@@ -58,6 +58,15 @@ export const CreateListInfo: React.FC = () => {
 
 <Card title="Informações">
   <Accordion multiple activeIndex={[0]}>
+    {/* Extratos */}
+    <AccordionTab header="Extratos">
+      <div className="grid grid-cols-1 gap-3">
+        <DocsColabProps label={"Extrato de Pagamento"} onClick={() => handleNavigation("extrato")} />
+        <DocsColabProps label={"Extrato de Adiantamento"} onClick={()=> handleNavigation("extrato/adiantamento")} />
+        <DocsColabProps label={"Folha de Ponto"} onClick={() => handleNavigation("extrato/folha")} />
+      </div>
+    </AccordionTab>    
+    
     {/* Salário */}
     <AccordionTab
       header={
@@ -103,9 +112,12 @@ O valor da cesta básica é automaticamente descontado no salário, sendo parte 
     >
       <p>{formatMoney(colaborador?.vt) || "Sem VT"}</p>
       <p className="font-bold">Informações:</p>
-      <p>
-        Vale Transporte (VT) é um benefício concedido pelas empresas aos seus colaboradores para cobrir os custos com deslocamento entre a residência e o local de trabalho. O VT é obrigatório para empresas com mais de 10 empregados, conforme a legislação brasileira (Lei nº 7.418/1985), e deve ser fornecido mensalmente, permitindo que o trabalhador utilize meios de transporte público, como ônibus, metrô ou trem. O valor do benefício não pode exceder 6% do salário base e é descontado do salário do empregado. Caso o trabalhador precise de mais transporte, ele pode complementar com recursos próprios.
-      </p>
+      <p> O Vale Transporte (VT) é um benefício concedido pelas empresas aos seus colaboradores para cobrir os custos com deslocamento entre a residência e o local de trabalho. Este benefício é obrigatório para empresas com mais de 10 empregados, conforme a legislação brasileira (Lei nº 7.418/1985), e deve ser fornecido mensalmente, permitindo que o trabalhador utilize meios de transporte público, como ônibus, metrô ou trem.
+
+No nosso caso, o VT cobre os custos das passagens de ida e volta ao serviço. Atualmente, desde janeiro de 2025, o custo de cada passagem é de R$ 6,20, totalizando R$ 12,40 por dia. Considerando 22 dias úteis de trabalho no mês, o valor total mensal do benefício é de R$ 272,80.
+
+Caso o colaborador tenha qualquer tipo de falta ou em dias de feriado em que não houver expediente, o valor proporcional será abatido no VT do mês subsequente. É importante ressaltar que, conforme a legislação, o desconto do VT no salário não pode ultrapassar 6% do salário base do empregado. Caso o custo do transporte exceda o valor fornecido pela empresa, o trabalhador pode complementar com recursos próprios.
+</p>
     </AccordionTab>
 
     {/* Plano de Saúde */}
@@ -136,14 +148,7 @@ O valor da cesta básica é automaticamente descontado no salário, sendo parte 
       <p>{colaborador?.vale_refeicao ? "Você possui vale refeição" : "-"}</p>
     </AccordionTab>
 
-    {/* Extratos */}
-    <AccordionTab header="Extratos">
-      <div className="grid grid-cols-1 gap-3">
-        <DocsColabProps label={"Extrato de Pagamento"} onClick={() => handleNavigation("extrato")} />
-        <DocsColabProps label={"Extrato de Adiantamento"} onClick={()=> handleNavigation("extrato/adiantamento")} />
-        <DocsColabProps label={"Folha de Ponto"} onClick={() => handleNavigation("extrato/folha")} />
-      </div>
-    </AccordionTab>
+
   </Accordion>
 
   {/* Modal de Detalhes */}

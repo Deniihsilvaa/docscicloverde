@@ -7,7 +7,7 @@ export interface ColaboradorProps {
   nome: string;
   email: string;
   role: string;
-  dataAdmissao: Date | "sem data";
+  data_admissao: Date | "sem data";
   cpf: string;
   cargo: string;
   salario: number;
@@ -43,7 +43,6 @@ export const DocsColab = async (): Promise<DocsColabProps[]> => {
     console.error("Erro ao carregar os dados!", error);
     throw new Error("Erro ao carregar os dados!");
   }
-  
+
   return data || [];
 };
-
