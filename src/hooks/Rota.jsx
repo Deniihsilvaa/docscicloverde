@@ -1,6 +1,7 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import ProtectedRoute from "./ProtectedRoute";
-import { useAuth } from "./AuthContext"; // Importa o contexto de autenticação
+import { useAuth } from "./AuthContext";
 import { Navigate } from "react-router-dom";
 
 import Layout from "../components/layout/Layout.jsx";
@@ -26,75 +27,144 @@ import ExtratoFolhaPonto from "../components/Users/PainelFinanceiro/Pages/Extrat
 import TableInfo from "../pages/Request/TableInfo.tsx";
 import PaymentRegistration from "../pages/leaderADM/PaymentRegistration.tsx";
 
+// Animation variants
+const pageTransition = {
+  initial: {
+    opacity: 0,
+    y: 20,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.3,
+      ease: "easeOut",
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -20,
+    transition: {
+      duration: 0.2,
+      ease: "easeIn",
+    },
+  },
+};
+
+// Animated wrapper component
+const AnimatedPage = ({ children }) => (
+  <motion.div
+    variants={pageTransition}
+    initial="initial"
+    animate="animate"
+    exit="exit"
+  >
+    {children}
+  </motion.div>
+);
+
 const Rota = () => {
-  const { user } = useAuth(); // Obtém o papel do usuário logado
+  const { user } = useAuth();
+  const location = useLocation();
 
   return (
-    <Routes>
-      {/* Rota de Login */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/unauthorized" element={<Unauthorized />} />
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        {/* Rota de Login */}
+        <Route 
+          path="/login" 
+          element={
+            <AnimatedPage>
+              <Login />
+            </AnimatedPage>
+          } 
+        />
+        <Route 
+          path="/unauthorized" 
+          element={
+            <AnimatedPage>
+              <Unauthorized />
+            </AnimatedPage>
+          } 
+        />
 
-      {/* Rotas protegidas para Admin */}
-      <Route
-        path="/admin/*"
-        element={
-          <ProtectedRoute userRole={user?.role} requiredRole="Admin">
-            <Layout />
-          </ProtectedRoute>
-        }
-      >
-        <Route path="home" element={<Home />} />
-        <Route path="UserRegistrationForm" element={<UserRegistrationForm />} />
-        <Route path="registro" element={<DashBoardRegistroColab />} />
-        <Route path="cadastroprodutos" element={<CadastroProdutos />} />
-        <Route path="nfe" element={<RegistroNotasFiscais />} />
-        <Route path="about" element={<About />} />
-        <Route path="contact" element={<Contact />} />
-        <Route path="user" element={<UserOP />} />
-        <Route path="user/painel" element={<PainelRegistro />} />
-        <Route path="user/financeiro" element={<PainelFinanceiro />} />
-        <Route path="mtr" element={<TableMTR />} />
-        <Route path="request" element={<DashBoardRequest />} />
-        <Route path="request/infoproducts" element={<TableInfo />} />
-        <Route path="registro/payment" element={<PaymentRegistration />} />
-      </Route>
+        {/* Rotas protegidas para Admin */}
+        <Route
+          path="/admin/*"
+          element={
+            <ProtectedRoute userRole={user?.role} requiredRole="Admin">
+              <AnimatedPage>
+                <Layout />
+              </AnimatedPage>
+            </ProtectedRoute>
+          }
+        >
+          <Route path="home" element={<Home />} />
+          <Route path="UserRegistrationForm" element={<UserRegistrationForm />} />
+          <Route path="registro" element={<DashBoardRegistroColab />} />
+          <Route path="cadastroprodutos" element={<CadastroProdutos />} />
+          <Route path="nfe" element={<RegistroNotasFiscais />} />
+          <Route path="about" element={<About />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="user" element={<UserOP />} />
+          <Route path="user/painel" element={<PainelRegistro />} />
+          <Route path="user/financeiro" element={<PainelFinanceiro />} />
+          <Route path="mtr" element={<TableMTR />} />
+          <Route path="request" element={<DashBoardRequest />} />
+          <Route path="request/infoproducts" element={<TableInfo />} />
+          <Route path="registro/payment" element={<PaymentRegistration />} />
+        </Route>
 
-      {/* Rotas protegidas para Operacional */}
-      <Route
-        path="/op/*"
-        element={
-          <ProtectedRoute userRole={user?.role} requiredRole="Colab">
-            <LayoutOp />
-          </ProtectedRoute>
-        }
-      >
-        <Route path="home" element={<UserOP />} />
-        <Route path="painel" element={<PainelRegistro />} />
-        <Route path="financeiro" element={<PainelFinanceiro />} />
-        <Route path="extrato" element={<ExtratoPGSMensal />} />
-        <Route path="extrato/adiantamento" element={<ExtratoPGAMensal />} />
-        <Route path="extrato/folha" element={<ExtratoFolhaPonto />} />
-        <Route path="user" element={<UserOP />} />
-      </Route>
+        {/* Rotas protegidas para Operacional */}
+        <Route
+          path="/op/*"
+          element={
+            <ProtectedRoute userRole={user?.role} requiredRole="Colab">
+              <AnimatedPage>
+                <LayoutOp />
+              </AnimatedPage>
+            </ProtectedRoute>
+          }
+        >
+          <Route path="home" element={<UserOP />} />
+          <Route path="painel" element={<PainelRegistro />} />
+          <Route path="financeiro" element={<PainelFinanceiro />} />
+          <Route path="extrato" element={<ExtratoPGSMensal />} />
+          <Route path="extrato/adiantamento" element={<ExtratoPGAMensal />} />
+          <Route path="extrato/folha" element={<ExtratoFolhaPonto />} />
+          <Route path="user" element={<UserOP />} />
+        </Route>
 
-      {/* Outras rotas */}
-      <Route path="/NotUse" element={<NotUse />} />
-      <Route
-        path="*"
-        element={
-          user ? (
-            user.role === "Admin" ? (
-              <Navigate to="/admin/home" />
-            ) : (
-              <Navigate to="/op/home" />
-            )
-          ) : (
-            <div>Carregando...</div>
-          ) // Enquanto carrega o usuário
-        }
-      />
-    </Routes>
+        {/* Outras rotas */}
+        <Route 
+          path="/NotUse" 
+          element={
+            <AnimatedPage>
+              <NotUse />
+            </AnimatedPage>
+          } 
+        />
+        
+        <Route
+          path="*"
+          element={
+            <AnimatedPage>
+              {user ? (
+                user.role === "Admin" ? (
+                  <Navigate to="/admin/home" />
+                ) : (
+                  <Navigate to="/op/home" />
+                )
+              ) : (
+                <div className="flex items-center justify-center min-h-screen">
+                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                </div>
+              )}
+            </AnimatedPage>
+          }
+        />
+      </Routes>
+    </AnimatePresence>
   );
 };
 

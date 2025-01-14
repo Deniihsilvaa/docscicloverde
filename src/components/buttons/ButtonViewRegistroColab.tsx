@@ -50,7 +50,7 @@ const ButtonViewRegistroColab = ({ typeDocs }) => {
             tooltip={`Visualizar: ${doc.typeDocs} ${doc.refDate}`}
             tooltipOptions={{ position: "bottom" }}
             className="text-blue-600 bg-transparent border-none hover:bg-blue-600 hover:text-white"
-            onClick={() => viewDate(doc.link)} // Passa a URL para a função de visualização
+            onClick={() => viewDate(doc.link)}
           />
         ))
       ) : (

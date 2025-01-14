@@ -19,7 +19,6 @@ export const CreateListInfo: React.FC = () => {
 
   const fetchData = async () => {
     if (!user?.user_id) {
-      console.error("Usuário não encontrado");
       setLoading(false);
       return;
     }
@@ -27,7 +26,7 @@ export const CreateListInfo: React.FC = () => {
     try {
       const response = await loadingDateColaborador(user.user_id);
       if (typeof response) {
-        setColaborador(response);  // Armazena o resultado em um array
+        setColaborador(response);  
       }
     } catch (e) {
       console.error("ERRO DE CARREGAMENTO", e);

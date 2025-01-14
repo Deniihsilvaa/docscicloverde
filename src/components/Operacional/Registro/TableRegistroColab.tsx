@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { ColaboradorProps, fetchDataColaboradores } from "./types";
+import { ColaboradorProps, fetchDataColaboradores,FormDataProsp } from "./types";
 import { useToast } from "../../Toast/ToastContext";
 import InputMenu from "./inputMenu"
 
-const DataTableColaboradores = () => {
+const DataTableColaboradores = ( { setDialogVisible, setInitialValues }: any) => {
   const [dadosInput, setDadosInput] = useState<ColaboradorProps[]>([]);
   const [quantidadeColaboradores, setQuantidadeColaboradores] = useState(0);
   const [totalSalario, setTotalSalario] = useState(0);
   const [selectRow, setSelectRow] = useState<ColaboradorProps | null>(null);
   const [loading, setLoading] = useState(false);
-
   const { showToast } = useToast();
+  
 
   useEffect(() => {
     setLoading(true);
@@ -50,7 +50,12 @@ const DataTableColaboradores = () => {
     }
   };
   const onLoadTable = () => {
-    fetchColaboradores();
+    //fetchColaboradores();
+  };
+  const onEdit = (data: FormDataProsp) => {
+    console.log(data);
+    setDialogVisible(true);
+    setInitialValues(data);
   };
 
   return (
@@ -72,10 +77,15 @@ const DataTableColaboradores = () => {
         tableStyle={{ minWidth: "50rem" }}
         header="Colaborador"
         paginator
+        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
         rowsPerPageOptions={[10, 20, 50]}
         first={0}
         rows={10}
+        totalRecords={0}
+        currentPageReportTemplate="Mostrando {first} de {totalRecords}"
         key={'id'}
+        onLoad={onLoadTable}
+        responsiveLayout="scroll"
         className="p-datatable-sm"
         scrollable
       >
@@ -100,7 +110,7 @@ const DataTableColaboradores = () => {
           field="editar"
           header="Ações"
           body={(row) => (
-            <InputMenu row={row} setRow={onLoadTable}/>
+            <InputMenu row={row} setRow={onLoadTable} onEdit={onEdit}/>
           )}
           style={{ width: "100px" }}
         />

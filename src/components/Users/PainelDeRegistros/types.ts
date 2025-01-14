@@ -18,7 +18,7 @@ const { user } = useAuth();
 export const Colaboradores = async () => {
   const { data, error } = await supabase
     .from("base_colab")
-    .select("id,nome")
+    .select("id,nome,cpf,user_id")
     .eq("user_id", user?.user_id);
   console.log("Dados de Colaboradores", data);
   if (error) {

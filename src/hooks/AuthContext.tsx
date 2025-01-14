@@ -1,4 +1,4 @@
-import React,{ createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../services/supabase";
 import { Toast } from "primereact/toast";
@@ -6,13 +6,14 @@ import { Toast } from "primereact/toast";
 interface User {
   role: string;
   user_id: string;
-  email:string;
+  email: string;
 }
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
   fetchUserRole: () => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -23,20 +24,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const toast = useRef<Toast>(null);
   const navigate = useNavigate();
 
-  // Função para buscar o papel do usuário
+  const showToast = useCallback((severity: string, summary: string, detail: string) => {
+    toast.current?.show({
+      severity,
+      summary,
+      detail,
+      life: 5000,
+    });
+  }, []);
+
   const fetchUserRole = useCallback(async () => {
-    setLoading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
 
       if (!session) {
-        toast.current?.show({
-          severity: "error",
-          summary: "Erro",
-          detail: "Nenhuma sessão encontrada.",
-          life: 5000,
-        });
-        navigate("/login");
+        setUser(null);
+        setLoading(false);
         return;
       }
 
@@ -48,40 +51,59 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .single();
 
       if (error || !userData) {
-        toast.current?.show({
-          severity: "error",
-          summary: "Erro",
-          detail: "Erro ao buscar dados do usuário",
-          life: 5000,
-        });
-        navigate("/login");
+        console.error("Erro ao buscar dados do usuário:", error);
+        setUser(null);
         return;
       }
 
-      setUser({ role: userData.role, user_id: currentUser.id , email: userData.email});
-
+      setUser({ 
+        role: userData.role, 
+        user_id: currentUser.id, 
+        email: userData.email 
+      });
 
     } catch (err) {
       console.error("Erro ao verificar o usuário:", err);
-      toast.current?.show({
-        severity: "error",
-        summary: "Erro",
-        detail: "Erro ao verificar o usuário",
-        life: 5000,
-      });
-      navigate("/login");
+      setUser(null);
     } finally {
       setLoading(false);
     }
-  }, [navigate]);
+  }, []);
 
-  // Inicializa o contexto ao montar
+  const logout = useCallback(async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      setUser(null);
+      navigate("/login");
+      showToast("success", "Sucesso", "Logout realizado com sucesso");
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+      showToast("error", "Erro", "Erro ao fazer logout");
+    }
+  }, [navigate, showToast]);
+
   useEffect(() => {
+    // Initial session check
     fetchUserRole();
+
+    // Set up auth state change subscription
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN') {
+        await fetchUserRole();
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [fetchUserRole]);
 
   return (
-    <AuthContext.Provider value={{ user, loading, fetchUserRole }}>
+    <AuthContext.Provider value={{ user, loading, fetchUserRole, logout }}>
       {children}
       <Toast ref={toast} />
     </AuthContext.Provider>

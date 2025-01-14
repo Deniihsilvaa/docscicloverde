@@ -5,21 +5,20 @@
     import { useToast } from "../../Toast/ToastContext";
     import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup";
 
-    const InputMenu: React.FC<InputMenuProps> = ({ row, setRow }) => {
+    const InputMenu: React.FC<InputMenuProps> = ({ row, setRow, onEdit }) => {
     const menuRight = useRef<Menu>(null); // Ref para o Menu
     const { showToast } = useToast();
 
     const items = [
         {
-        label: "Oque vamos fazer?",
         items: [
             {
             label: "Editar",
             icon: "pi pi-pencil",
             command: () => {
-                console.log("editando dados,", row);
-            },
-            },
+                onEdit(row);
+              }
+          },
             {
             label: "Deletar",
             icon: "pi pi-trash",
@@ -60,7 +59,6 @@
     
       const confirm1 = (event: React.MouseEvent<HTMLButtonElement>) => {
         confirmPopup({
-          group: "headless",
           target: event.currentTarget,
           message: "Tem certeza que deseja excluir este colaborador?",
           icon: "pi pi-exclamation-triangle",
@@ -76,7 +74,7 @@
     return (
         <div className="flex card justify-content-center">
 <ConfirmPopup
-        group="headless"
+        
         content={({ message, acceptBtnRef, rejectBtnRef, hide }) => (
           <div className="p-3 text-white bg-gray-900 border-round">
             <span>{message}</span>

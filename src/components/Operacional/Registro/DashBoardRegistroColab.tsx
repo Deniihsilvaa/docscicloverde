@@ -14,12 +14,13 @@ export default function Registro() {
   const [dialogVisible, setDialogVisible] = useState<boolean>(false);
   const [reloadTable, setReloadTable] = useState(false);
   const navigate = useNavigate();
+  const [initialValues, setInitialValues] = useState<FormDataProsp | undefined>(undefined);
 
   const handleSubmit = async (data: FormProps) => {
+
     try {
-      console.log("Dados enviado:",data)
       const result = await handleOnSubmit(data);
-      if (result){
+      if (result) {
         showToast({
           severity: "success",
           summary: "Sucesso",
@@ -28,8 +29,8 @@ export default function Registro() {
         });
         setReloadTable((prev) => !prev)
         setDialogVisible(false);
-        
-      }else{
+
+      } else {
         showToast({
           severity: "error",
           summary: "Erro",
@@ -63,8 +64,12 @@ export default function Registro() {
         </Card>
 
         <Card title="Tabela de Colaboradores" className="mt-1">
-        <div className="overflow-x-auto">
-          <DataTableColaboradores key={reloadTable ? "reload" : "default"} />
+          <div className="overflow-x-auto">
+            <DataTableColaboradores
+              key={reloadTable ? "reload" : "default"}
+              setDialogVisible={setDialogVisible}
+              setInitialValues={setInitialValues}
+            />
           </div>
         </Card>
       </div>
@@ -77,7 +82,7 @@ export default function Registro() {
         <div className="contents shadow-neutral-400">
           <FormRegistroColab
             onSubmit={handleSubmit}
-            refreshTable={() => setReloadTable((prev) => !prev)}
+            initialValues={initialValues}
           />
         </div>
       </Dialog>
