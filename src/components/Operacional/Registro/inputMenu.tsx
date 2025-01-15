@@ -15,7 +15,8 @@
             {
             label: "Editar",
             icon: "pi pi-pencil",
-            command: () => {
+            command: (e) => {
+
                 onEdit(row);
               }
           },

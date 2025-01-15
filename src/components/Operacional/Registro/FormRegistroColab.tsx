@@ -6,18 +6,29 @@ import { Button } from "primereact/button";
 import React, { useState, useRef, ChangeEvent, useEffect } from "react";
 import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
-import { FormDataProsp, ExtractLogins, FormRegistoColabProps } from "./types";
+import { FormDataPros, ExtractLogins, FormRegistoColabProps } from "./types";
 import { Toast } from "primereact/toast";
 
 
 
 const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
-  onSubmit,
   initialValues,
+  onSubmit,
 }) => {
   const toast = useRef<Toast>(null);
-  const estadosCivis = ["Solteiro", "Casado", "Divorciado", "Viúvo"];
-  const departamentos = ["RH", "Liderança", "Financeiro", "Operacional"];
+  const estadosCivis = [
+    { label: "Solteiro", value: "Solteiro" },
+    { label: "Casado", value: "Casado" },
+    { label: "Divorciado", value: "Divorciado" },
+    { label: "Viúvo", value: "Viúvo" },
+  ];
+
+  const departamentos = [
+    { label: "RH", value: "RH" },
+    { label: "Liderança", value: "Liderança" },
+    { label: "Financeiro", value: "Financeiro" },
+    { label: "Operacional", value: "Operacional" },
+  ];
   const cargos = ["Analista", "Gerente", "Assistente", "Separador de reciclaveis"];
   const status = [
     { label: "Ativo", value: true },
@@ -26,7 +37,7 @@ const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
   const stepperRef = useRef<any>(null);
   const [logins, SetLogins] = useState<{ label: string; value: any }[]>([]);
 
-  const [formRGData, setFormData] = useState<FormDataProsp>({
+  const [formRGData, setFormData] = useState<FormDataPros>({
     id: initialValues?.id,
     nome: initialValues?.nome || "",
     cpf: initialValues?.cpf || "",
@@ -57,7 +68,7 @@ const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
   };
 
   const missingFields = Object.keys(formRGData).filter((key) => !formRGData[key]);
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
 
     if (missingFields.length > 0) {
       toast.current?.show({
@@ -66,13 +77,15 @@ const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
         detail: "Preencha todos os campos",
         life: 3000,
       });
-      //mostrar quais campos nao foram preenchidos
+      
       console.log(missingFields);
 
       return;
     }
-    setFormData(formRGData);
-    onSubmit(formRGData);
+    if (onSubmit) {
+      onSubmit(formRGData as FormDataPros);
+    }
+    //setFormData(formRGData);
   };
 
   const optionsLogins = async () => {
@@ -91,7 +104,9 @@ const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
 
   useEffect(() => {
     optionsLogins();
+    console.log("initialValues", initialValues);
   }, []);
+
 
   return (
     <div>
@@ -148,7 +163,7 @@ const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
                     </label>
                     <Calendar
                       name="data_nascimento"
-                      value={formRGData.data_nascimento}
+                      value={formRGData.data_nascimento as Date}
                       className="w-full"
                       onChange={(e) => {
                         setFormData({ ...formRGData, data_nascimento: e.value as Date });

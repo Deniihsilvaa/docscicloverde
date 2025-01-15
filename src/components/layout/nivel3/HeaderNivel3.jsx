@@ -13,8 +13,13 @@ export default function Header({ toggleSidebar }) {
 
   // Função de logout
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    console.log("Deslogado");
     navigate("/login");
+   const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error("Erro ao deslogar:", error);
+    }
   };
 
   // Nome e email do usuário

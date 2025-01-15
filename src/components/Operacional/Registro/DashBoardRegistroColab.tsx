@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useToast } from "../../Toast/ToastContext";
 import { useNavigate } from "react-router";
 import FormRegistroColab from "./FormRegistroColab";
-import { handleOnSubmit, FormDataProsp } from "./types";
+import { handleOnSubmit, FormDataPros } from "./types";
 import { Card } from "primereact/card";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
@@ -14,12 +14,12 @@ export default function Registro() {
   const [dialogVisible, setDialogVisible] = useState<boolean>(false);
   const [reloadTable, setReloadTable] = useState(false);
   const navigate = useNavigate();
-  const [initialValues, setInitialValues] = useState<FormDataProsp | undefined>(undefined);
+  const [initialValues, setInitialValues] = useState<FormDataPros | undefined>(undefined);
 
-  const handleSubmit = async (data: FormProps) => {
-
+  const handleSubmit = async (data) => {
     try {
       const result = await handleOnSubmit(data);
+      console.log('Result:', result); // Adiciona esta linha
       if (result) {
         showToast({
           severity: "success",
@@ -28,8 +28,7 @@ export default function Registro() {
           life: 5000,
         });
         setReloadTable((prev) => !prev)
-        setDialogVisible(false);
-
+        setDialogVisible(false)
       } else {
         showToast({
           severity: "error",
@@ -47,6 +46,9 @@ export default function Registro() {
       });
     }
   };
+  useEffect(() => {
+    initialValues && setInitialValues(initialValues);
+  }, [initialValues]);
   return (
     <div className="container flex flex-col items-center justify-center min-h-screen mx-auto">
       <div className="justify-center bg-black">
@@ -81,8 +83,8 @@ export default function Registro() {
       >
         <div className="contents shadow-neutral-400">
           <FormRegistroColab
-            onSubmit={handleSubmit}
             initialValues={initialValues}
+            onSubmit={handleSubmit}
           />
         </div>
       </Dialog>

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { ColaboradorProps, fetchDataColaboradores,FormDataProsp } from "./types";
+import { ColaboradorProps, fetchDataColaboradores,FormDataPros } from "./types";
 import { useToast } from "../../Toast/ToastContext";
 import InputMenu from "./inputMenu"
 
 const DataTableColaboradores = ( { setDialogVisible, setInitialValues }: any) => {
-  const [dadosInput, setDadosInput] = useState<ColaboradorProps[]>([]);
+  const [dataTable, setDataTable] = useState<FormDataPros[]>([]);
   const [quantidadeColaboradores, setQuantidadeColaboradores] = useState(0);
   const [totalSalario, setTotalSalario] = useState(0);
-  const [selectRow, setSelectRow] = useState<ColaboradorProps | null>(null);
+  const [selectRow, setSelectRow] = useState<FormDataPros | null>(null);
   const [loading, setLoading] = useState(false);
   const { showToast } = useToast();
   
@@ -22,7 +22,7 @@ const DataTableColaboradores = ( { setDialogVisible, setInitialValues }: any) =>
   const fetchColaboradores = async () => {
     try {
       const colaboradores = await fetchDataColaboradores();
-      setDadosInput(colaboradores);
+      setDataTable(colaboradores);
       const totalAtivo = colaboradores.filter(
         (colaborador) => colaborador.state === "true"
       ).length;
@@ -50,12 +50,24 @@ const DataTableColaboradores = ( { setDialogVisible, setInitialValues }: any) =>
     }
   };
   const onLoadTable = () => {
-    //fetchColaboradores();
+    fetchColaboradores();
   };
-  const onEdit = (data: FormDataProsp) => {
-    console.log(data);
+  const onEdit = (data: FormDataPros) => {
+    const rest = { ...data };
+  
+    // Safely format the dates if they exist
+    if (rest.data_nascimento) {
+      rest.data_nascimento = formatDate(rest.data_nascimento as Date);
+    }
+    if (rest.data_admissao) {
+      rest.data_admissao = formatDate(rest.data_admissao as Date);
+    }
+    setInitialValues(rest);
     setDialogVisible(true);
-    setInitialValues(data);
+  };
+  const formatDate = (date: Date | null): Date => {
+      const dataformatada = new Date(date!);
+      return dataformatada;
   };
 
   return (
@@ -69,7 +81,7 @@ const DataTableColaboradores = ( { setDialogVisible, setInitialValues }: any) =>
       </h3>
       <p>{loading && <span>Carregando...</span>}</p>
       <DataTable
-        value={dadosInput}
+        value={dataTable}
         selectionMode="single"
         selection={selectRow!}
         onSelectionChange={(e) => setSelectRow(e.value)}
@@ -91,13 +103,29 @@ const DataTableColaboradores = ( { setDialogVisible, setInitialValues }: any) =>
       >
         <Column field="nome" header="Nome" />
         <Column field="cpf" header="CPF" />
-        <Column field="data_nascimento" header="Nascimento" />
+       <Column 
+         field="data_nascimento" 
+         header="Nascimento" 
+         body={(rowData: FormDataPros) => 
+           rowData.data_nascimento 
+             ? new Date(rowData.data_nascimento).toLocaleDateString() 
+             : ''
+         } 
+       />
         <Column
           field="salario"
           header="Salário"
           body={(salario) => `R$ ${salario.salario.toFixed(2)}`}
         />
-        <Column field="data_admissao" header="Admissão" />
+      <Column 
+        field="data_admissao" 
+        header="Admissão" 
+        body={(rowData: FormDataPros) => 
+          rowData.data_admissao 
+            ? new Date(rowData.data_admissao).toLocaleDateString() 
+            : ''
+        } 
+      />
         <Column field="departamento" header="Departamento" />
         <Column field="cargo" header="Cargo" />
         <Column field="observacoes" header="Observações" />

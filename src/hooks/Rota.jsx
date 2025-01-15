@@ -30,7 +30,7 @@ import PaymentRegistration from "../pages/leaderADM/PaymentRegistration.tsx";
 // Animation variants
 const pageTransition = {
   initial: {
-    opacity: 0,
+    opacity: 1,
     y: 20,
   },
   animate: {
