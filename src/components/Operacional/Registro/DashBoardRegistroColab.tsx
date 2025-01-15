@@ -16,10 +16,10 @@ export default function Registro() {
   const navigate = useNavigate();
   const [initialValues, setInitialValues] = useState<FormDataPros | undefined>(undefined);
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (data : FormDataPros) => {
     try {
       const result = await handleOnSubmit(data);
-      console.log('Result:', result); // Adiciona esta linha
+      console.log('Resultado da função:', result);
       if (result) {
         showToast({
           severity: "success",

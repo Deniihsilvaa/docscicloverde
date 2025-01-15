@@ -9,8 +9,6 @@ import { StepperPanel } from "primereact/stepperpanel";
 import { FormDataPros, ExtractLogins, FormRegistoColabProps } from "./types";
 import { Toast } from "primereact/toast";
 
-
-
 const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
   initialValues,
   onSubmit,
@@ -66,11 +64,31 @@ const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
       [name]: value,
     }));
   };
+  const requiredFields = [
+    'nome',
+    'cpf',
+    'rg',
+    'data_nascimento',
+    'data_admissao',
+    'cargo',
+    'departamento'
+  ] as const;
 
-  const missingFields = Object.keys(formRGData).filter((key) => !formRGData[key]);
+  const missingFields = requiredFields
+  .filter(field => !formRGData[field])
+  .filter(field => {
+    // Tratamento especial para campos que podem ser 0
+    if (typeof formRGData[field] === 'number') {
+      return formRGData[field] === null || formRGData[field] === undefined;
+    }
+    return !formRGData[field];
+  });
+
+
   const handleSubmit = () => {
 
     if (missingFields.length > 0) {
+
       toast.current?.show({
         severity: "error",
         summary: "Erro",
@@ -83,6 +101,7 @@ const FormRegistroColab: React.FC<FormRegistoColabProps> = ({
       return;
     }
     if (onSubmit) {
+      console.log('Dados para salvar:',formRGData);
       onSubmit(formRGData as FormDataPros);
     }
     //setFormData(formRGData);

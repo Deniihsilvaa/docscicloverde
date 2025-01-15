@@ -17,7 +17,7 @@ export interface FormDataPros {
   cargo?: string;
   observacoes?: string;
   state:boolean;
-  user_id?:string | null;
+  user_id?: null;
 }
 
 export interface FormData {
@@ -36,7 +36,7 @@ export interface FormData {
   cargo?: string;
   observacoes?: string;
   state:boolean;
-  user_id?:string | null;
+  user_id?: null;
 }
 
 export type FormRegistoColabProps = {
@@ -99,16 +99,30 @@ export const handleOnSubmit = async (dados: FormDataPros): Promise<boolean> => {
     if (!dadosSemId.nome || !dadosSemId.cpf) {
       throw new Error("Dados obrigatórios não fornecidos");
     }
-
+    
     if (id) {
-     
-      const { error: updateError } = await supabase
-        .from("base_colab")
-        .update(dadosSemId)
-        .eq("id", id);
+      console.log("Dados para alterar:", dadosSemId);
+      const {data, error } = await supabase
+      .from("base_colab")
+      .update(dadosSemId)
+      .eq("id", id)
+      .select();
+      console.log("Dados atualizados:", data);
+      
+      if (error) {
+        console.error("Erro detalhado do Supabase:", {
+          code: error.code,
+          message: error.message,
+          details: error.details,
+          hint: error.hint
+        });
+        throw new Error(`Erro ao atualizar registro: ${error.message}`);
+      }
 
-      if (updateError) {
-        throw new Error(`Erro ao atualizar registro: ${updateError.message}`);
+      if (!data || data.length === 0) {
+        console.warn("Nenhum registro foi atualizado");
+      } else {
+        console.log("Registro atualizado com sucesso:", data);
       }
     } else {
       // Inserção de novo registro
@@ -127,7 +141,7 @@ export const handleOnSubmit = async (dados: FormDataPros): Promise<boolean> => {
     console.error("Erro na operação do Supabase:", {
       erro: error instanceof Error ? error.message : 'Erro desconhecido',
       dados: { ...dados, cpf: '***' }, // Log seguro, ocultando dados sensíveis
-      operacao: id !== undefined ? 'update' : 'insert'
+      operacao: id? 'update' : 'insert'
     });
 
     // Re-throw do erro para tratamento adequado no componente
