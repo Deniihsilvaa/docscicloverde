@@ -5,21 +5,17 @@ import { useNavigate } from "react-router-dom";
 import logo from "../../../assets/logo.png";
 import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
+import { useAuth } from "../../../hooks/AuthContext";
 
 export default function Header({ toggleSidebar }) {
   const navigate = useNavigate();
   const [nameUser, setNameUser] = useState("");
   const [emailUser, setEmailUser] = useState("");
+  const { logout } = useAuth();
 
-  // Função de logout
   const handleLogout = async () => {
-    console.log("Deslogado");
+    await logout();
     navigate("/login");
-   const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      console.error("Erro ao deslogar:", error);
-    }
   };
 
   // Nome e email do usuário
@@ -79,6 +75,7 @@ export default function Header({ toggleSidebar }) {
   ];
 
   return (
+
     <Menubar
       model={items}
       className="p-shadow-2"

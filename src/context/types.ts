@@ -1,6 +1,6 @@
 // src/context/types.ts
+import { logarUser } from "../api/ApiLogin";
 import { supabase } from "../services/supabase";
-
 
 export const handleLogin = async (
   e: React.FormEvent<HTMLFormElement>,
@@ -21,23 +21,29 @@ export const handleLogin = async (
     setError("Por favor, preencha todos os campos.");
     return;
   }
-  const {error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
+  const userArray = [{email, password}]
+    const response = await logarUser(userArray[0])
 
-  if (error) {
-    setError(error.message);
-  } else {
-    navigate("/");
-    setSuccess("Login efetuado com sucesso!");
+
+  try {
+    if (!response) {
+      setLoading(false);
+      setError("Falha ao efetuar login.");
+    } else {
+      
+      setSuccess("Login efetuado com sucesso!");
+      navigate("/");
+    }
+  } catch (error) {
+    console.error("Erro:", error.message);
   }
   setLoading(false);
 };
-export const tabeleMTR = async () =>{
+
+export const tabeleMTR = async () => {
   const { data } = await supabase.from("baseMtr").select("*");
-  return data
-}
+  return data;
+};
 export async function tableMTR() {
   try {
     const { data, error } = await supabase.from("baseMtr").select("*");

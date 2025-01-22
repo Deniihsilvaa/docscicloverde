@@ -1,7 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { supabase } from "../services/supabase";
-import { Toast } from "primereact/toast";
+import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
 interface User {
   role: string;
@@ -9,111 +6,67 @@ interface User {
   email: string;
 }
 
-interface AuthContextType {
+interface AuthContextProps {
   user: User | null;
   loading: boolean;
-  fetchUserRole: () => Promise<void>;
-  logout: () => Promise<void>;
+  logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const toast = useRef<Toast>(null);
-  const navigate = useNavigate();
 
-  const showToast = useCallback((severity: string, summary: string, detail: string) => {
-    toast.current?.show({
-      severity,
-      summary,
-      detail,
-      life: 5000,
-    });
-  }, []);
-
-  const fetchUserRole = useCallback(async () => {
+  const fetchUser = async () => {
+    setLoading(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const token = localStorage.getItem("authToken");
+      if (!token) throw new Error("Token não encontrado");
 
-      if (!session) {
-        setUser(null);
-        setLoading(false);
-        return;
-      }
-
-      const { user: currentUser } = session;
-      const { data: userData, error } = await supabase
-        .from("base_user")
-        .select("role,email")
-        .eq("user_id", currentUser.id)
-        .single();
-
-      if (error || !userData) {
-        console.error("Erro ao buscar dados do usuário:", error);
-        setUser(null);
-        return;
-      }
-
-      setUser({ 
-        role: userData.role, 
-        user_id: currentUser.id, 
-        email: userData.email 
+      const response = await fetch("https://newback-end-cicloverde.onrender.com/auth/user", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       });
 
-    } catch (err) {
-      console.error("Erro ao verificar o usuário:", err);
+      if (!response.ok) throw new Error("Erro ao buscar usuário");
+
+      const data = await response.json();
+      setUser({
+        user_id: data.user_id || "",
+        role: data.role || "",
+        email: data.email || "",
+      });
+    } catch (error) {
+      console.error("Erro ao autenticar:", error.message);
       setUser(null);
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
-  const logout = useCallback(async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      
-      setUser(null);
-      navigate("/login");
-      showToast("success", "Sucesso", "Logout realizado com sucesso");
-    } catch (error) {
-      console.error("Erro ao fazer logout:", error);
-      showToast("error", "Erro", "Erro ao fazer logout");
-    }
-  }, [navigate, showToast]);
+  const logout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("authUser");
+    setUser(null);
+  };
 
   useEffect(() => {
-    // Initial session check
-    fetchUserRole();
-
-    // Set up auth state change subscription
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN') {
-        await fetchUserRole();
-      } else if (event === 'SIGNED_OUT') {
-        setUser(null);
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [fetchUserRole]);
+    fetchUser();
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, fetchUserRole, logout }}>
+    <AuthContext.Provider value={{ user, loading, logout }}>
       {children}
-      <Toast ref={toast} />
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = (): AuthContextType => {
+export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth deve ser usado dentro de AuthProvider");
-  }
+  if (!context) throw new Error("useAuth deve ser usado dentro de AuthProvider");
   return context;
 };

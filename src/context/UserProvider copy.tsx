@@ -17,7 +17,9 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       data: { session },
     } = await supabase.auth.getSession();
 
+    console.log("Iniciando sessao")
     if (session) {
+     
       const { user: currentUser } = session;
       const { data: userData, error } = await supabase
         .from("base_user")
@@ -29,8 +31,8 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         console.error("Erro ao buscar dados do usuário:", error);
         return;
       }
-
-      setUser({ role: userData.role });
+      console.log("userData",userData)
+      //setUser({ role: userData.role });
     }
   };
   useEffect(() => {

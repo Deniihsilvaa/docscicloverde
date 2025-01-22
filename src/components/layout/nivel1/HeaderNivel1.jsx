@@ -1,14 +1,15 @@
 import { Menubar } from "primereact/menubar";
-import { supabase } from "../../../services/supabase";
 import { useNavigate } from "react-router-dom";
 import logo from "../../../assets/logo.png";
 import PropTypes from "prop-types";
+import { useAuth } from "../../../hooks/AuthContext";
 export default function HeaderNivel1({ toggleSidebar }) {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   // Função de logout
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await logout();
     navigate("/login"); // Redireciona para a página de login após o logout
   };
 

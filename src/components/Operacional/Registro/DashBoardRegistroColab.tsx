@@ -85,6 +85,7 @@ export default function Registro() {
           <FormRegistroColab
             initialValues={initialValues}
             onSubmit={handleSubmit}
+            
           />
         </div>
       </Dialog>

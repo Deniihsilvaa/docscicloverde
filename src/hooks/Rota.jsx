@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import ProtectedRoute from "./ProtectedRoute";
 import { useAuth } from "./AuthContext";
 import { Navigate } from "react-router-dom";
+import PropTypes from 'prop-types';
 
 import Layout from "../components/layout/Layout.jsx";
 import LayoutOp from "../components/layout/LayoutOp.jsx";
@@ -12,7 +13,6 @@ import Contact from "../pages/Contact.jsx";
 import Login from "../pages/Login.jsx";
 import CadastroProdutos from "../components/CadastroProdutos/CadastroProdutos.jsx";
 import RegistroNotasFiscais from "../components/CadastroNFE/RegistroNotasFiscais.jsx";
-import Unauthorized from "../pages/Unauthorized.jsx";
 import DashBoardRegistroColab from "../components/Operacional/Registro/DashBoardRegistroColab.tsx";
 import UserOP from "../pages/leader/user.jsx";
 import PainelRegistro from "../components/Users/PainelDeRegistros/PainelRegistro.tsx";
@@ -29,44 +29,26 @@ import PaymentRegistration from "../pages/leaderADM/PaymentRegistration.tsx";
 
 // Animation variants
 const pageTransition = {
-  initial: {
-    opacity: 1,
-    y: 20,
-  },
-  animate: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.3,
-      ease: "easeOut",
-    },
-  },
-  exit: {
-    opacity: 0,
-    y: -20,
-    transition: {
-      duration: 0.2,
-      ease: "easeIn",
-    },
-  },
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+  exit: { opacity: 0, y: -20, transition: { duration: 0.2 } },
 };
 
 // Animated wrapper component
 const AnimatedPage = ({ children }) => (
-  <motion.div
-    variants={pageTransition}
-    initial="initial"
-    animate="animate"
-    exit="exit"
-  >
+  <motion.div variants={pageTransition} initial="initial" animate="animate" exit="exit">
     {children}
   </motion.div>
 );
 
+AnimatedPage.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
 const Rota = () => {
   const { user } = useAuth();
   const location = useLocation();
-
+  console.log("Verificando user da Rota:",user?.role)
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
@@ -74,17 +56,8 @@ const Rota = () => {
         <Route 
           path="/login" 
           element={
-            <AnimatedPage>
               <Login />
-            </AnimatedPage>
-          } 
-        />
-        <Route 
-          path="/unauthorized" 
-          element={
-            <AnimatedPage>
-              <Unauthorized />
-            </AnimatedPage>
+            
           } 
         />
 

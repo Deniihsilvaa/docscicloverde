@@ -1,14 +1,11 @@
-import { Card } from "primereact/card";
-const NotUse = () => {
+const VerificationUser = () => {
+  const local = localStorage.getItem("authUser")
+  
   return (
-    <div className="card">
-      <Card title="Atenção">
-        <div className="m-0">
-         <div> Pagina nao encontrada</div>
-        </div>
-      </Card>
+    <div>
+      Dados do local storage{local}
     </div>
   );
 };
 
-export default NotUse;
+export default VerificationUser;

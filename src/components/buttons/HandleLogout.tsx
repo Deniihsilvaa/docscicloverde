@@ -1,14 +1,15 @@
 // montar botao de loagout
 
 import React from "react";
-import { supabase } from "../../services/supabase";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/AuthContext";
 
 const HandleLogout = () => {
     const navigate = useNavigate();
+    const { logout } = useAuth();
 
     const handleLogout = async () => {
-        await supabase.auth.signOut();
+        await logout();
         navigate("/login");
     };
 
