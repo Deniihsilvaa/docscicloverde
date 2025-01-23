@@ -97,7 +97,8 @@ const DataTableColaboradores = ({ setDialogVisible, setInitialValues }: any) => 
 
   return (
     <>
-      <div className="card flex justify-content-center">
+      <div className="grid grid-cols-2">
+      <div className="m-2">
         <h3>
           Colaboradores Ativos: {quantidadeColaboradores} | Total de Salários:{" "}
           {totalSalario.toLocaleString("pt-BR", {
@@ -105,7 +106,9 @@ const DataTableColaboradores = ({ setDialogVisible, setInitialValues }: any) => 
             currency: "BRL",
           })}
         </h3>
-        <div>
+        </div>
+
+        <div className="m-2">
           <FilterDropdown
             colaboradores={baseColaboradores}
             onFilterChange={handleFilterChange}

@@ -7,6 +7,8 @@ import { Card } from "primereact/card";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import DataTableColaboradores from "./TableRegistroColab";
+import { motion } from "framer-motion";
+
 export default function Registro() {
   const { showToast } = useToast();
 
@@ -50,8 +52,9 @@ export default function Registro() {
   }, [initialValues]);
   
   return (
-    <div className="container flex flex-col items-center justify-center min-h-screen mx-auto">
-      <div className="justify-center bg-black">
+    //container organizado e responsivo
+    <div className="grid grid-cols-1 gap-4">
+      <div className="justify-center bg-black w-full overflow-x-auto">
         <Card title="Colaboradores" className="w-full">
           <div className="flex flex-col gap-3">
             <Button
@@ -65,7 +68,7 @@ export default function Registro() {
           </div>
         </Card>
 
-        <Card title="Tabela de Colaboradores" className="mt-1">
+        <Card title="Tabela de Colaboradores" className="mt-1 w-full">
           <div className="overflow-x-auto">
             <DataTableColaboradores
               key={reloadTable ? "reload" : "default"}

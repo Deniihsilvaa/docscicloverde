@@ -17,11 +17,11 @@ const Layout = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen layout">
-      <Header toggleSidebar={toggleSidebar} />
-      <div className="flex flex-1">
+    <div className="flex flex-col min-h-screen layout shadow-neutral-300 container">
+      <Header toggleSidebar={toggleSidebar} className="w-full shadow-md" />
+      <div className="flex flex-1 overflow-hidden">
         <Sidebar isOpen={isOpenSidebar} Isclose={toggleSidebar} />
-        <main>
+        <main className="flex-1 w-full px-4 py-4 md:px-6">
           <Outlet />
         </main>
       </div>

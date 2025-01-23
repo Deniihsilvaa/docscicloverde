@@ -12,9 +12,7 @@ body {
 /* Estilo para a estrutura do layout */
 .layout {
   display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Garante que o layout ocupe a altura total da tela */
-  overflow-x: hidden;
+  flex-direction: column;  
 }
 
 /* Estilo para a área principal (conteúdo) */
