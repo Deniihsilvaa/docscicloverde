@@ -50,7 +50,7 @@ AnimatedPage.propTypes = {
 const Rota = () => {
   const { user } = useAuth();
   const location = useLocation();
-  console.log(`Rota:${location.pathname} ROLE:`, user?.role)
+  //console.log(`Rota:${location.pathname} ROLE:`, user?.role)
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>

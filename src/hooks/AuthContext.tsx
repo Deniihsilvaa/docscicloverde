@@ -69,7 +69,6 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // Efeito para buscar o usuário ao montar o componente
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    console.log("1. authContext useEffect token", token);
     if (token) {
       fetchUser(token);
     } else {

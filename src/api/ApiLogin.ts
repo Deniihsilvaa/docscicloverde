@@ -1,7 +1,6 @@
 // src/api/ApiLogin.ts
 export const logarUser = async (userArray: any) => {
   try {
-    console.log("Dados para logar",userArray)
     const response = await fetch("https://newback-end-cicloverde.onrender.com/auth/login", {
       method: "POST",
       headers: {
@@ -14,7 +13,6 @@ export const logarUser = async (userArray: any) => {
       throw new Error("Não foi possível carregar os dados dos colaboradores.");
     } else {
       const data = await response.json();
-      console.log("Apilogin:data", data)
       localStorage.setItem("authToken", data.token);
       localStorage.setItem("authUser", JSON.stringify(data.user));
       return data; 
@@ -39,13 +37,9 @@ export const fetchCollaborators = async (token: string) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("4. api login fetchCollaborators:response", response)
-
-
     if (!response.ok) {
       throw new Error('Erro ao carregar colaboradores');
     }
-
     const data = await response.json();
     return data;
   } catch (err) {
@@ -55,7 +49,6 @@ export const fetchCollaborators = async (token: string) => {
 };
 export const logoutUser = async () => {
   const token = localStorage.getItem("authToken");
-  console.log("Inciando logout")
   if (!token) {
     throw new Error("Token não encontrado. O usuário não está autenticado.");
   }
