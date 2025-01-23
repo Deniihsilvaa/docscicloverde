@@ -1,72 +1,108 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+  useMemo,
+} from "react";
+import { fetchCollaborators } from "../api/ApiLogin";
+import { useNavigate } from "react-router-dom";
 
-interface User {
+// Tipagem do Usuário
+export interface User {
   role: string;
   user_id: string;
   email: string;
 }
 
-interface AuthContextProps {
+// Tipagem do Contexto de Autenticação
+export interface AuthContextProps {
   user: User | null;
   loading: boolean;
   logout: () => void;
+  error: string | null;
 }
 
+// Criação do Contexto
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+// Provedor do Contexto
+const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  const fetchUser = async () => {
+  // Função para buscar o usuário autenticado
+  const fetchUser = async (token: string) => {
     setLoading(true);
+    setError(null); // Reseta o estado de erro
     try {
-      const token = localStorage.getItem("authToken");
       if (!token) throw new Error("Token não encontrado");
 
-      const response = await fetch("https://newback-end-cicloverde.onrender.com/auth/user", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const data = await fetchCollaborators(token);
+      if (!data) throw new Error("Erro ao buscar usuário: response.json");
 
-      if (!response.ok) throw new Error("Erro ao buscar usuário");
-
-      const data = await response.json();
       setUser({
         user_id: data.user_id || "",
         role: data.role || "",
         email: data.email || "",
       });
-    } catch (error) {
-      console.error("Erro ao autenticar:", error.message);
+    } catch (err: any) {
+      console.error("Erro ao autenticar:", err.message || err);
       setUser(null);
+      setError("Erro ao autenticar: " + (err.message || "Erro desconhecido"));
     } finally {
       setLoading(false);
     }
   };
 
+  // Função de logout
   const logout = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("authUser");
     setUser(null);
+    navigate("/login");
   };
 
+  // Efeito para buscar o usuário ao montar o componente
   useEffect(() => {
-    fetchUser();
-  }, []);
+    const token = localStorage.getItem("authToken");
+    console.log("1. authContext useEffect token", token);
+    if (token) {
+      fetchUser(token);
+    } else {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  // Memoização do valor do contexto para evitar renders desnecessárias
+  const value = useMemo(
+    () => ({
+      user,
+      loading,
+      logout,
+      error,
+    }),
+    [user, loading, error]
+  );
 
   return (
-    <AuthContext.Provider value={{ user, loading, logout }}>
+    <AuthContext.Provider value={value}>
       {children}
+      {error && <div className="error">{error}</div>} {/* Exibe mensagens de erro */}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => {
+// Hook para usar o contexto de autenticação
+const useAuth = (): AuthContextProps => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth deve ser usado dentro de AuthProvider");
+  if (!context) {
+    throw new Error("useAuth deve ser usado dentro de AuthProvider");
+  }
   return context;
 };
+
+export { AuthContext, AuthProvider, useAuth };

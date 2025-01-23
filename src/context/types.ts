@@ -1,6 +1,7 @@
 // src/context/types.ts
 import { logarUser } from "../api/ApiLogin";
 import { supabase } from "../services/supabase";
+import { useAuth } from "../hooks/AuthContext";
 
 export const handleLogin = async (
   e: React.FormEvent<HTMLFormElement>,
@@ -12,7 +13,7 @@ export const handleLogin = async (
   setLoading: (loading: boolean) => void
 ) => {
   e.preventDefault();
-  setError(""); // Limpa erros anteriores
+  setError("");
   setLoading(true);
   setSuccess("");
 
@@ -21,24 +22,27 @@ export const handleLogin = async (
     setError("Por favor, preencha todos os campos.");
     return;
   }
-  const userArray = [{email, password}]
-    const response = await logarUser(userArray[0])
 
 
   try {
+    const response = await logarUser({ email, password }); // Passe o objeto correto
+
     if (!response) {
       setLoading(false);
       setError("Falha ao efetuar login.");
     } else {
-      
+      localStorage.setItem("authToken", response.token);
       setSuccess("Login efetuado com sucesso!");
-      navigate("/");
+      return response;
     }
   } catch (error) {
-    console.error("Erro:", error.message);
+    setError("Erro ao efetuar login. Tente novamente.");
+    console.error("Erro no login:", error);
+  } finally {
+    setLoading(false);
   }
-  setLoading(false);
 };
+
 
 export const tabeleMTR = async () => {
   const { data } = await supabase.from("baseMtr").select("*");

@@ -1,8 +1,12 @@
-export const logarUser = async (userArray) => {
+// src/api/ApiLogin.ts
+export const logarUser = async (userArray: any) => {
   try {
+    console.log("Dados para logar",userArray)
     const response = await fetch("https://newback-end-cicloverde.onrender.com/auth/login", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(userArray),
     });
 
@@ -10,43 +14,40 @@ export const logarUser = async (userArray) => {
       throw new Error("Não foi possível carregar os dados dos colaboradores.");
     } else {
       const data = await response.json();
-      
-      // Salvar o token no localStorage
+      console.log("Apilogin:data", data)
       localStorage.setItem("authToken", data.token);
-      
-      // Salvar o objeto user no localStorage como string JSON
       localStorage.setItem("authUser", JSON.stringify(data.user));
-
-      console.log("Retorno do backEnd: response", data);
-
-
+      return data; 
     }
-    return response;
   } catch (error) {
-    console.error("Erro inesperado ao carregar colaboradores:", error);
-    return []; // Retorna um array vazio em caso de falha
+    console.error("Erro ao logar:", error);
+    throw error; // Lançar o erro para tratamento posterior
   }
 };
 
-const token = localStorage.getItem("authToken")
-export const fetchCollaborators = async () => {
+export const fetchCollaborators = async (token: string) => {
 
   try {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      return null;
+    }
     const response = await fetch('https://newback-end-cicloverde.onrender.com/auth/user', {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
     });
-// Authorization: `Bearer ${token}`,
+    console.log("4. api login fetchCollaborators:response", response)
+
+
     if (!response.ok) {
       throw new Error('Erro ao carregar colaboradores');
     }
 
     const data = await response.json();
-    console.log("Apilogin:Data", data)
-    return data.collaborators;
+    return data;
   } catch (err) {
     console.error('Erro ao buscar colaboradores:', err);
     throw new Error('Não foi possível carregar os dados dos colaboradores');
@@ -54,7 +55,7 @@ export const fetchCollaborators = async () => {
 };
 export const logoutUser = async () => {
   const token = localStorage.getItem("authToken");
-
+  console.log("Inciando logout")
   if (!token) {
     throw new Error("Token não encontrado. O usuário não está autenticado.");
   }
@@ -75,6 +76,3 @@ export const logoutUser = async () => {
 
   return response;
 };
-
-
-

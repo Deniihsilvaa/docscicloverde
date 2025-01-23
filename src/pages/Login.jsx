@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { handleLogin } from "../context/types";
+import { logarUser } from "../api/ApiLogin";
 import { useToast } from "../components/Toast/ToastContext";
 import { InputText } from "primereact/inputtext";
 import { Password } from 'primereact/password';
@@ -35,7 +35,28 @@ const Login = () => {
     }
   }, [error, success, showToast]);
 
+  const handleNavigate = () => {
+    navigate("/v2");
+  };
 
+  const handleLogin = async () => {
+    setLoading(true);
+    try {
+      if (!email || !password) {
+        setLoading(false);
+        setError("Preencha todos os campos.");
+        return;
+      }
+      const userArry = { email, password };
+      await logarUser(userArry);
+      setSuccess("Login efetuado com sucesso!");
+      handleNavigate();
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex items-center justify-center w-full min-h-screen p-4 login-container">
@@ -49,17 +70,10 @@ const Login = () => {
         <div className="flex flex-col space-y-2">
           <form
           className="space-y-4"
-            onSubmit={(e) =>
-              handleLogin(
-                e,
-                email,
-                password,
-                setError,
-                setSuccess,
-                navigate,
-                setLoading
-              )
-            }
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleLogin();
+            }}
           >
             {error && <p className="mb-4 text-center text-red-500">{error}</p>}
             <div className="mb-6">

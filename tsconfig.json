@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["jest", "node"],
+    "jsx": "react"
+  },
+  "include": ["src/**/*", "src/pages/v2.d.ts"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}

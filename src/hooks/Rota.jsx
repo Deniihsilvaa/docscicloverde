@@ -17,7 +17,9 @@ import DashBoardRegistroColab from "../components/Operacional/Registro/DashBoard
 import UserOP from "../pages/leader/user.jsx";
 import PainelRegistro from "../components/Users/PainelDeRegistros/PainelRegistro.tsx";
 import PainelFinanceiro from "../components/Users/PainelFinanceiro/PainelFinanceiro.jsx";
-import NotUse from "../pages/v2.jsx";
+import NotUse from "../pages/VerificationUser.tsx";
+
+import VerificationUser from '../pages/VerificationUser.tsx';
 import UserRegistrationForm from "../components/CadastroPessoas/UserRegistrationForm.tsx";
 import TableMTR from "../components/CadastroMTR/TableMTR.tsx";
 import DashBoardRequest from '../pages/DashBoardRequest.tsx';
@@ -48,17 +50,22 @@ AnimatedPage.propTypes = {
 const Rota = () => {
   const { user } = useAuth();
   const location = useLocation();
-  console.log("Verificando user da Rota:",user?.role)
+  console.log(`Rota:${location.pathname} ROLE:`, user?.role)
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         {/* Rota de Login */}
-        <Route 
-          path="/login" 
+        <Route
+          path="/login"
           element={
-              <Login />
-            
-          } 
+            <Login />
+          }
+        />
+        <Route
+          path="/v2"
+          element={
+            <VerificationUser />
+          }
         />
 
         {/* Rotas protegidas para Admin */}
@@ -109,17 +116,19 @@ const Rota = () => {
         </Route>
 
         {/* Outras rotas */}
-        <Route 
-          path="/NotUse" 
-          element={
-            <AnimatedPage>
-              <NotUse />
-            </AnimatedPage>
-          } 
-        />
-        
+          <Route
+            path="/NotUse"
+            element={
+              <AnimatedPage>
+                <NotUse />
+              </AnimatedPage>
+            }
+          />
+        {/* TODO:Rotas para v2 */}
+
+
         <Route
-          path="*"
+          path="/"
           element={
             <AnimatedPage>
               {user ? (

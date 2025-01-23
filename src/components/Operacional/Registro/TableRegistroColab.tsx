@@ -24,12 +24,12 @@ const DataTableColaboradores = ( { setDialogVisible, setInitialValues }: any) =>
       const colaboradores = await fetchDataColaboradores();
       setDataTable(colaboradores);
       const totalAtivo = colaboradores.filter(
-        (colaborador) => colaborador.state === "true"
+        (colaborador: ColaboradorProps) => colaborador.state === "true"
       ).length;
       setQuantidadeColaboradores(totalAtivo);
       const totalSalarios = colaboradores
-        .filter((colaborador) => colaborador.state === "true")
-        .reduce((total, colaborador) => total + colaborador.salario, 0);
+        .filter((colaborador: ColaboradorProps) => colaborador.state === "true")
+        .reduce((total: number, colaborador: ColaboradorProps) => total + colaborador.salario, 0);
       setTotalSalario(totalSalarios);
 
       showToast({
