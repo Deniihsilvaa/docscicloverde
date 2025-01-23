@@ -7,7 +7,6 @@ import { Card } from "primereact/card";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import DataTableColaboradores from "./TableRegistroColab";
-import { FormProps } from "react-router";
 export default function Registro() {
   const { showToast } = useToast();
 
@@ -19,7 +18,7 @@ export default function Registro() {
   const handleSubmit = async (data : FormDataPros) => {
     try {
       const result = await handleOnSubmit(data);
-      console.log('Resultado da função:', result);
+      // console.log('Resultado da função:', result);
       if (result) {
         showToast({
           severity: "success",
@@ -49,6 +48,7 @@ export default function Registro() {
   useEffect(() => {
     initialValues && setInitialValues(initialValues);
   }, [initialValues]);
+  
   return (
     <div className="container flex flex-col items-center justify-center min-h-screen mx-auto">
       <div className="justify-center bg-black">

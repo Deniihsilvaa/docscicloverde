@@ -4,6 +4,7 @@ import ToastModel, { ToastRef, ToastProps } from "./ToastModel";
 // Define o tipo do contexto
 interface ToastContextProps {
   showToast: (props: ToastProps) => void;
+  
 }
 
 // Criação do contexto

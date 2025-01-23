@@ -1,4 +1,5 @@
 import {supabase} from "../../../services/supabase";
+import {fetchCollaborators} from "../../../api/Operacional/ApiOp";
 
 export interface FormDataPros {
   id?: string | number;
@@ -9,14 +10,14 @@ export interface FormDataPros {
   estado_civil?: string;
   endereco?: string;
   telefone?: string | null;
-  salario?: string;
+  salario?: number;
   data_admissao?: Date | string | null;
   carteira_trabalho?: string;
   pis?: string;
   departamento?: string;
   cargo?: string;
   observacoes?: string;
-  state:boolean;
+  state: boolean;
   user_id?: null;
 }
 
@@ -28,14 +29,14 @@ export interface FormData {
   estado_civil?: string;
   endereco?: string;
   telefone?: string;
-  salario?: string;
+  salario?: number;
   data_admissao?: Date | null; 
   carteira_trabalho?: string;
   pis?: string;
   departamento?: string;
   cargo?: string;
   observacoes?: string;
-  state:boolean;
+  state: boolean;
   user_id?: null;
 }
 
@@ -49,7 +50,7 @@ export interface TableRegistroColabProps {
   onDelete: (data: FormDataPros) => void;
 }
 export interface ColaboradorProps {
-  id?: number;
+  id?: number | string;
   nome: string;
   cpf: string | null;
   rg: string;
@@ -57,20 +58,25 @@ export interface ColaboradorProps {
   estado_civil: string;
   endereco: string;
   telefone: string;
-  salario: string;
+  salario: number;
   data_admissao: Date | null;
   carteira_trabalho: string;
   pis: string;
   departamento: string;
   cargo: string;
   observacoes: string;
-  state: string;
+  state: boolean;
 }
- export const fetchDataColaboradores = async () => {
-   const { data, error } = await supabase.from("base_colab").select("*");
-   if (error)  throw new Error("Erro ao carregar os dados!");
-   return data
+ export const fetchDataColaboradores = async (idsearchTerm: string) => {
+   const response = await fetchCollaborators(idsearchTerm);
+   if (!response)  throw new Error("Erro ao carregar os dados!");   
+   return response 
   };
+
+
+
+
+  
 export interface InputMenuProps {
   row: FormDataPros;
   onEdit: (data: FormDataPros) => void;

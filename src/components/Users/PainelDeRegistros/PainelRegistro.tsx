@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import ListInforUser from "./List/ListRegistro";
-import { Card } from "primereact/card";
-import ButtonHeader from "./headerRegistro/ButtonHeader";
 import ButtonViewRegistroColab from "../../../components/buttons/ButtonViewRegistroColab";
 import { BreadCrumb } from "primereact/breadcrumb";
 

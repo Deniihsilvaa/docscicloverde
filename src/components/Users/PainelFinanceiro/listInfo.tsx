@@ -40,9 +40,9 @@ export const CreateListInfo: React.FC = () => {
   const openModal = () => {
     setVisible(true);
   };
-  const handleNavigation = (path) => {
+const handleNavigation = (path: string) => {
     navigate.apply(this, [`/op/${path}`]);
-  };
+};
   useEffect(() => {
     setLoading(true);
     fetchData();
