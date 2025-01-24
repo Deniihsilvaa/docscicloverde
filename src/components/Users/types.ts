@@ -12,7 +12,6 @@ export interface PainelFinanceiroProps {
 export const loadingDateColaborador = async (
   user: string | number
 ): Promise<PainelFinanceiroProps | null> => {
-  console.log("user.user_id", user);
   const { data, error } = await supabase
     .from("viewbaseBenefColab")
     .select("*")
