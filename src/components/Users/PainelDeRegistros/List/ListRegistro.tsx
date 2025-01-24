@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ColaboradorProps } from "../types";
-import { supabase } from "../../../../services/supabase";
-import { useAuth } from "../../../../hooks/AuthContext";
 import { useToast } from "../../../Toast/ToastContext";
+import {fetchUser} from "../../../../api/Operacional/ApiOp";
 
 // Animation variants
 const containerVariants = {
@@ -29,9 +28,10 @@ export default function ListInforUser() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [expandedItem, setExpandedItem] = useState<number | null>(null);
-  const { user } = useAuth();
   const { showToast } = useToast();
 
+  
+ 
   const formatCurrency = (value: number) => {
     return value.toLocaleString("pt-BR", {
       style: "currency",
@@ -52,31 +52,17 @@ export default function ListInforUser() {
     }
   };
 
-  const fetchColaboradores = useCallback(async () => {
+  const fetchColaboradores = async () => {
+    
     try {
       setLoading(true);
       setError(null);
 
-      if (!user?.user_id) {
-        throw new Error("Usuário não autenticado");
-      }
+      const response = await fetchUser();
+      console.log("Dados do colaborador:",response);
 
-      const { data, error: supabaseError } = await supabase
-        .from("base_colab")
-        .select("*")
-        .eq("user_id", user.user_id);
+      setDados(response || []);
 
-      if (supabaseError) {
-        throw new Error(supabaseError.message);
-      }
-
-      setDados(data || []);
-      showToast({
-        severity: "success",
-        summary: "Sucesso",
-        detail: "Dados carregados com sucesso",
-        life: 1000,
-      });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Erro ao carregar os dados";
       setError(errorMessage);
@@ -86,14 +72,15 @@ export default function ListInforUser() {
         detail: errorMessage,
         life: 5000,
       });
+
     } finally {
       setLoading(false);
     }
-  }, [user?.user_id, showToast]);
+  };
 
   useEffect(() => {
     fetchColaboradores();
-  }, [fetchColaboradores]);
+  }, []);
 
   if (loading) {
     return (

@@ -10,7 +10,7 @@ interface DocsColabProps {
   refDate: Date;
 }
 
-const ButtonViewRegistroColab = ({ typeDocs }) => {
+const ButtonViewRegistroColab = ({ typeDocs }: { typeDocs: string }) => {
   const { user } = useAuth();
   const [docs, setDocs] = useState<DocsColabProps[]>([]);
 

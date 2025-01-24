@@ -35,14 +35,14 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
 
   // Função para buscar o usuário autenticado
-  const fetchUser = async (token: string) => {
+  const fetchDataUser = async (token: string) => {
     setLoading(true);
     setError(null); // Reseta o estado de erro
     try {
       if (!token) throw new Error("Token não encontrado");
 
       const data = await fetchCollaborators(token);
-      if (!data) throw new Error("Erro ao buscar usuário: response.json");
+      if (!data) throw new Error("Erro ao buscar usuário AuthContext");
 
       setUser({
         user_id: data.user_id || "",
@@ -70,7 +70,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (token) {
-      fetchUser(token);
+      fetchDataUser(token);
     } else {
       navigate("/login");
     }

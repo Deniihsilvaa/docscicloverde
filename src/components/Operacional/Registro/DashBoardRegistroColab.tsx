@@ -42,7 +42,7 @@ export default function Registro() {
       showToast({
         severity: "error",
         summary: "Erro",
-        detail: error.message,
+        detail: error?.message || "Erro ao salvar",
         life: 5000,
       });
     }
@@ -92,6 +92,7 @@ export default function Registro() {
           />
         </div>
       </Dialog>
+      
     </div>
   );
 }

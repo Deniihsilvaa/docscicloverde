@@ -26,7 +26,6 @@ export const logarUser = async (userArray: any) => {
 export const fetchCollaborators = async (token: string) => {
 
   try {
-    const token = localStorage.getItem('authToken');
     if (!token) {
       return null;
     }
@@ -41,6 +40,7 @@ export const fetchCollaborators = async (token: string) => {
       throw new Error('Erro ao carregar colaboradores');
     }
     const data = await response.json();
+    console.log("Retorno da api", data);
     return data;
   } catch (err) {
     console.error('Erro ao buscar colaboradores:', err);
