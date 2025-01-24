@@ -1,7 +1,7 @@
 import { Button } from "primereact/button";
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../../hooks/AuthContext";
-import { supabase } from "../../services/supabase";
+import axios from "axios";
+
 
 // Tipagem para os documentos do colaborador
 interface DocsColabProps {
@@ -11,7 +11,6 @@ interface DocsColabProps {
 }
 
 const ButtonViewRegistroColab = ({ typeDocs }: { typeDocs: string }) => {
-  const { user } = useAuth();
   const [docs, setDocs] = useState<DocsColabProps[]>([]);
 
   useEffect(() => {
@@ -19,16 +18,29 @@ const ButtonViewRegistroColab = ({ typeDocs }: { typeDocs: string }) => {
   }, []);
 
   const loadDocs = async () => {
-    const { data, error } = await supabase
-      .from("docs_colab")
-      .select("link,typeDocs,refDate")
-      .eq("user_id", user?.user_id)
-      .eq("typeDocs", typeDocs);
-
-    if (error) {
-      console.error("Erro ao carregar os dados!", error);
+    try {
+      const token = localStorage.getItem('authToken');
+      const userID = localStorage.getItem("authUser");
+      const user = userID ? JSON.parse(userID).id : null;
+      if (!token || !user) {
+        console.error("Token ou colaborador inválido!");
+        return;
+      }
+      
+      const response = await axios.get(
+        `https://newback-end-cicloverde.onrender.com/op/colab/docs`,
+        {
+          params: { idUser: user, typeDocs },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      setDocs(response.data || []);
+    } catch (error) {
+      console.error("Erro ao carregar documentos do backend:", error);
     }
-    setDocs(data || []);
   };
 
   const viewDate = (url: string | null) => {

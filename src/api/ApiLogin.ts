@@ -31,6 +31,7 @@ export const fetchCollaborators = async (token: string) => {
     }
     const response = await fetch('https://newback-end-cicloverde.onrender.com/auth/user', {
       method: 'GET',
+
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -40,7 +41,6 @@ export const fetchCollaborators = async (token: string) => {
       throw new Error('Erro ao carregar colaboradores');
     }
     const data = await response.json();
-    console.log("Retorno da api", data);
     return data;
   } catch (err) {
     console.error('Erro ao buscar colaboradores:', err);

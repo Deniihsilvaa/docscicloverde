@@ -117,7 +117,7 @@ const Rota = () => {
 
         {/* Outras rotas */}
           <Route
-            path="/NotUse"
+            path="/unauthorized"
             element={
               <AnimatedPage>
                 <NotUse />
