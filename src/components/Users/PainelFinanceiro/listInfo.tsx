@@ -15,16 +15,17 @@ export const CreateListInfo: React.FC = () => {
   const [colaborador, setColaborador] = useState<PainelFinanceiroProps | null>(null);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+  const userID = localStorage.getItem("authUser");
+  const user = userID ? JSON.parse(userID).id : null;
 
   const fetchData = async () => {
-    if (!user?.user_id) {
+    if (!user) {
       setLoading(false);
       return;
     }
   
     try {
-      const response = await loadingDateColaborador(user.user_id);
+      const response = await loadingDateColaborador(user);
       if (typeof response) {
         setColaborador(response);  
       }
