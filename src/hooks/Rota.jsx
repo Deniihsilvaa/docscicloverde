@@ -23,9 +23,9 @@ import VerificationUser from '../pages/VerificationUser.tsx';
 import UserRegistrationForm from "../components/CadastroPessoas/UserRegistrationForm.tsx";
 import TableMTR from "../components/CadastroMTR/TableMTR.tsx";
 import DashBoardRequest from '../pages/DashBoardRequest.tsx';
-import ExtratoPGSMensal from "../components/Users/PainelFinanceiro/Pages/ExtratoPGSMensal.tsx";
-import ExtratoPGAMensal from "../components/Users/PainelFinanceiro/Pages/ExtratoPGAMensal.tsx";
-import ExtratoFolhaPonto from "../components/Users/PainelFinanceiro/Pages/ExtratoFolhaPonto.tsx";
+import ExtratoPGSMensal from "../components/Users/PainelFinanceiro/componentes/ExtratoPGSMensal.tsx";
+import ExtratoPGAMensal from "../components/Users/PainelFinanceiro/componentes/ExtratoPGAMensal.tsx";
+import ExtratoFolhaPonto from "../components/Users/PainelFinanceiro/componentes/ExtratoFolhaPonto.tsx";
 import TableInfo from "../pages/Request/TableInfo.tsx";
 import PaymentRegistration from "../pages/leaderADM/PaymentRegistration.tsx";
 

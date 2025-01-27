@@ -62,7 +62,7 @@ const ListExtratoPagamento: React.FC<ListExtratoPagamentoProps> = ({ pagamentos,
                   </div>
                   <div className="flex space-x-4">
                     <span className="text-2xl font-bold text-white">
-                      {pagamento ? `R$ ${pagamento.valor.toFixed(2)}` : "(Sem dados)"}
+                      {pagamento ? `R$ ${pagamento.valor_total.toFixed(2)}` : "(Sem dados)"}
                     </span>
                   </div>
                   <div className="flex flex-row-reverse space-x-4 space-x-reverse">

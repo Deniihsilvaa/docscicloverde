@@ -1,7 +1,7 @@
 // src/components/Users/types.ts
 import { supabase } from "../../services/supabase";
 import { useAuth } from "../../hooks/AuthContext";
-
+import {fetchPayments} from "../../api/Operacional/ApiOp"
 export interface PainelFinanceiroProps {
   salario?: number;
   cesta_basica?: number;
@@ -9,20 +9,9 @@ export interface PainelFinanceiroProps {
   plano_saude?: string;
   vale_refeicao?: boolean;
 }
-export const loadingDateColaborador = async (
-  user: string | number
-): Promise<PainelFinanceiroProps | null> => {
-  const { data, error } = await supabase
-    .from("viewbaseBenefColab")
-    .select("*")
-    .eq("user_id", user)
-    .single();
 
-  if (error) throw error;
-  return data ? (data as PainelFinanceiroProps) : null;
-};
 export interface PagamentoProps {
-  valor: number;
+  valor_total: number;
   status: string;
   data_pagamento: string;
   user_id: string;
@@ -30,18 +19,9 @@ export interface PagamentoProps {
   url?: string;
 }
 export const fetchPagamentos = async (anoSelecionado: number) => {
-  const { user } = useAuth();
-  const { data, error } = await supabase
-    .from("base_pagamentos")
-    .select("url,valor,status,data_pagamento,user_id,mes_referente")
-    .eq("ano", anoSelecionado)
-    .eq("type_pg", "wage")
-    .eq("user_id", user?.user_id)
-    .order("data_pagamento", { ascending: true });
-  if (error) {
-    console.error("Erro ao buscar pagamentos", error);
-  } else {
-    return data || [];
+  const response = await fetchPayments(anoSelecionado)
+  if (response){
+    return response
   }
 };
 

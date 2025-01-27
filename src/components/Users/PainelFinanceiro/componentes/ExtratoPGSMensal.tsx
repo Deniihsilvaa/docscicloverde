@@ -17,9 +17,9 @@ const ExtratoPGSMensal = () => {
   const [anoSelecionado, setAnoSelecionado] = useState(2024);
   const loadingData = async () => {
     const retur = await fetchPagamentos(anoSelecionado);
-    if (typeof retur) {
-      setPagamentos(retur || []);
-    }
+    console.log("Analisando retorno retur",retur )
+    setPagamentos(retur || []);
+    
   };
   useEffect(() => {
     loadingData();  // Carrega os dados sempre que o ano for alterado

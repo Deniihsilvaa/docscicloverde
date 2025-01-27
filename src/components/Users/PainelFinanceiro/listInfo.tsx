@@ -2,11 +2,10 @@
 import React, { useState, useEffect } from "react";
 import { Card } from "primereact/card";
 import { Banknote, Notebook } from "lucide-react";
-import { PainelFinanceiroProps, loadingDateColaborador } from "../types";
-import { useAuth } from "../../../hooks/AuthContext";
+import { Accordion, AccordionTab } from "primereact/accordion";
+import { PainelFinanceiroProps } from "../types";
 import {fetchUser} from  "../../../api/Operacional/ApiOp";
 
-import { Accordion, AccordionTab } from "primereact/accordion";
 import { Dialog } from "primereact/dialog";
 import DocsColabProps from "../../../components/buttons/buttonStyle";
 import { useNavigate } from "react-router";
@@ -27,7 +26,6 @@ export const CreateListInfo: React.FC = () => {
     }
   
     try {
-      //const response = await loadingDateColaborador(user);
       const response = await fetchUser();
       console.log("Dados do colaborador:",response);
       if (response) {
