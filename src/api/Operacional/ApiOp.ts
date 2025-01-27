@@ -46,7 +46,14 @@ export const fetchUser = async () => {
       throw new Error('Erro ao carregar  dados do colaborador');
     }
     const data = await response.json();
-    return data;
+    const combinedData = data.map((item:any) => {
+      return {
+        ...item, // Inclui todos os dados do objeto principal
+        ...item.beneficios, // Insere os dados de "beneficios" diretamente no objeto
+      };
+    });
+
+    return combinedData;
   } catch (err) {
     console.error('Erro ao buscar dados do colaborador:', err);
     throw new Error('Não foi possível carregar os dados do colaborador');

@@ -4,6 +4,8 @@ import { Card } from "primereact/card";
 import { Banknote, Notebook } from "lucide-react";
 import { PainelFinanceiroProps, loadingDateColaborador } from "../types";
 import { useAuth } from "../../../hooks/AuthContext";
+import {fetchUser} from  "../../../api/Operacional/ApiOp";
+
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { Dialog } from "primereact/dialog";
 import DocsColabProps from "../../../components/buttons/buttonStyle";
@@ -25,9 +27,12 @@ export const CreateListInfo: React.FC = () => {
     }
   
     try {
-      const response = await loadingDateColaborador(user);
-      if (typeof response) {
-        setColaborador(response);  
+      //const response = await loadingDateColaborador(user);
+      const response = await fetchUser();
+      console.log("Dados do colaborador:",response);
+      if (response) {
+        setColaborador(response[0]);  
+        console.log("Dados do setColaborador:",colaborador);
       }
     } catch (e) {
       console.error("ERRO DE CARREGAMENTO", e);
@@ -41,7 +46,7 @@ export const CreateListInfo: React.FC = () => {
   const openModal = () => {
     setVisible(true);
   };
-const handleNavigation = (path: string) => {
+const handleNavigation = (path: string | number) => {
     navigate.apply(this, [`/op/${path}`]);
 };
   useEffect(() => {
